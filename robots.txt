@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /api/
+
+# Sitemap location for search indexing
+Sitemap: https://midnight-signals.ai.studio/sitemap.xml

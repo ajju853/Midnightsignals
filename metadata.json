@@ -1,0 +1,6 @@
+{
+  "name": "Midnight Signals",
+  "description": "An immersive, interactive audio-visual lyrics dashboard for the song 'Midnight Signals' with a dynamic lo-fi synthesizer and an AI signal echo interpreter.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
