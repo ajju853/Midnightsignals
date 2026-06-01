@@ -22,8 +22,6 @@ export default function SignalCanvas({
 }: SignalCanvasProps) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   
-  // Custom interactive signal message
-  const [inputText, setInputText] = useState("");
   const [focusedSignal, setFocusedSignal] = useState<FloatingSignal | null>(null);
   const [hoveredSignalId, setHoveredSignalId] = useState<string | null>(null);
 
@@ -603,12 +601,6 @@ export default function SignalCanvas({
     setHoveredSignalId(null);
   };
 
-  const handleSendSignal = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!inputText.trim()) return;
-    addLocalSignal(inputText.trim(), vibe);
-    setInputText("");
-  };
 
   const handleSaveSnapshot = () => {
     const canvas = canvasRef.current;
@@ -714,35 +706,6 @@ export default function SignalCanvas({
         </div>
       )}
 
-      {/* Interactive Input HUD to float signals directly into the visual canvas */}
-      <div className="absolute bottom-4 left-4 right-4 bg-zinc-900/90 hover:bg-zinc-900/98 border border-zinc-800/80 backdrop-blur-md px-4 py-3 rounded-2xl shadow-xl flex flex-col md:flex-row items-center justify-between gap-3 text-left transition-all duration-300">
-        <div className="flex-1">
-          <h4 className="text-xs font-semibold text-zinc-200 tracking-wide font-sans mb-0.5">
-            Launch Your Signal Into the Sky
-          </h4>
-          <p className="text-[11px] text-zinc-400">
-            Write an unsent thought, dynamic greeting, or feeling. It will drift as a glowing node.
-          </p>
-        </div>
-        <form onSubmit={handleSendSignal} className="w-full md:w-auto flex items-center gap-2">
-          <input
-            id="signal-ether-input"
-            type="text"
-            placeholder="Type a message..."
-            value={inputText}
-            onChange={(e) => setInputText(e.target.value)}
-            maxLength={64}
-            className="flex-1 min-w-[160px] max-w-[280px] bg-zinc-950/90 text-zinc-200 text-xs px-3.5 py-1.5 rounded-xl border border-zinc-800 placeholder-zinc-500 focus:outline-none focus:border-indigo-500 transition-all font-sans"
-          />
-          <button
-            id="signal-ether-btn"
-            type="submit"
-            className="bg-indigo-600 hover:bg-indigo-500 text-white font-medium text-xs px-4 py-2 rounded-xl active:scale-95 transition-all outline-none flex items-center gap-1.5 cursor-pointer"
-          >
-            Launch
-          </button>
-        </form>
-      </div>
     </div>
   );
 }

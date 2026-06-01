@@ -106,16 +106,16 @@ export default function App() {
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [masterVolume, setMasterVolume] = useState(0.6);
-  const [rainVolume, setRainVolume] = useState(0.3);
+  const [rainVolume, setRainVolume] = useState(0.2);
   const [currentVibe, setCurrentVibe] = useState<VibeType>("dreamy");
 
   // Advanced Lofi Multi-Track Overlay Mixer States
-  const [oceanVolume, setOceanVolume] = useState(0.15);
-  const [vinylVolume, setVinylVolume] = useState(0.2);
+  const [oceanVolume, setOceanVolume] = useState(0.1);
+  const [vinylVolume, setVinylVolume] = useState(0.12);
 
   // Binaural Cognitive Focus Wave Generator States
   const [isBinauralActive, setIsBinauralActive] = useState(false);
-  const [binauralVolume, setBinauralVolume] = useState(0.25);
+  const [binauralVolume, setBinauralVolume] = useState(0.15);
   const [binauralOffset, setBinauralOffset] = useState(6); // 6Hz = Theta Wave (Deep focus/Relax)
 
   // Interactive Synth Pace States (Tempo/BPM & Waveform Shapes)
@@ -208,6 +208,11 @@ export default function App() {
   const [breathingPhase, setBreathingPhase] = useState<"Inhale" | "Hold" | "Exhale" | "Pause">("Inhale");
   const [breathingSecondsLeft, setBreathingSecondsLeft] = useState(4);
   const [breathingScale, setBreathingScale] = useState(1.0);
+
+  // Mobile-friendly Tuner expand/collapse state
+  const [showTuner, setShowTuner] = useState(false);
+  const [showSoundConsole, setShowSoundConsole] = useState(false);
+  const [showEchoTerminal, setShowEchoTerminal] = useState(false);
 
   // Floating user coordinates signals
   const [floatingSignals, setFloatingSignals] = useState<FloatingSignal[]>([
@@ -1267,67 +1272,116 @@ export default function App() {
         </div>
       )}
 
-      <div className="relative z-10 max-w-7xl mx-auto px-4 py-8 md:px-8 md:py-10 flex flex-col min-h-screen justify-between gap-8 pb-[250px] md:pb-[290px]">
+      <div className="relative z-10 max-w-7xl mx-auto px-4 py-8 md:px-8 md:py-10 flex flex-col min-h-screen justify-between gap-8 pb-12">
         
         {/* COMPREHENSIVE FLOATING SCRUBBER FOOTER CONTROLLER + TUNER WRAPPER */}
         <div className="sticky top-4 z-45 w-full flex flex-col gap-3">
           
           <footer 
-            className="bg-zinc-950/95 border border-white/10 backdrop-blur-xl px-6 py-4 rounded-3xl flex flex-col md:flex-row items-center justify-between gap-5 shadow-[0_25px_50px_-12px_rgba(0,0,0,0.8)] relative transition-all duration-500 ease-in-out w-full"
+            className="bg-zinc-950/95 border border-white/10 backdrop-blur-xl p-3 md:px-6 md:py-4 rounded-2xl md:rounded-3xl flex flex-col md:flex-row items-center justify-between gap-3 md:gap-5 shadow-[0_25px_50px_-12px_rgba(0,0,0,0.8)] relative transition-all duration-500 ease-in-out w-full"
             style={{
               borderColor: isPlaying ? `${activeTheme.accent}33` : "rgba(255,255,255,0.1)",
               boxShadow: isPlaying ? `0 20px 40px -15px ${activeTheme.accent}15, inset 0 1px 0 0 rgba(255,255,255,0.1)` : "none"
             }}
           >
           
-          {/* Playback Button with gorgeous round shape styling and dynamic breathing aura */}
-          <div className="flex items-center gap-4 w-full md:w-auto">
-            <div className="relative shrink-0 select-none">
-              {isPlaying && (
-                <span 
-                  className="absolute inset-0 rounded-full animate-ping opacity-25" 
-                  style={{ backgroundColor: activeTheme.accent }}
-                />
-              )}
-              <button
-                id="midnight-playback-main-btn"
-                onClick={handleTogglePlayback}
-                className="w-12 h-12 rounded-full border text-white flex items-center justify-center cursor-pointer transition-all duration-300 shadow-lg relative z-10 hover:scale-105 active:scale-95"
-                style={{
-                  borderColor: isPlaying ? activeTheme.accent : "rgba(255, 255, 255, 0.3)",
-                  backgroundColor: isPlaying ? `${activeTheme.accent}15` : "rgba(255, 255, 255, 0.03)",
-                  boxShadow: isPlaying ? `0 0 12px ${activeTheme.glowColor}40` : "none"
-                }}
-                title={isPlaying ? "Pause track" : "Play track"}
-              >
-                {isPlaying ? (
-                  <Pause className="w-5 h-5 text-white" style={{ fill: activeTheme.accent }} />
-                ) : (
-                  <Play className="w-5 h-5 text-white fill-white translate-x-[1px]" />
+          {/* Row 1: Player buttons, playing info, and radio tuner index trigger for mobile */}
+          <div className="flex items-center justify-between gap-3 w-full md:w-auto">
+            <div className="flex items-center gap-3">
+              <div className="relative shrink-0 select-none">
+                {isPlaying && (
+                  <span 
+                    className="absolute inset-0 rounded-full animate-ping opacity-25" 
+                    style={{ backgroundColor: activeTheme.accent }}
+                  />
                 )}
-              </button>
+                <button
+                  id="midnight-playback-main-btn"
+                  onClick={handleTogglePlayback}
+                  className="w-10 h-10 md:w-12 md:h-12 rounded-full border text-white flex items-center justify-center cursor-pointer transition-all duration-300 shadow-lg relative z-10 hover:scale-105 active:scale-95"
+                  style={{
+                    borderColor: isPlaying ? activeTheme.accent : "rgba(255, 255, 255, 0.3)",
+                    backgroundColor: isPlaying ? `${activeTheme.accent}15` : "rgba(255, 255, 255, 0.03)",
+                    boxShadow: isPlaying ? `0 0 12px ${activeTheme.glowColor}40` : "none"
+                  }}
+                  title={isPlaying ? "Pause track" : "Play track"}
+                >
+                  {isPlaying ? (
+                    <Pause className="w-4 h-4 md:w-5 md:h-5 text-white" style={{ fill: activeTheme.accent }} />
+                  ) : (
+                    <Play className="w-4 h-4 md:w-5 md:h-5 text-white fill-white translate-x-[1px]" />
+                  )}
+                </button>
+              </div>
+              
+              <div className="text-left font-sans max-w-[140px] sm:max-w-[220px]">
+                <span className="text-[7px] md:text-[8px] font-mono uppercase tracking-[0.2em] opacity-50 block">// Station Active</span>
+                <h4 className="text-2xs md:text-xs font-bold text-white tracking-wide truncate" style={{ color: isPlaying ? activeTheme.accent : "#ffffff" }}>{activeSongTitle}</h4>
+                <p className="text-[8px] md:text-[9px] text-zinc-500 font-mono mt-0.5 flex items-center gap-1.5">
+                  <span className={`inline-block w-1 h-1 rounded-full ${isPlaying ? "bg-emerald-400 animate-pulse" : "bg-amber-400"}`} />
+                  {isPlaying ? "RECEIVING" : "STANDBY"}
+                </p>
+              </div>
             </div>
-            
-            <div className="text-left font-sans">
-              <span className="text-[8px] font-mono uppercase tracking-[0.2em] opacity-50 block">// Station Active</span>
-              <h4 className="text-xs font-bold text-white tracking-wide truncate max-w-[200px]" style={{ color: isPlaying ? activeTheme.accent : "#ffffff" }}>{activeSongTitle}</h4>
-              <p className="text-[9px] text-zinc-500 font-mono mt-0.5 flex items-center gap-1.5">
-                <span className={`inline-block w-1.5 h-1.5 rounded-full ${isPlaying ? "bg-emerald-400 animate-pulse" : "bg-amber-400"}`} />
-                {isPlaying ? "[STATE: RECEIVING BROADCAST]" : "[STATE: FREQUENCY STANDBY]"}
-              </p>
+
+            {/* Quick interactive tuner triggers & vibe indicator specific to mobile layout */}
+            <div className="flex items-center gap-1 sm:gap-1.5 md:hidden">
+              <button
+                type="button"
+                onClick={() => setShowTuner(!showTuner)}
+                className={`py-1.5 px-2 rounded-lg border uppercase text-[7px] font-bold select-none cursor-pointer duration-300 transition-all ${
+                  showTuner 
+                    ? "border-sky-500 bg-sky-500/10 text-sky-400" 
+                    : "border-white/10 bg-white/5 text-zinc-400 hover:text-white"
+                }`}
+              >
+                📡 {showTuner ? "Tuner" : "Tune"}
+              </button>
+              <button
+                type="button"
+                onClick={() => setShowSoundConsole(!showSoundConsole)}
+                className={`py-1.5 px-2 rounded-lg border uppercase text-[7px] font-bold select-none cursor-pointer duration-300 transition-all ${
+                  showSoundConsole
+                    ? "border-purple-500 bg-purple-500/10 text-purple-450"
+                    : "border-white/10 bg-white/5 text-zinc-400 hover:text-white"
+                }`}
+              >
+                🎛️ Console
+              </button>
+              <button
+                type="button"
+                onClick={() => setShowEchoTerminal(!showEchoTerminal)}
+                className={`py-1.5 px-2 rounded-lg border uppercase text-[7px] font-bold select-none cursor-pointer duration-300 transition-all ${
+                  showEchoTerminal
+                    ? "border-emerald-500 bg-emerald-500/10 text-emerald-400"
+                    : "border-white/10 bg-white/5 text-zinc-400 hover:text-white"
+                }`}
+              >
+                📟 Signal
+              </button>
+              <div 
+                className="hidden sm:block px-2 py-1.5 rounded-lg border uppercase tracking-wider text-[7px] font-bold select-none"
+                style={{
+                  borderColor: `${activeTheme.accent}33`,
+                  backgroundColor: `${activeTheme.accent}0a`,
+                  color: activeTheme.accent
+                }}
+              >
+                <span>{currentVibe}</span>
+              </div>
             </div>
           </div>
 
-          {/* Core interactive seeker progress bar scrubber */}
-          <div className="flex-1 w-full flex items-center gap-4">
-            <span className="font-mono text-[10px] text-zinc-400 select-none">
+          {/* Row 2: Seeker progress slider */}
+          <div className="flex-grow w-full md:flex-1 flex items-center gap-3">
+            <span className="font-mono text-[9px] md:text-[10px] text-zinc-400 select-none">
               {formatTime(currentTime)}
             </span>
 
             <div
               id="lyrics-play-bar-scrubber"
               onClick={handleSeek}
-              className="progress-track flex-grow h-2 rounded-full bg-zinc-900/80 border border-white/5 relative cursor-pointer group transition-all"
+              className="progress-track flex-grow h-1.5 md:h-2 rounded-full bg-zinc-900/80 border border-white/5 relative cursor-pointer group transition-all"
             >
               {/* Audio visual progress fill node */}
               <div
@@ -1340,19 +1394,19 @@ export default function App() {
               >
                 {/* Micro pointer handler on timeline drag */}
                 <div 
-                  className="absolute right-0 top-1/2 -translate-y-1/2 w-3 h-3 rounded-full opacity-0 group-hover:opacity-100 transition-opacity border border-zinc-950 shadow-md transform translate-x-1.5"
+                  className="absolute right-0 top-1/2 -translate-y-1/2 w-2.5 h-2.5 rounded-full opacity-0 group-hover:opacity-100 transition-opacity border border-zinc-950 shadow-md transform translate-x-1.5"
                   style={{ backgroundColor: activeTheme.accent }}
                 />
               </div>
             </div>
 
-            <span className="font-mono text-[10px] text-zinc-500 select-none">
+            <span className="font-mono text-[9px] md:text-[10px] text-zinc-500 select-none">
               -{formatTime(Math.max(0, totalDuration - currentTime))}
             </span>
           </div>
 
-          {/* Quick instructions indicator details */}
-          <div className="flex items-center gap-3 text-xs font-mono text-zinc-400 w-full md:w-auto justify-end">
+          {/* Row 3: Expanded metadata and instructions shown strictly on wider screens */}
+          <div className="hidden md:flex items-center gap-3 text-xs font-mono text-zinc-400 w-full md:w-auto justify-end">
             <div className="flex items-center gap-1.5 bg-zinc-900/60 border border-white/5 py-1.5 px-3 rounded-xl select-none">
               <Clock className="w-3.5 h-3.5 text-zinc-500" />
               <span className="text-[10px]">TOTAL LNT: {formatTime(totalDuration)}</span>
@@ -1360,7 +1414,7 @@ export default function App() {
             
             {/* Vibe badge helper */}
             <div 
-              className="hidden sm:flex items-center gap-1 px-2.5 py-1.5 rounded-xl border uppercase tracking-wider text-[8.5px] font-bold select-none"
+              className="flex items-center gap-1 px-2.5 py-1.5 rounded-xl border uppercase tracking-wider text-[8.5px] font-bold select-none"
               style={{
                 borderColor: `${activeTheme.accent}33`,
                 backgroundColor: `${activeTheme.accent}0a`,
@@ -1374,8 +1428,8 @@ export default function App() {
         </footer>
 
         {/* DYNAMIC STATION FREQUENCY TUNER NAVIGATION (MOVED TO TOP OF HEADER) */}
-        <div className="w-full max-w-7xl mx-auto z-20 relative text-left bg-zinc-950/25 p-3.5 rounded-2xl border border-white/5 backdrop-blur-md">
-          <div className="flex items-center justify-between gap-4 mb-2.5">
+        <div className={`w-full max-w-7xl mx-auto z-20 relative text-left bg-zinc-950/25 p-3 rounded-2xl border border-white/5 backdrop-blur-md transition-all duration-300 ${showTuner ? "block animate-fadeIn" : "hidden md:block"}`}>
+          <div className="flex items-center justify-between gap-4 mb-2">
             <div className="flex items-center gap-2 font-mono text-[9px] text-[#00D1FF] uppercase tracking-widest font-extrabold select-none">
               <span className="relative flex h-1.5 w-1.5">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#00D1FF] opacity-75"></span>
@@ -1687,7 +1741,23 @@ export default function App() {
           <main className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start flex-1 w-full">
           
           {/* LEFT SIDEBAR: Sound Console & Signal Gauges */}
-          <section className="lg:col-span-3 flex flex-col gap-6 w-full h-full lg:sticky lg:top-8">
+          <section className={`
+            lg:col-span-3 flex-col gap-6 w-full h-full lg:sticky lg:top-8 lg:order-none lg:flex
+            ${showSoundConsole 
+              ? "fixed inset-y-0 left-0 z-50 w-[85%] sm:w-full sm:max-w-xs bg-[#09090e]/98 border-r border-white/10 p-5 md:p-6 overflow-y-auto shadow-2xl flex" 
+              : "hidden"
+            }
+          `}>
+            {/* Draw Mobile Header / Close Button */}
+            <div className="flex items-center justify-between lg:hidden mb-2">
+              <span className="text-[10px] uppercase font-mono text-zinc-550 font-bold tracking-widest">// Signal Console</span>
+              <button 
+                onClick={() => setShowSoundConsole(false)}
+                className="py-1 px-2.5 rounded-lg border border-white/10 hover:bg-white/5 text-[9px] font-mono text-zinc-450 hover:text-white uppercase tracking-wider cursor-pointer"
+              >
+                Close ×
+              </button>
+            </div>
             
             {/* DIAGNOSTIC METRIC BOXES - MULTIPLEX TRANSMISSION PANEL */}
             <div className="bg-zinc-950/60 p-5 rounded-3xl border border-white/5 backdrop-blur-lg">
@@ -2257,60 +2327,85 @@ export default function App() {
           </section>
 
           {/* CENTER PANEL: Sky Canvas, Karaoke Lyric Display & Quick Seek Scrubber */}
-          <section className="lg:col-span-6 flex flex-col gap-6 w-full">
+          <section className="lg:col-span-6 flex flex-col gap-6 w-full order-1 lg:order-none">
             
+            {/* STARRY COORDINATE CANVAS VISUALIZER */}
+            <div className="bg-zinc-950/80 rounded-3xl border border-white/5 p-4 md:p-6 relative shadow-2xl overflow-hidden flex flex-col">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1.5 mb-4">
+                <div>
+                  <h3 className="text-xs uppercase tracking-widest text-[#00D1FF] font-semibold font-mono flex items-center gap-1.5">
+                    🛰️ Space Multiplex Visualizer
+                  </h3>
+                  <p className="text-[10px] text-zinc-500 font-mono mt-0.5">
+                    Real-time orbit projection of signal coordinates & atmospheric frequency.
+                  </p>
+                </div>
+              </div>
+              <div className="w-full relative h-[140px] sm:h-[180px] md:h-[220px] rounded-2xl overflow-hidden bg-zinc-950 border border-white/5">
+                <SignalCanvas
+                  vibe={currentVibe}
+                  currentTime={currentTime}
+                  pulseTrigger={pulseEvent}
+                  floatingSignals={floatingSignals}
+                  addLocalSignal={addLocalSignal}
+                  activeBpm={activeBpm}
+                  isPlaying={isPlaying}
+                />
+              </div>
+            </div>
+
             {/* DYNAMIC SCROLLING LYRICS VIEWPORT OR CREATIVE LAB DASHBOARD */}
             <div className="bg-zinc-950/80 rounded-3xl border border-white/5 p-6 md:p-8 relative shadow-2xl flex flex-col gap-6">
               
               {/* Central control navigation tab layout */}
-              <div className="flex border-b border-white/5 bg-zinc-950/30 p-1.5 rounded-2xl gap-1">
+              <div className="flex border-b border-white/5 bg-zinc-950/30 p-1 rounded-2xl gap-0.5 sm:gap-1">
                 <button
                   type="button"
                   onClick={() => setActiveCenterTab("karaoke")}
-                  className={`flex-1 py-2 text-2xs font-mono tracking-widest uppercase text-center rounded-xl transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
+                  className={`flex-1 py-2 text-2xs font-mono tracking-wider sm:tracking-widest uppercase text-center rounded-xl transition-all flex items-center justify-center gap-1 cursor-pointer ${
                     activeCenterTab === "karaoke"
                       ? "text-white bg-zinc-900 border border-white/10 shadow-sm"
                       : "text-zinc-500 hover:text-zinc-300"
                   }`}
                 >
-                  <Music className="w-3.5 h-3.5 text-[#00D1FF]" />
-                  Karaoke Scroller
+                  <Music className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-[#00D1FF]" />
+                  <span>Karaoke<span className="hidden sm:inline"> Scroller</span></span>
                 </button>
                 <button
                   type="button"
                   onClick={() => setActiveCenterTab("presets")}
-                  className={`flex-1 py-2 text-2xs font-mono tracking-widest uppercase text-center rounded-xl transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
+                  className={`flex-1 py-2 text-2xs font-mono tracking-wider sm:tracking-widest uppercase text-center rounded-xl transition-all flex items-center justify-center gap-1 cursor-pointer ${
                     activeCenterTab === "presets"
                       ? "text-white bg-zinc-900 border border-white/10 shadow-sm"
                       : "text-zinc-500 hover:text-zinc-300"
                   }`}
                 >
-                  <Layers className="w-3.5 h-3.5 text-[#00D1FF]" />
-                  100 Calm Presets
+                  <Layers className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-[#00D1FF]" />
+                  <span><span className="hidden sm:inline">Calm </span>Presets</span>
                 </button>
                 <button
                   type="button"
                   onClick={() => setActiveCenterTab("submit")}
-                  className={`flex-1 py-1 px-1 text-2xs font-mono tracking-widest uppercase text-center rounded-xl transition-all flex items-center justify-center gap-1 cursor-pointer ${
+                  className={`flex-1 py-1 px-1 text-2xs font-mono tracking-wider sm:tracking-widest uppercase text-center rounded-xl transition-all flex items-center justify-center gap-1 cursor-pointer ${
                     activeCenterTab === "submit"
                       ? "text-white bg-zinc-900 border border-white/10 shadow-sm"
                       : "text-zinc-500 hover:text-zinc-300"
                   }`}
                 >
                   <RefreshCw className="w-3 h-3 text-[#00D1FF]" />
-                  Submit Song
+                  <span>Submit<span className="hidden sm:inline"> Song</span></span>
                 </button>
                 <button
                   type="button"
                   onClick={() => setActiveCenterTab("nature")}
-                  className={`flex-1 py-1 px-1 text-2xs font-mono tracking-widest uppercase text-center rounded-xl transition-all flex items-center justify-center gap-1 cursor-pointer ${
+                  className={`flex-1 py-1 px-1 text-2xs font-mono tracking-wider sm:tracking-widest uppercase text-center rounded-xl transition-all flex items-center justify-center gap-1 cursor-pointer ${
                     activeCenterTab === "nature"
                       ? "text-white bg-zinc-900 border border-white/10 shadow-sm"
                       : "text-zinc-500 hover:text-zinc-300"
                   }`}
                 >
-                  <Bird className="w-3.5 h-3.5 text-[#00D1FF]" />
-                  Nature Soundboard
+                  <Bird className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-[#00D1FF]" />
+                  <span>Nature<span className="hidden sm:inline"> Deck</span></span>
                 </button>
               </div>
 
@@ -2775,7 +2870,23 @@ export default function App() {
           </section>
 
           {/* RIGHT SIDEBAR: Spectrum indicator and AI Echo terminal logs */}
-          <section className="lg:col-span-3 flex flex-col gap-6 w-full">
+          <section className={`
+            lg:col-span-3 flex-col gap-6 w-full lg:order-none lg:flex
+            ${showEchoTerminal 
+              ? "fixed inset-y-0 right-0 z-50 w-[85%] sm:w-full sm:max-w-xs bg-[#09090e]/98 border-l border-white/10 p-5 md:p-6 overflow-y-auto shadow-2xl flex" 
+              : "hidden"
+            }
+          `}>
+            {/* Draw Mobile Header / Close Button */}
+            <div className="flex items-center justify-between lg:hidden mb-2">
+              <span className="text-[10px] uppercase font-mono text-zinc-550 font-bold tracking-widest">// Signal Echo Terminal</span>
+              <button 
+                onClick={() => setShowEchoTerminal(false)}
+                className="py-1 px-2.5 rounded-lg border border-white/10 hover:bg-white/5 text-[9px] font-mono text-zinc-450 hover:text-white uppercase tracking-wider cursor-pointer"
+              >
+                Close ×
+              </button>
+            </div>
             
             {/* SPECTRAL WAVEFORM METERS */}
             <div className="bg-zinc-950/60 p-5 rounded-3xl border border-white/5 backdrop-blur-lg flex flex-col justify-between">
@@ -3015,20 +3126,7 @@ export default function App() {
 
 
 
-        {/* STARRY COORDINATE CANVAS VISUALIZER SET AS A PERSISTENT FIXED FOOTER */}
-        <footer id="midnight-canvas-footer" className="fixed bottom-0 left-0 right-0 z-40 bg-zinc-950/90 border-t border-white/5 py-3 px-4 md:px-8 shadow-[0_-15px_30px_rgba(0,0,0,0.85)] backdrop-blur-xl">
-          <div className="max-w-7xl mx-auto w-full relative h-[180px] md:h-[225px]">
-            <SignalCanvas
-              vibe={currentVibe}
-              currentTime={currentTime}
-              pulseTrigger={pulseEvent}
-              floatingSignals={floatingSignals}
-              addLocalSignal={addLocalSignal}
-              activeBpm={activeBpm}
-              isPlaying={isPlaying}
-            />
-          </div>
-        </footer>
+        {/* Visualizer moved to center body per user request */}
 
         {/* REGULATORY ADMINISTRATIVE & HIGH-IMPACT SEO LINKS BAR */}
         <div className="flex flex-wrap justify-center items-center gap-x-4 gap-y-2 mt-4 pb-12 text-3xs font-mono uppercase tracking-widest text-zinc-500 z-25 relative border-t border-white/5 pt-5 max-w-4xl mx-auto">
@@ -3287,6 +3385,17 @@ export default function App() {
 
         {/* COOKIE PRIVACY CONSENT BANNER */}
         <CookieConsent onSave={(prefs) => console.log("Cookies preferences loaded:", prefs)} />
+
+        {/* Mobile Sidebar backdrop */}
+        {(showSoundConsole || showEchoTerminal) && (
+          <div 
+            className="fixed inset-0 z-45 bg-black/60 backdrop-blur-[2px] lg:hidden"
+            onClick={() => {
+              setShowSoundConsole(false);
+              setShowEchoTerminal(false);
+            }}
+          />
+        )}
 
       </div>
     </div>

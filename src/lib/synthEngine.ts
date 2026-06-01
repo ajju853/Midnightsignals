@@ -120,7 +120,7 @@ export class MidnightSynth {
     this.rainFilter.Q.setValueAtTime(1.0, this.ctx.currentTime);
 
     this.rainGain = this.ctx.createGain();
-    this.rainGain.gain.setValueAtTime(0.04, this.ctx.currentTime); // Quiet crackling/rain background
+    this.rainGain.gain.setValueAtTime(0.012, this.ctx.currentTime); // Quiet crackling/rain background
 
     whiteNoise.connect(this.rainFilter);
     this.rainFilter.connect(this.rainGain);
@@ -287,26 +287,26 @@ export class MidnightSynth {
 
   public setRainVolume(vol: number) {
     if (this.rainGain && this.ctx) {
-      this.rainGain.gain.linearRampToValueAtTime(vol * 0.12, this.ctx.currentTime + 0.15);
+      this.rainGain.gain.linearRampToValueAtTime(vol * 0.04, this.ctx.currentTime + 0.15);
     }
   }
 
   public setOceanVolume(vol: number) {
     if (this.oceanGain && this.ctx) {
-      this.oceanGain.gain.linearRampToValueAtTime(vol * 0.11, this.ctx.currentTime + 0.2);
+      this.oceanGain.gain.linearRampToValueAtTime(vol * 0.03, this.ctx.currentTime + 0.2);
     }
   }
 
   public setVinylVolume(vol: number) {
     if (this.vinylGain && this.ctx) {
-      this.vinylGain.gain.linearRampToValueAtTime(vol * 0.08, this.ctx.currentTime + 0.1);
+      this.vinylGain.gain.linearRampToValueAtTime(vol * 0.022, this.ctx.currentTime + 0.1);
     }
   }
 
   public setBinauralVolume(vol: number) {
     this.binauralVolume = vol;
     if (this.binauralGain && this.ctx) {
-      this.binauralGain.gain.linearRampToValueAtTime(vol * 0.24, this.ctx.currentTime + 0.15);
+      this.binauralGain.gain.linearRampToValueAtTime(vol * 0.08, this.ctx.currentTime + 0.15);
     }
   }
 

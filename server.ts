@@ -10,6 +10,14 @@ const PORT = 3000;
 
 app.use(express.json());
 
+// Redirect HTTP to HTTPS in production behind reverse proxies like Cloudflare/Google Cloud Run
+app.use((req, res, next) => {
+  if (process.env.NODE_ENV === "production" && req.headers["x-forwarded-proto"] === "http") {
+    return res.redirect(301, `https://${req.headers.host || "midnight-signals.cloud"}${req.url}`);
+  }
+  next();
+});
+
 // Lazy register GoogleGenAI
 let ai: GoogleGenAI | null = null;
 const getAIClient = (): GoogleGenAI => {
@@ -38,11 +46,11 @@ app.get("/api/health", (req, res) => {
 // Serve ads.txt for AdSense crawler verification
 app.get("/ads.txt", (req, res) => {
   res.setHeader("Content-Type", "text/plain");
-  res.sendFile(path.join(process.cwd(), "ads.txt"));
+  res.sendFile(path.join(process.cwd(), "public", "ads.txt"));
 });
 
 // Serve sitemap.xml for Google/Bing crawler bot indexing
-app.get("/sitemap.xml", (req, res) => {
+app.get(["/sitemap.xml", "/api/sitemap.xml"], (req, res) => {
   res.setHeader("Content-Type", "application/xml");
   
   const combos = [
@@ -95,43 +103,43 @@ app.get("/sitemap.xml", (req, res) => {
 // Serve robots.txt for search indexing configurations
 app.get("/robots.txt", (req, res) => {
   res.setHeader("Content-Type", "text/plain");
-  res.sendFile(path.join(process.cwd(), "robots.txt"));
+  res.sendFile(path.join(process.cwd(), "public", "robots.txt"));
 });
 
 // Serve site.webmanifest
 app.get("/site.webmanifest", (req, res) => {
   res.setHeader("Content-Type", "application/manifest+json");
-  res.sendFile(path.join(process.cwd(), "site.webmanifest"));
+  res.sendFile(path.join(process.cwd(), "public", "site.webmanifest"));
 });
 
 // Serve favicon.svg
 app.get("/favicon.svg", (req, res) => {
   res.setHeader("Content-Type", "image/svg+xml");
-  res.sendFile(path.join(process.cwd(), "favicon.svg"));
+  res.sendFile(path.join(process.cwd(), "public", "favicon.svg"));
 });
 
 // Serve favicon.ico
 app.get("/favicon.ico", (req, res) => {
   res.setHeader("Content-Type", "image/x-icon");
-  res.sendFile(path.join(process.cwd(), "favicon.ico"));
+  res.sendFile(path.join(process.cwd(), "public", "favicon.ico"));
 });
 
 // Serve apple-touch-icon.png
 app.get("/apple-touch-icon.png", (req, res) => {
   res.setHeader("Content-Type", "image/png");
-  res.sendFile(path.join(process.cwd(), "apple-touch-icon.png"));
+  res.sendFile(path.join(process.cwd(), "public", "apple-touch-icon.png"));
 });
 
 // Serve icon-192.png
 app.get("/icon-192.png", (req, res) => {
   res.setHeader("Content-Type", "image/png");
-  res.sendFile(path.join(process.cwd(), "icon-192.png"));
+  res.sendFile(path.join(process.cwd(), "public", "icon-192.png"));
 });
 
 // Serve icon-512.png
 app.get("/icon-512.png", (req, res) => {
   res.setHeader("Content-Type", "image/png");
-  res.sendFile(path.join(process.cwd(), "icon-512.png"));
+  res.sendFile(path.join(process.cwd(), "public", "icon-512.png"));
 });
 
 // Post an unsent late-night message to get an AI "Echo from the other star"
@@ -238,8 +246,28 @@ async function startServer() {
     app.use(vite.middlewares);
   } else {
     const distPath = path.join(process.cwd(), "dist");
-    app.use(express.static(distPath));
+    
+    // Serve static files with custom headers for CDN caching optimization
+    app.use(express.static(distPath, {
+      maxAge: "30d", // Base browser caching max age
+      setHeaders: (res, filePath) => {
+        // Apply immutable, long-lived headers for static assets containing Vite hashes
+        if (filePath.match(/\.(js|css|png|jpg|jpeg|gif|ico|svg|woff2?|webp)$/)) {
+          res.setHeader("Cache-Control", "public, max-age=31536000, immutable");
+        } else if (filePath.endsWith(".html")) {
+          // Keep index.html fresh at all times
+          res.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+        }
+      }
+    }));
+
     app.get("*", (req, res) => {
+      // If a dynamic asset/file with an extension is requested but wasn't served by express.static,
+      // return a true 404 rather than fall back to index.html (which causes Console Parsing Errors)
+      const ext = path.extname(req.path);
+      if (ext && ext !== ".html") {
+        return res.status(404).send("Not Found");
+      }
       res.sendFile(path.join(distPath, "index.html"));
     });
   }
