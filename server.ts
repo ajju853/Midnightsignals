@@ -50,6 +50,12 @@ app.get("/ads.txt", (req, res) => {
   res.sendFile(path.join(process.cwd(), "public", "ads.txt"));
 });
 
+// Serve Google Site Verification file explicitly
+app.get("/google14833afe332cbfc4.html", (req, res) => {
+  res.setHeader("Content-Type", "text/html");
+  res.sendFile(path.join(process.cwd(), "public", "google14833afe332cbfc4.html"));
+});
+
 // Helper to generate and automatically update sitemap.xml on disk
 export function generateAndSaveSitemap() {
   const combos = [
