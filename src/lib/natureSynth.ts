@@ -27,6 +27,8 @@ export class NatureSynth {
   private tropicalRainforestGain: GainNode | null = null;
   private cicadaChorusGain: GainNode | null = null;
   private mangroveWavesGain: GainNode | null = null;
+  private hongKongKitesGain: GainNode | null = null;
+  private victoriaHarbourGain: GainNode | null = null;
 
   // LFO & Constant source nodes for sweeps
   private treesNoiseSource: AudioBufferSourceNode | null = null;
@@ -66,6 +68,9 @@ export class NatureSynth {
   private mangroveWavesNoiseSource: AudioBufferSourceNode | null = null;
   private mangroveWavesFilter: BiquadFilterNode | null = null;
 
+  private victoriaHarbourNoiseSource: AudioBufferSourceNode | null = null;
+  private victoriaHarbourFilter: BiquadFilterNode | null = null;
+
   // Active volume levels
   private volumes: { [key: string]: number } = {
     birds: 0.4,
@@ -85,6 +90,8 @@ export class NatureSynth {
     tropicalRainforest: 0.35,
     cicadaChorus: 0.2,
     mangroveWaves: 0.3,
+    hongKongKites: 0.45,
+    victoriaHarbour: 0.4,
   };
 
   // Active status toggles
@@ -106,6 +113,8 @@ export class NatureSynth {
     tropicalRainforest: false,
     cicadaChorus: false,
     mangroveWaves: false,
+    hongKongKites: false,
+    victoriaHarbour: false,
   };
 
   // Keep track of periodic interval loops
@@ -117,6 +126,8 @@ export class NatureSynth {
   private templeBellsLoopId: any = null;
   private peacockCallsLoopId: any = null;
   private tropicalRainforestLoopId: any = null;
+  private hongKongKitesLoopId: any = null;
+  private victoriaHarbourLoopId: any = null;
 
   public isPlaying = false;
 
@@ -209,6 +220,14 @@ export class NatureSynth {
       this.mangroveWavesGain.gain.setValueAtTime(this.activeStates.mangroveWaves ? this.volumes.mangroveWaves : 0.0, this.ctx.currentTime);
       this.mangroveWavesGain.connect(this.masterGain);
 
+      this.hongKongKitesGain = this.ctx.createGain();
+      this.hongKongKitesGain.gain.setValueAtTime(this.activeStates.hongKongKites ? this.volumes.hongKongKites : 0.0, this.ctx.currentTime);
+      this.hongKongKitesGain.connect(this.masterGain);
+
+      this.victoriaHarbourGain = this.ctx.createGain();
+      this.victoriaHarbourGain.gain.setValueAtTime(this.activeStates.victoriaHarbour ? this.volumes.victoriaHarbour : 0.0, this.ctx.currentTime);
+      this.victoriaHarbourGain.connect(this.masterGain);
+
       // Start continuous atmospheric noise loops
       this.setupTreesGenerator();
       this.setupOceanGenerator();
@@ -224,6 +243,7 @@ export class NatureSynth {
       this.setupTropicalRainforestGenerator();
       this.setupCicadaChorusGenerator();
       this.setupMangroveWavesGenerator();
+      this.setupVictoriaHarbourGenerator();
 
     } catch (e) {
       console.error("Nature ambient sound AudioContext initialization failed", e);
@@ -658,6 +678,18 @@ export class NatureSynth {
       if (!this.activeStates.tropicalRainforest || !this.isPlaying) return;
       this.triggerTropicalRainforestEvent();
     }, 7500);
+
+    // Hong Kong Black Kites random scheduler
+    this.hongKongKitesLoopId = setInterval(() => {
+      if (!this.activeStates.hongKongKites || !this.isPlaying) return;
+      this.triggerHongKongKiteCall();
+    }, 11000);
+
+    // Victoria Harbour Ferry horns random scheduler
+    this.victoriaHarbourLoopId = setInterval(() => {
+      if (!this.activeStates.victoriaHarbour || !this.isPlaying) return;
+      this.triggerStarFerryHorn();
+    }, 15000);
   }
 
   private stopLoopingSchedules() {
@@ -668,6 +700,8 @@ export class NatureSynth {
     if (this.templeBellsLoopId) clearInterval(this.templeBellsLoopId);
     if (this.peacockCallsLoopId) clearInterval(this.peacockCallsLoopId);
     if (this.tropicalRainforestLoopId) clearInterval(this.tropicalRainforestLoopId);
+    if (this.hongKongKitesLoopId) clearInterval(this.hongKongKitesLoopId);
+    if (this.victoriaHarbourLoopId) clearInterval(this.victoriaHarbourLoopId);
     this.birdLoopId = null;
     this.owlLoopId = null;
     this.caveEchoesLoopId = null;
@@ -675,6 +709,8 @@ export class NatureSynth {
     this.templeBellsLoopId = null;
     this.peacockCallsLoopId = null;
     this.tropicalRainforestLoopId = null;
+    this.hongKongKitesLoopId = null;
+    this.victoriaHarbourLoopId = null;
   }
 
   public triggerTempleBells() {
@@ -1065,6 +1101,8 @@ export class NatureSynth {
       this.tropicalRainforestGain?.gain.setValueAtTime(0, now);
       this.cicadaChorusGain?.gain.setValueAtTime(0, now);
       this.mangroveWavesGain?.gain.setValueAtTime(0, now);
+      this.hongKongKitesGain?.gain.setValueAtTime(0, now);
+      this.victoriaHarbourGain?.gain.setValueAtTime(0, now);
     }
   }
 
@@ -1107,6 +1145,8 @@ export class NatureSynth {
     if (channel === "tropicalRainforest") return this.tropicalRainforestGain;
     if (channel === "cicadaChorus") return this.cicadaChorusGain;
     if (channel === "mangroveWaves") return this.mangroveWavesGain;
+    if (channel === "hongKongKites") return this.hongKongKitesGain;
+    if (channel === "victoriaHarbour") return this.victoriaHarbourGain;
     return null;
   }
 
@@ -1131,6 +1171,8 @@ export class NatureSynth {
     this.tropicalRainforestGain?.gain.setValueAtTime(this.activeStates.tropicalRainforest ? this.volumes.tropicalRainforest : 0.0, now);
     this.cicadaChorusGain?.gain.setValueAtTime(this.activeStates.cicadaChorus ? this.volumes.cicadaChorus : 0.0, now);
     this.mangroveWavesGain?.gain.setValueAtTime(this.activeStates.mangroveWaves ? this.volumes.mangroveWaves : 0.0, now);
+    this.hongKongKitesGain?.gain.setValueAtTime(this.activeStates.hongKongKites ? this.volumes.hongKongKites : 0.0, now);
+    this.victoriaHarbourGain?.gain.setValueAtTime(this.activeStates.victoriaHarbour ? this.volumes.victoriaHarbour : 0.0, now);
   }
 
   public getChannelVolume(channel: string): number {
@@ -1139,6 +1181,128 @@ export class NatureSynth {
 
   public getChannelActive(channel: string): boolean {
     return this.activeStates[channel] || false;
+  }
+
+  private setupVictoriaHarbourGenerator() {
+    if (!this.ctx || !this.victoriaHarbourGain) return;
+
+    const buffer = this.createNoiseBuffer("brown");
+    this.victoriaHarbourNoiseSource = this.ctx.createBufferSource();
+    this.victoriaHarbourNoiseSource.buffer = buffer;
+    this.victoriaHarbourNoiseSource.loop = true;
+
+    this.victoriaHarbourFilter = this.ctx.createBiquadFilter();
+    this.victoriaHarbourFilter.type = "lowpass";
+    this.victoriaHarbourFilter.frequency.setValueAtTime(100, this.ctx.currentTime);
+
+    const gate = this.ctx.createGain();
+    gate.gain.setValueAtTime(0.06, this.ctx.currentTime);
+
+    this.victoriaHarbourNoiseSource.connect(this.victoriaHarbourFilter);
+    this.victoriaHarbourFilter.connect(gate);
+    gate.connect(this.victoriaHarbourGain);
+    this.victoriaHarbourNoiseSource.start();
+
+    // Rhythmic swaying harbour ship wakes and waves (5.2s cycle)
+    const modulateHarbourWaves = () => {
+      if (!this.ctx || !this.isPlaying || !this.activeStates.victoriaHarbour || !gate || !this.victoriaHarbourFilter) return;
+      const now = this.ctx.currentTime;
+      const activeSwell = 0.015 + Math.max(0, Math.sin(now * 1.2)) * 0.18;
+      gate.gain.linearRampToValueAtTime(activeSwell, now + 1.5);
+      this.victoriaHarbourFilter.frequency.setValueAtTime(80 + Math.sin(now * 1.2) * 40, now);
+    };
+    setInterval(modulateHarbourWaves, 1000);
+  }
+
+  public triggerHongKongKiteCall() {
+    if (!this.ctx || !this.hongKongKitesGain || !this.isPlaying || !this.activeStates.hongKongKites) return;
+    const now = this.ctx.currentTime;
+    
+    // Black Kite call is a series of rapid high-pitch trilling whistles then a long descending sweep
+    const osc = this.ctx.createOscillator();
+    const amp = this.ctx.createGain();
+    osc.connect(amp);
+    amp.connect(this.hongKongKitesGain);
+    osc.type = "sine";
+    
+    osc.frequency.setValueAtTime(2700, now);
+    // Rapid pitch vibrato
+    const lfo = this.ctx.createOscillator();
+    const lfoGain = this.ctx.createGain();
+    lfo.type = "sine";
+    lfo.frequency.setValueAtTime(15, now);
+    lfoGain.gain.setValueAtTime(220, now);
+    lfo.connect(lfoGain);
+    lfoGain.connect(osc.frequency);
+    
+    amp.gain.setValueAtTime(0.001, now);
+    amp.gain.linearRampToValueAtTime(0.06, now + 0.1);
+    amp.gain.exponentialRampToValueAtTime(0.001, now + 0.55);
+    
+    lfo.start(now);
+    osc.start(now);
+    
+    lfo.stop(now + 0.55);
+    osc.stop(now + 0.6);
+    
+    // Long descending sweep
+    setTimeout(() => {
+      if (!this.ctx || !this.hongKongKitesGain || !this.isPlaying || !this.activeStates.hongKongKites) return;
+      const now2 = this.ctx.currentTime;
+      const osc2 = this.ctx.createOscillator();
+      const amp2 = this.ctx.createGain();
+      osc2.connect(amp2);
+      amp2.connect(this.hongKongKitesGain);
+      osc2.type = "sine";
+      
+      osc2.frequency.setValueAtTime(3100, now2);
+      osc2.frequency.exponentialRampToValueAtTime(1400, now2 + 0.85);
+      
+      amp2.gain.setValueAtTime(0.001, now2);
+      amp2.gain.linearRampToValueAtTime(0.05, now2 + 0.15);
+      amp2.gain.exponentialRampToValueAtTime(0.001, now2 + 0.85);
+      
+      osc2.start(now2);
+      osc2.stop(now2 + 0.9);
+    }, 600);
+    
+    this.onVoiceTriggerCallback("Hong Kong Black Kite", "🦅", "Screaming whistling call of a Black Kite soaring over Victoria Peak");
+  }
+
+  public triggerStarFerryHorn() {
+    if (!this.ctx || !this.victoriaHarbourGain || !this.isPlaying || !this.activeStates.victoriaHarbour) return;
+    const now = this.ctx.currentTime;
+    
+    // Iconic double-tone deep Star Ferry brass fog horn
+    const osc1 = this.ctx.createOscillator();
+    const osc2 = this.ctx.createOscillator();
+    const amp = this.ctx.createGain();
+    const lowpass = this.ctx.createBiquadFilter();
+    
+    osc1.type = "sawtooth";
+    osc2.type = "sawtooth";
+    lowpass.type = "lowpass";
+    lowpass.frequency.setValueAtTime(260, now);
+    
+    osc1.frequency.setValueAtTime(135, now);
+    osc2.frequency.setValueAtTime(175, now);
+    
+    osc1.connect(lowpass);
+    osc2.connect(lowpass);
+    lowpass.connect(amp);
+    amp.connect(this.victoriaHarbourGain);
+    
+    amp.gain.setValueAtTime(0.001, now);
+    amp.gain.linearRampToValueAtTime(0.12, now + 0.15);
+    amp.gain.linearRampToValueAtTime(0.12, now + 1.1);
+    amp.gain.exponentialRampToValueAtTime(0.001, now + 1.4);
+    
+    osc1.start(now);
+    osc2.start(now);
+    osc1.stop(now + 1.45);
+    osc2.stop(now + 1.45);
+    
+    this.onVoiceTriggerCallback("Star Ferry Horn", "🚢", "Resonant double-tone brass Star Ferry foghorn echoing from Kowloon");
   }
 
   public shutdown() {

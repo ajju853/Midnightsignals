@@ -900,5 +900,27 @@ export const calmLofiPresets: LofiPreset[] = [
       "Breathe in deep and let the stellar code",
       "Lead you down your designated road"
     ]
+  },
+  {
+    name: "Tamil Sangam Forest Harmony",
+    description: "Quiet woodland sounds with soothing Tamil lyrics from classical poetry celebrating nature and peace.",
+    vibe: "dreamy",
+    lines: [
+      "Kurinji nilatthin amaidhi ingu malarattum",
+      "Kaatrin isayil thuyaram ellam marayattum",
+      "Iravaana vaanathil minmeengal olirgiradhu",
+      "Manadhil thooimaiyum amaidhiyum niraigiradhu"
+    ]
+  },
+  {
+    name: "Telugu Deccan River Flow",
+    description: "Serene stream murmurs from the Deccan plateau with comforting Telugu chants of wellness.",
+    vibe: "dreamy",
+    lines: [
+      "Ee koti chukkala madhya prasanthatha neeku",
+      "Prathisaari neevu thirigi swasa theesuko",
+      "Manasu loni aalochanalanni aagiponi",
+      "Swarala sangeetham aathmani sparsi-sthundi"
+    ]
   }
 ];

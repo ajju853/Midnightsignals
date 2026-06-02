@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
+import { motion, AnimatePresence } from "motion/react";
 import { FloatingSignal, VibeType } from "../types";
 
 interface SignalCanvasProps {
@@ -51,6 +52,67 @@ export default function SignalCanvas({
 
   const isDriftActiveRef = useRef(isDriftActive);
   const isStarShowerActiveRef = useRef(isStarShowerActive);
+
+  // Switching visualization styles: gravity, bars, circle, or particles
+  const [visualStyle, setVisualStyle] = useState<"gravity" | "bars" | "circle" | "particles">("gravity");
+  const visualStyleRef = useRef(visualStyle);
+
+  // Transition weights/opacities for each visualizer style
+  const styleAlphasRef = useRef<{
+    gravity: number;
+    bars: number;
+    circle: number;
+    particles: number;
+  }>({
+    gravity: 1,
+    bars: 0,
+    circle: 0,
+    particles: 0
+  });
+
+  const [lastChangedStyle, setLastChangedStyle] = useState<string | null>(null);
+
+  useEffect(() => {
+    visualStyleRef.current = visualStyle;
+  }, [visualStyle]);
+
+  const changeStyleWithNotice = (newStyle: "gravity" | "bars" | "circle" | "particles") => {
+    setVisualStyle(newStyle);
+    setLastChangedStyle(newStyle);
+  };
+
+  // Auto clean-up notice banner timer
+  useEffect(() => {
+    if (!lastChangedStyle) return;
+    const t = setTimeout(() => setLastChangedStyle(null), 1500);
+    return () => clearTimeout(t);
+  }, [lastChangedStyle]);
+
+  const handleCycleVisualStyle = () => {
+    const order: ("gravity" | "bars" | "circle" | "particles")[] = ["gravity", "bars", "circle", "particles"];
+    const currIdx = order.indexOf(visualStyle);
+    const nextIdx = (currIdx + 1) % order.length;
+    changeStyleWithNotice(order[nextIdx]);
+  };
+
+  // Flow particles for the custom Flow Particles style
+  const flowParticlesRef = useRef<{ x: number; y: number; size: number; speed: number; angle: number; color: string }[]>([]);
+
+  useEffect(() => {
+    const particles = [];
+    const colors = ["#818cf8", "#a78bfa", "#f472b6", "#34d399", "#60a5fa"];
+    for (let i = 0; i < 60; i++) {
+      particles.push({
+        x: Math.random() * 1200,
+        y: Math.random() * 600,
+        size: Math.random() * 2 + 0.8,
+        speed: Math.random() * 0.8 + 0.25,
+        angle: Math.random() * Math.PI * 2,
+        color: colors[Math.floor(Math.random() * colors.length)]
+      });
+    }
+    flowParticlesRef.current = particles;
+  }, []);
 
   // Set up event listeners for NatureSoundboard sync triggers
   useEffect(() => {
@@ -461,6 +523,197 @@ export default function SignalCanvas({
         ctx.stroke();
       }
 
+      // Get the active visualizer style
+      const activeStyle = visualStyleRef.current;
+
+      // Interpolate weights/alphas for each visualizer style towards their target (1 if active, 0 otherwise)
+      const styleKeys: ("gravity" | "bars" | "circle" | "particles")[] = ["gravity", "bars", "circle", "particles"];
+      styleKeys.forEach((key) => {
+        const target = key === activeStyle ? 1 : 0;
+        styleAlphasRef.current[key] += (target - styleAlphasRef.current[key]) * 0.082; // smooth 8.2% frame step
+        if (Math.abs(styleAlphasRef.current[key] - target) < 0.001) {
+          styleAlphasRef.current[key] = target;
+        }
+      });
+
+      // STYLE 1: Constellation Links for Gravity Style
+      const gravityAlpha = styleAlphasRef.current.gravity;
+      if (gravityAlpha > 0.001) {
+        ctx.strokeStyle = vibe === "neon" 
+          ? `rgba(244, 63, 94, ${0.08 * gravityAlpha})` 
+          : `rgba(129, 140, 248, ${0.08 * gravityAlpha})`;
+        ctx.lineWidth = 0.8;
+        for (let i = 0; i < floatingSignals.length; i++) {
+          for (let j = i + 1; j < floatingSignals.length; j++) {
+            const s1 = floatingSignals[i];
+            const s2 = floatingSignals[j];
+            const d = Math.hypot(s1.x - s2.x, s1.y - s2.y);
+            if (d < 150) {
+              ctx.beginPath();
+              ctx.moveTo(s1.x, s1.y);
+              ctx.lineTo(s2.x, s2.y);
+              ctx.stroke();
+            }
+          }
+        }
+      }
+
+      // STYLE 2: Beautiful Frequency equalizer spectrum bars
+      const barsAlpha = styleAlphasRef.current.bars;
+      if (barsAlpha > 0.001) {
+        const barCount = 44;
+        const spacing = 3;
+        const totalGap = (barCount - 1) * spacing;
+        const barWidth = (canvas.width - totalGap) / barCount;
+        
+        ctx.save();
+        for (let i = 0; i < barCount; i++) {
+          const freqOffset = i / barCount;
+          const sineNumerator = (Date.now() * 0.003) + freqOffset * Math.PI * 3.5;
+          const sineVal = Math.sin(sineNumerator);
+          const rawHeight = (sineVal * 0.45 + 0.55) * (canvas.height * 0.45) + (beatAmplitude * 32);
+          const noiseJitter = Math.sin((Date.now() * 0.013) + i) * 5;
+          const barHeight = Math.max(8, rawHeight + noiseJitter);
+
+          const bx = i * (barWidth + spacing);
+          const by = canvas.height - barHeight;
+
+          const barGrad = ctx.createLinearGradient(bx, by, bx, canvas.height);
+          if (vibe === "melancholy") {
+            barGrad.addColorStop(0, `rgba(59, 130, 246, ${0.72 * barsAlpha})`);
+            barGrad.addColorStop(1, `rgba(29, 78, 216, ${0.05 * barsAlpha})`);
+          } else if (vibe === "hopeful") {
+            barGrad.addColorStop(0, `rgba(16, 185, 129, ${0.72 * barsAlpha})`);
+            barGrad.addColorStop(1, `rgba(4, 120, 87, ${0.05 * barsAlpha})`);
+          } else if (vibe === "neon") {
+            barGrad.addColorStop(0, `rgba(244, 63, 94, ${0.72 * barsAlpha})`);
+            barGrad.addColorStop(1, `rgba(190, 24, 74, ${0.05 * barsAlpha})`);
+          } else {
+            barGrad.addColorStop(0, `rgba(168, 85, 247, ${0.72 * barsAlpha})`);
+            barGrad.addColorStop(1, `rgba(109, 40, 217, ${0.05 * barsAlpha})`);
+          }
+
+          ctx.fillStyle = barGrad;
+          ctx.beginPath();
+          if (ctx.roundRect) {
+            ctx.roundRect(bx, by, barWidth, barHeight, [4, 4, 0, 0]);
+          } else {
+            ctx.rect(bx, by, barWidth, barHeight);
+          }
+          ctx.fill();
+
+          // Capsule crown element
+          if (i % 2 === 0 && barHeight > 25) {
+            ctx.fillStyle = `rgba(255, 255, 255, ${0.8 * barsAlpha})`;
+            ctx.beginPath();
+            ctx.arc(bx + barWidth/2, by + 1, Math.min(2.5, barWidth/2), 0, Math.PI * 2);
+            ctx.fill();
+          }
+        }
+        ctx.restore();
+      }
+
+      // STYLE 3: Pulsating circular waves
+      const circleAlpha = styleAlphasRef.current.circle;
+      if (circleAlpha > 0.001) {
+        const cx = canvas.width / 2;
+        const cy = canvas.height / 2;
+        ctx.save();
+        
+        for (let ringIdx = 0; ringIdx < 3; ringIdx++) {
+          const baseRadius = 35 + ringIdx * 48 + (beatAmplitude * 16);
+          const alpha = (0.5 - (ringIdx * 0.12)) * circleAlpha;
+          
+          ctx.beginPath();
+          ctx.lineWidth = 1.6 - (ringIdx * 0.35);
+          
+          if (vibe === "melancholy") {
+            ctx.strokeStyle = `rgba(59, 130, 246, ${alpha})`;
+            ctx.shadowColor = `rgba(59, 130, 246, ${0.4 * circleAlpha})`;
+          } else if (vibe === "hopeful") {
+            ctx.strokeStyle = `rgba(16, 185, 129, ${alpha})`;
+            ctx.shadowColor = `rgba(16, 185, 129, ${0.4 * circleAlpha})`;
+          } else if (vibe === "neon") {
+            ctx.strokeStyle = `rgba(244, 63, 94, ${alpha})`;
+            ctx.shadowColor = `rgba(244, 63, 94, ${0.4 * circleAlpha})`;
+          } else {
+            ctx.strokeStyle = `rgba(168, 85, 247, ${alpha})`;
+            ctx.shadowColor = `rgba(168, 85, 247, ${0.4 * circleAlpha})`;
+          }
+          ctx.shadowBlur = 8 * circleAlpha;
+
+          const pointCount = 90;
+          for (let pIdx = 0; pIdx <= pointCount; pIdx++) {
+            const theta = (pIdx / pointCount) * Math.PI * 2;
+            const timeOffset = Date.now() * 0.0018;
+            const waveScale = 7 + (ringIdx * 3) + (beatAmplitude * 5);
+            const waveFrequency = 4 + ringIdx;
+            const r = baseRadius + Math.sin(theta * waveFrequency + timeOffset) * waveScale;
+            
+            const px = cx + Math.cos(theta) * r;
+            const py = cy + Math.sin(theta) * r;
+            
+            if (pIdx === 0) {
+              ctx.moveTo(px, py);
+            } else {
+              ctx.lineTo(px, py);
+            }
+          }
+          ctx.stroke();
+        }
+
+        // Inner glowing core
+        let coreColor = `rgba(168, 85, 247, ${0.2 * circleAlpha})`;
+        if (vibe === "melancholy") coreColor = `rgba(59, 130, 246, ${0.2 * circleAlpha})`;
+        else if (vibe === "hopeful") coreColor = `rgba(16, 185, 129, ${0.2 * circleAlpha})`;
+        else if (vibe === "neon") coreColor = `rgba(244, 63, 94, ${0.2 * circleAlpha})`;
+        
+        ctx.fillStyle = coreColor;
+        ctx.beginPath();
+        ctx.arc(cx, cy, 18 + (beatAmplitude * 7), 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.restore();
+      }
+
+      // STYLE 4: Gracefully flowing stream of wind particles
+      const particlesAlpha = styleAlphasRef.current.particles;
+      if (particlesAlpha > 0.001) {
+        const flowParticles = flowParticlesRef.current;
+        ctx.save();
+        
+        flowParticles.forEach((p) => {
+          p.x += p.speed * 1.6;
+          p.y += Math.sin((Date.now() / 1200) + p.angle) * 0.45;
+
+          if (p.x > canvas.width + 15) {
+            p.x = -15;
+            p.y = Math.random() * canvas.height;
+          }
+
+          let color = p.color;
+          if (vibe === "melancholy") {
+            color = `rgba(147, 197, 253, ${0.55 * particlesAlpha})`;
+          } else if (vibe === "hopeful") {
+            color = `rgba(110, 231, 183, ${0.55 * particlesAlpha})`;
+          } else if (vibe === "neon") {
+            color = `rgba(251, 113, 133, ${0.55 * particlesAlpha})`;
+          } else {
+            color = `rgba(196, 181, 253, ${0.55 * particlesAlpha})`;
+          }
+
+          ctx.fillStyle = color;
+          ctx.shadowColor = color;
+          ctx.shadowBlur = (beatAmplitude * 5 + 1) * particlesAlpha;
+          
+          ctx.beginPath();
+          ctx.arc(p.x, p.y % canvas.height, p.size, 0, Math.PI * 2);
+          ctx.fill();
+        });
+        
+        ctx.restore();
+      }
+
       // Draw Floating user signals with interactive Hover pulse & animation
       floatingSignals.forEach((sig) => {
         // Check isHovered status
@@ -566,7 +819,7 @@ export default function SignalCanvas({
 
     render();
     return () => cancelAnimationFrame(animId);
-  }, [vibe, floatingSignals, hoveredSignalId]);
+  }, [vibe, floatingSignals, hoveredSignalId, visualStyle]);
 
   // Handle canvas click to select/focus a signal or trigger star shower animation
   const handleCanvasClick = (e: React.MouseEvent<HTMLCanvasElement>) => {
@@ -737,7 +990,7 @@ export default function SignalCanvas({
       </div>
 
       {/* Dynamic top-right corner active signals counter HUD element + HUD controls */}
-      <div className="absolute top-4 right-4 pointer-events-auto bg-zinc-950/90 border border-white/5 backdrop-blur-md px-3 py-1.5 rounded-xl flex items-center gap-3 shadow-xl animate-fadeIn transition-all duration-350 select-none z-10">
+      <div className="absolute top-4 right-4 pointer-events-auto bg-zinc-950/90 border border-white/5 backdrop-blur-md px-3 py-1.5 rounded-xl flex items-center gap-2 sm:gap-3 shadow-xl animate-fadeIn transition-all duration-350 select-none z-10">
         <div className="flex items-center gap-1.5">
           <span className="relative flex h-2 w-2">
             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-80"></span>
@@ -750,11 +1003,23 @@ export default function SignalCanvas({
 
         <span className="h-3.5 w-[1px] bg-white/10" />
 
+        {/* Visual Style Fast Cycle Toggle Button */}
+        <button
+          type="button"
+          onClick={handleCycleVisualStyle}
+          className="text-[9px] font-mono font-bold text-zinc-400 hover:text-white border border-white/5 hover:bg-white/5 px-2 py-0.5 rounded transition-all cursor-pointer flex items-center gap-1 hover:border-white/20 active:scale-95"
+          title="Toggle or cycle through all available 2D canvas visualization layouts instantly"
+        >
+          🔄 Toggle Style
+        </button>
+
+        <span className="h-3.5 w-[1px] bg-white/10 hidden sm:inline" />
+
         {/* Drift Orbit / Linear Motion Toggle */}
         <button
           type="button"
           onClick={() => setIsDriftActive((prev) => !prev)}
-          className={`text-[9px] font-mono font-bold px-2 py-0.5 rounded transition-all cursor-pointer ${
+          className={`text-[9px] font-mono font-bold px-2 py-0.5 rounded transition-all cursor-pointer hidden sm:inline ${
             isDriftActive
               ? "bg-indigo-500/20 text-indigo-400 border border-indigo-500/30"
               : "text-zinc-400 border border-white/5 hover:text-white"
@@ -802,6 +1067,68 @@ export default function SignalCanvas({
           </div>
         </div>
       )}
+
+      {/* Style Transition Morph Overlay - Framer Motion Banner */}
+      <AnimatePresence mode="popLayout">
+        {lastChangedStyle && (
+          <motion.div
+            key={lastChangedStyle}
+            initial={{ opacity: 0, y: -20, scale: 0.92 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 15, scale: 0.95 }}
+            transition={{ type: "spring", stiffness: 380, damping: 24 }}
+            className="absolute top-16 left-1/2 -translate-x-1/2 pointer-events-none bg-zinc-950/95 border border-white/10 backdrop-blur-xl px-4 py-3 rounded-2xl flex items-center gap-3 shadow-[0_20px_40px_-5px_rgba(0,0,0,0.8)] z-30"
+          >
+            <div className="text-xl">
+              {lastChangedStyle === "gravity" && "🛰️"}
+              {lastChangedStyle === "bars" && "📊"}
+              {lastChangedStyle === "circle" && "🌀"}
+              {lastChangedStyle === "particles" && "✨"}
+            </div>
+            <div className="text-left">
+              <p className="text-[9px] font-mono uppercase tracking-[0.18em] text-zinc-400 font-bold leading-none mb-1">Visualization Mode Synthesized</p>
+              <p className="text-xs font-sans font-black text-white leading-none">
+                {lastChangedStyle === "gravity" && "Orbit Core Constellation"}
+                {lastChangedStyle === "bars" && "Frequency Spectrum Equalizer"}
+                {lastChangedStyle === "circle" && "Pulsating Fluid Waves"}
+                {lastChangedStyle === "particles" && "Graceful Ambient Particle Stream"}
+              </p>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Visualizer Style Selector Overlay Footer */}
+      <div className="absolute bottom-4 left-4 right-4 sm:left-auto sm:right-4 pointer-events-auto bg-zinc-950/90 border border-white/5 backdrop-blur-md p-1.5 rounded-xl flex items-center justify-center gap-1 shadow-2xl z-10 select-none">
+        <span className="text-[10px] font-mono text-zinc-500 px-2 uppercase hidden sm:inline">Style:</span>
+        {[
+          { id: "gravity", label: "Orbit Core", icon: "🛰️" },
+          { id: "bars", label: "Frequency Bars", icon: "📊" },
+          { id: "circle", label: "Circular Wave", icon: "🌀" },
+          { id: "particles", label: "Particle Flow", icon: "✨" }
+        ].map((styleOpt) => {
+          const isActive = visualStyle === styleOpt.id;
+          return (
+            <button
+              key={styleOpt.id}
+              type="button"
+              onClick={() => changeStyleWithNotice(styleOpt.id as any)}
+              className="relative text-[11px] px-3 rounded-lg transition-all font-mono font-bold flex items-center gap-1.5 cursor-pointer z-10 hover:text-white min-h-[44px] md:min-h-0"
+              style={{ color: isActive ? "#ffffff" : "rgb(161, 161, 170)" }}
+            >
+              {isActive && (
+                <motion.div
+                  layoutId="activeVisualStyleBg"
+                  transition={{ type: "spring", stiffness: 350, damping: 25 }}
+                  className="absolute inset-0 bg-indigo-500/20 border border-indigo-500/35 rounded-lg -z-10 shadow-lg shadow-indigo-500/5"
+                />
+              )}
+              <span className="text-sm md:text-xs">{styleOpt.icon}</span>
+              <span className="hidden md:inline">{styleOpt.label}</span>
+            </button>
+          );
+        })}
+      </div>
 
     </div>
   );

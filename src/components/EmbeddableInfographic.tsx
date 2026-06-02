@@ -153,7 +153,7 @@ export default function EmbeddableInfographic({ isEmbedded = false }: { isEmbedd
               max="0"
               value={dbLevel}
               onChange={(e) => setDbLevel(Number(e.target.value))}
-              className="w-full h-1 bg-zinc-950 rounded accent-emerald-400 cursor-pointer"
+              className="w-full h-2.5 sm:h-1.5 rounded-lg bg-zinc-950 cursor-pointer accent-emerald-400 py-1 sm:py-0 border border-white/5"
             />
           </div>
         </div>

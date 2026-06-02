@@ -9,6 +9,8 @@ import {
   Pause,
   Sliders,
   Volume2,
+  VolumeX,
+  Moon,
   Sparkles,
   Send,
   RefreshCw,
@@ -89,6 +91,25 @@ const TRANSLATIONS = {
     scenerySub: "Grafiken wechseln oder manuelle Umgebungsebenen-Overlays einblenden.",
     mixerTitle: "Prozedurales Soundboard",
     mixerToggleAll: "Wiedergabestatus der Loop-Engine umschalten"
+  },
+  hi: {
+    tagline: "आपके मन को एक आवृत्ति की आवश्यकता है। हम प्रदान करते हैं।",
+    vocalSignal: "स्वर संकेत वर्णनकर्ता",
+    readLyrics: "उच्च-गुणवत्ता वाली भारतीय मानव वर्णन संश्लेषण का उपयोग करके लाइव बोल पढ़ें।",
+    lyricReader: "गीत वाचक मोड",
+    active: "सक्रिय",
+    disabled: "निष्क्रिय",
+    availableSystemVoices: "उपलब्ध सिस्टम आवाजें",
+    testAccent: "भारतीय लहजे का परीक्षण करें",
+    returnMain: "मुख्य स्टेशन पर वापस लौटें",
+    cozyTuner: "शांत स्टेशन ट्यूनर और आवृत्ति सूचकांक",
+    totalLnt: "कुल चालू अवधि",
+    stationStandby: "स्टैंडबाय",
+    stationRecv: "प्राप्त हो रहा है",
+    sceneryTitle: "वायुमंडलीय दृश्य और विज़ुअलाइज़र मोड",
+    scenerySub: "ग्राफिक्स बदलें या नीचे मैन्युअल पर्यावरणीय परत ओवरले चालू करें।",
+    mixerTitle: "प्रक्रियात्मक साउंडस्केप बोर्ड",
+    mixerToggleAll: "लूप इंजन खेलने की स्थिति टॉगल करें"
   }
 };
 
@@ -395,7 +416,7 @@ export default function App() {
   ]);
 
   // AI Unsent message and responses state list
-  const [interfaceLanguage, setInterfaceLanguage] = useState<"en" | "de">("en");
+  const [interfaceLanguage, setInterfaceLanguage] = useState<"en" | "de" | "hi">("en");
   const [unsentMessageInput, setUnsentMessageInput] = useState("");
   const [isSendingEcho, setIsSendingEcho] = useState(false);
   const [echoHistory, setEchoHistory] = useState<EchoItem[]>([
@@ -493,6 +514,25 @@ export default function App() {
 
   // Dynamic Ambient Visuals Layer settings
   const [visualMode, setVisualMode] = useState<"off" | "static" | "animated">("animated");
+
+  // Sidebar expanded / collapsed sections to prevent information overload
+  const [sidebarExpanded, setSidebarExpanded] = useState<{
+    synth: boolean;
+    mixer: boolean;
+    binaural: boolean;
+    sleep: boolean;
+    visual: boolean;
+    advanced: boolean;
+  }>({
+    synth: false,     // Collapse advanced properties by default to prevent info overload
+    mixer: true,      // Sound mixer can be open by default
+    binaural: false,  // Collapse advanced cognitive waves by default
+    sleep: false,     // Collapse sleep timer by default
+    visual: false,    // Collapse visual options by default
+    advanced: false,  // Group advanced synthesizer and cognitive audio properties
+  });
+
+  const [showInactiveMixer, setShowInactiveMixer] = useState<boolean>(false);
   
   // Backdoor/Manual triggers so users can toggle Campfire and Train independently too!
   const [manualCampfire, setManualCampfire] = useState(false);
@@ -1170,6 +1210,36 @@ export default function App() {
     }
   };
 
+  const handleQuickStartListening = () => {
+    if (!synthRef.current) return;
+    if (!isPlaying) {
+      synthRef.current.start(currentTime >= totalDuration ? 0 : currentTime);
+      setIsPlaying(true);
+      speakText("Beginning stream playback. Immerse yourself.");
+    }
+  };
+
+  const handleGenerateRandomMix = () => {
+    if (!synthRef.current) return;
+    
+    // Pick 2-3 random values for environmental sliders
+    const randomRain = parseFloat((Math.random() * 0.4 + 0.15).toFixed(2)); // 0.15 to 0.55
+    const randomOcean = parseFloat((Math.random() * 0.35 + 0.15).toFixed(2)); // 0.15 to 0.50
+    const randomVinyl = parseFloat((Math.random() * 0.15 + 0.05).toFixed(2)); // 0.05 to 0.20
+    
+    setRainVolume(randomRain);
+    setOceanVolume(randomOcean);
+    setVinylVolume(randomVinyl);
+    
+    // Ensure we are playing
+    if (!isPlaying) {
+      synthRef.current.start(currentTime >= totalDuration ? 0 : currentTime);
+      setIsPlaying(true);
+    }
+    
+    speakText("Ambient mix generated successfully. Tuning all atmospheric dials.");
+  };
+
   // Seeks playback point along progression scrubber bar
   const handleSeek = (e: React.MouseEvent<HTMLDivElement>) => {
     const bar = e.currentTarget;
@@ -1590,297 +1660,7 @@ export default function App() {
         </div>
       )}
 
-      <div className="relative z-10 max-w-7xl mx-auto px-4 py-8 md:px-8 md:py-10 flex flex-col min-h-screen justify-between gap-8 pb-12">
-        
-        {/* COMPREHENSIVE FLOATING SCRUBBER FOOTER CONTROLLER + TUNER WRAPPER */}
-        <div className="sticky top-4 z-45 w-full flex flex-col gap-3">
-          
-          <footer 
-            className="bg-zinc-950/95 border border-white/10 backdrop-blur-xl p-3 md:px-6 md:py-4 rounded-2xl md:rounded-3xl flex flex-col md:flex-row items-center justify-between gap-3 md:gap-5 shadow-[0_25px_50px_-12px_rgba(0,0,0,0.8)] relative transition-all duration-500 ease-in-out w-full"
-            style={{
-              borderColor: isPlaying ? `${activeTheme.accent}33` : "rgba(255,255,255,0.1)",
-              boxShadow: isPlaying ? `0 20px 40px -15px ${activeTheme.accent}15, inset 0 1px 0 0 rgba(255,255,255,0.1)` : "none"
-            }}
-          >
-          
-          {/* Row 1: Player buttons, playing info, and radio tuner index trigger for mobile */}
-          <div className="flex items-center justify-between gap-3 w-full md:w-auto">
-            <div className="flex items-center gap-3">
-              <div className="relative shrink-0 select-none">
-                {isPlaying && (
-                  <span 
-                    className="absolute inset-0 rounded-full animate-ping opacity-25" 
-                    style={{ backgroundColor: activeTheme.accent }}
-                  />
-                )}
-                <button
-                  id="midnight-playback-main-btn"
-                  onClick={handleTogglePlayback}
-                  className="w-10 h-10 md:w-12 md:h-12 rounded-full border text-white flex items-center justify-center cursor-pointer transition-all duration-300 shadow-lg relative z-10 hover:scale-105 active:scale-95"
-                  style={{
-                    borderColor: isPlaying ? activeTheme.accent : "rgba(255, 255, 255, 0.3)",
-                    backgroundColor: isPlaying ? `${activeTheme.accent}15` : "rgba(255, 255, 255, 0.03)",
-                    boxShadow: isPlaying ? `0 0 12px ${activeTheme.glowColor}40` : "none"
-                  }}
-                  title={isPlaying ? "Pause track" : "Play track"}
-                >
-                  {isPlaying ? (
-                    <Pause className="w-4 h-4 md:w-5 md:h-5 text-white" style={{ fill: activeTheme.accent }} />
-                  ) : (
-                    <Play className="w-4 h-4 md:w-5 md:h-5 text-white fill-white translate-x-[1px]" />
-                  )}
-                </button>
-              </div>
-              
-              <div className="text-left font-sans max-w-[140px] sm:max-w-[220px]">
-                <span className="text-[7px] md:text-[8px] font-mono uppercase tracking-[0.2em] opacity-50 block">// Station Active</span>
-                <h4 className="text-2xs md:text-xs font-bold text-white tracking-wide truncate" style={{ color: isPlaying ? activeTheme.accent : "#ffffff" }}>{activeSongTitle}</h4>
-                <p className="text-[8px] md:text-[9px] text-zinc-500 font-mono mt-0.5 flex items-center gap-1.5">
-                  <span className={`inline-block w-1 h-1 rounded-full ${isPlaying ? "bg-emerald-400 animate-pulse" : "bg-amber-400"}`} />
-                  {isPlaying ? "RECEIVING" : "STANDBY"}
-                </p>
-              </div>
-            </div>
-
-            {/* Quick interactive tuner triggers & vibe indicator specific to mobile layout */}
-            <div className="flex items-center gap-1 sm:gap-1.5 md:hidden">
-              <button
-                type="button"
-                onClick={() => setShowTuner(!showTuner)}
-                className={`py-1.5 px-2 rounded-lg border uppercase text-[7px] font-bold select-none cursor-pointer duration-300 transition-all ${
-                  showTuner 
-                    ? "border-sky-500 bg-sky-500/10 text-sky-400" 
-                    : "border-white/10 bg-white/5 text-zinc-400 hover:text-white"
-                }`}
-              >
-                📡 {showTuner ? "Tuner" : "Tune"}
-              </button>
-              <button
-                type="button"
-                onClick={() => setShowSoundConsole(!showSoundConsole)}
-                className={`py-1.5 px-2 rounded-lg border uppercase text-[7px] font-bold select-none cursor-pointer duration-300 transition-all ${
-                  showSoundConsole
-                    ? "border-purple-500 bg-purple-500/10 text-purple-450"
-                    : "border-white/10 bg-white/5 text-zinc-400 hover:text-white"
-                }`}
-              >
-                🎛️ Console
-              </button>
-              <button
-                type="button"
-                onClick={() => setShowEchoTerminal(!showEchoTerminal)}
-                className={`py-1.5 px-2 rounded-lg border uppercase text-[7px] font-bold select-none cursor-pointer duration-300 transition-all ${
-                  showEchoTerminal
-                    ? "border-emerald-500 bg-emerald-500/10 text-emerald-400"
-                    : "border-white/10 bg-white/5 text-zinc-400 hover:text-white"
-                }`}
-              >
-                📟 Signal
-              </button>
-              <div 
-                className="hidden sm:block px-2 py-1.5 rounded-lg border uppercase tracking-wider text-[7px] font-bold select-none"
-                style={{
-                  borderColor: `${activeTheme.accent}33`,
-                  backgroundColor: `${activeTheme.accent}0a`,
-                  color: activeTheme.accent
-                }}
-              >
-                <span>{currentVibe}</span>
-              </div>
-            </div>
-          </div>
-
-          {/* Row 2: Seeker progress slider */}
-          <div className="flex-grow w-full md:flex-1 flex items-center gap-3">
-            <span className="font-mono text-[9px] md:text-[10px] text-zinc-400 select-none">
-              {formatTime(currentTime)}
-            </span>
-
-            <div
-              id="lyrics-play-bar-scrubber"
-              onClick={handleSeek}
-              className="progress-track flex-grow h-1.5 md:h-2 rounded-full bg-zinc-900/80 border border-white/5 relative cursor-pointer group transition-all"
-            >
-              {/* Audio visual progress fill node */}
-              <div
-                className="progress-fill absolute left-0 top-0 h-full rounded-full transition-all duration-75"
-                style={{
-                  width: `${(currentTime / totalDuration) * 100}%`,
-                  background: `linear-gradient(to right, ${activeTheme.accent}, #00D1FF)`,
-                  boxShadow: `0 0 8px ${activeTheme.glowColor}`
-                }}
-              >
-                {/* Micro pointer handler on timeline drag */}
-                <div 
-                  className="absolute right-0 top-1/2 -translate-y-1/2 w-2.5 h-2.5 rounded-full opacity-0 group-hover:opacity-100 transition-opacity border border-zinc-950 shadow-md transform translate-x-1.5"
-                  style={{ backgroundColor: activeTheme.accent }}
-                />
-              </div>
-            </div>
-
-            <span className="font-mono text-[9px] md:text-[10px] text-zinc-500 select-none">
-              -{formatTime(Math.max(0, totalDuration - currentTime))}
-            </span>
-          </div>
-
-          {/* Row 3: Expanded metadata and instructions shown strictly on wider screens */}
-          <div className="hidden md:flex items-center gap-3 text-xs font-mono text-zinc-400 w-full md:w-auto justify-end">
-            <div className="flex items-center gap-1.5 bg-zinc-900/60 border border-white/5 py-1.5 px-3 rounded-xl select-none">
-              <Clock className="w-3.5 h-3.5 text-zinc-500" />
-              <span className="text-[10px]">TOTAL LNT: {formatTime(totalDuration)}</span>
-            </div>
-            
-            {/* Vibe badge helper */}
-            <div 
-              className="flex items-center gap-1 px-2.5 py-1.5 rounded-xl border uppercase tracking-wider text-[8.5px] font-bold select-none"
-              style={{
-                borderColor: `${activeTheme.accent}33`,
-                backgroundColor: `${activeTheme.accent}0a`,
-                color: activeTheme.accent
-              }}
-            >
-              <span>{currentVibe} Mode</span>
-            </div>
-          </div>
-
-        </footer>
-
-        {/* DYNAMIC STATION FREQUENCY TUNER NAVIGATION (MOVED TO TOP OF HEADER) */}
-        <div className={`w-full max-w-7xl mx-auto z-20 relative text-left bg-zinc-950/25 p-3 rounded-2xl border border-white/5 backdrop-blur-md transition-all duration-300 ${showTuner ? "block animate-fadeIn" : "hidden md:block"}`}>
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-2">
-            <div className="flex items-center gap-2 font-mono text-[9px] text-[#00D1FF] uppercase tracking-widest font-extrabold select-none">
-              <span className="relative flex h-1.5 w-1.5">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#00D1FF] opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-[#00D1FF]"></span>
-              </span>
-              <span>{interfaceLanguage === "en" ? "Midnight Cozy Tuner & Frequency Index" : "Gemütlicher Stations-Tuner & Frequenzindex"}</span>
-            </div>
-            <div className="flex items-center gap-2 flex-wrap sm:flex-nowrap">
-              <button
-                type="button"
-                onClick={() => setInterfaceLanguage(interfaceLanguage === "en" ? "de" : "en")}
-                className="text-[9px] font-mono text-zinc-300 hover:text-white transition-colors flex items-center gap-1.5 bg-white/5 hover:bg-white/10 px-2 py-1 rounded cursor-pointer border border-white/5"
-              >
-                🌐 {interfaceLanguage === "en" ? "Translate: DE 🇩🇪" : "Übersetzen: EN 🇺🇸"}
-              </button>
-              {currentPath && (
-                <a
-                  href="/"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    setCurrentPath("");
-                    window.history.pushState({}, "", "/");
-                    window.scrollTo({ top: 0, behavior: "smooth" });
-                  }}
-                  className="text-[9px] font-mono text-zinc-400 hover:text-white transition-colors flex items-center gap-1 bg-white/5 hover:bg-white/10 px-2 py-1 rounded cursor-pointer"
-                >
-                  🏠 {interfaceLanguage === "en" ? "Return to Main Station" : "Zum Hauptsender"}
-                </a>
-              )}
-            </div>
-          </div>
-          
-          <div className="flex overflow-x-auto gap-2 pb-1 scrollbar-thin scrollbar-thumb-white/10 scrollbar-track-transparent snap-x">
-            {SEO_PAGES.map((page) => {
-              const isSelected = currentPath === page.path;
-              return (
-                <a
-                  key={page.path}
-                  href={page.path}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    setCurrentPath(page.path);
-                    window.history.pushState({}, "", page.path);
-                    window.scrollTo({ top: 0, behavior: 'smooth' });
-                  }}
-                  className={`flex-shrink-0 snap-start p-2 px-3 rounded-xl border text-left transition-all active:scale-97 cursor-pointer group flex items-center gap-2 ${
-                    isSelected 
-                      ? "border-sky-500 bg-sky-500/10 text-white" 
-                      : "bg-zinc-900 border-white/5 hover:border-indigo-500/30 hover:bg-indigo-950/20 text-zinc-300"
-                  }`}
-                >
-                  <span className={`inline-block w-1.5 h-1.5 rounded-full ${isSelected ? "bg-sky-400 animate-pulse" : "bg-zinc-650 group-hover:bg-zinc-450"}`} />
-                  <div>
-                    <span className="font-mono text-[6.5px] uppercase tracking-wider text-zinc-500 block">
-                      {page.vibe} frequency
-                    </span>
-                    <span className="font-sans text-[9.5px] font-bold block whitespace-nowrap">
-                      {page.headline.replace(" Generator", "").replace(" & Deep Relaxation", "")}
-                    </span>
-                  </div>
-                </a>
-              );
-            })}
-            
-            {/* Programmatic combos */}
-            {[
-              { path: "/ocean-waves-and-rain", headline: "Ocean Waves & Soft Rain", vibe: "dreamy" },
-              { path: "/ocean-waves-and-crickets", headline: "Waves & Field Crickets", vibe: "dreamy" },
-              { path: "/ocean-waves-and-owl-sounds", headline: "Waves & Woodland Owls", vibe: "melancholy" },
-              { path: "/songbirds-and-forest-breeze", headline: "Songbirds & Forest Breeze", vibe: "hopeful" },
-              { path: "/rain-and-vinyl-crackles", headline: "Soft Rain & Cozy Vinyl", vibe: "neon" },
-              { path: "/neon-lofi-and-ocean-sounds", headline: "Neon Lo-Fi & Ocean Surf", vibe: "neon" }
-            ].map((combo) => {
-              const isSelected = currentPath === combo.path;
-              return (
-                <a
-                  key={combo.path}
-                  href={combo.path}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    setCurrentPath(combo.path);
-                    window.history.pushState({}, "", combo.path);
-                    window.scrollTo({ top: 0, behavior: 'smooth' });
-                  }}
-                  className={`flex-shrink-0 snap-start p-2 px-3 rounded-xl border text-left transition-all active:scale-97 cursor-pointer group flex items-center gap-2 ${
-                    isSelected 
-                      ? "border-rose-500 bg-rose-500/10 text-white" 
-                      : "bg-zinc-900 border-white/5 hover:border-rose-500/30 hover:bg-rose-950/20 text-zinc-300"
-                  }`}
-                >
-                  <span className={`inline-block w-1.5 h-1.5 rounded-full ${isSelected ? "bg-rose-400 animate-pulse" : "bg-zinc-650 group-hover:bg-zinc-450"}`} />
-                  <div>
-                    <span className="font-mono text-[6.5px] uppercase tracking-wider text-zinc-500 block">
-                      Preset frequency
-                    </span>
-                    <span className="font-sans text-[9.5px] font-bold block whitespace-nowrap">
-                      {combo.headline}
-                    </span>
-                  </div>
-                </a>
-              );
-            })}
-
-            {/* Special Interactive Infographic asset node */}
-            <a
-              key="/science-of-lofi-focus-infographic"
-              href="/science-of-lofi-focus-infographic"
-              onClick={(e) => {
-                e.preventDefault();
-                setCurrentPath("/science-of-lofi-focus-infographic");
-                window.history.pushState({}, "", "/science-of-lofi-focus-infographic");
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-              }}
-              className={`flex-shrink-0 snap-start p-2 px-3 rounded-xl border text-left transition-all active:scale-97 cursor-pointer group flex items-center gap-2 ${
-                currentPath === "/science-of-lofi-focus-infographic"
-                  ? "border-amber-500 bg-amber-500/10 text-white"
-                  : "bg-zinc-900 border-white/5 hover:border-amber-500/30 hover:bg-amber-950/20 text-zinc-300"
-              }`}
-            >
-              <span className={`inline-block w-1.5 h-1.5 rounded-full ${currentPath === "/science-of-lofi-focus-infographic" ? "bg-amber-400 animate-pulse" : "bg-zinc-650 group-hover:bg-zinc-450"}`} />
-              <div>
-                <span className="font-mono text-[6.5px] uppercase tracking-wider text-zinc-500 block">
-                  Interactive Asset
-                </span>
-                <span className="font-sans text-[9.5px] font-bold block whitespace-nowrap">
-                  📊 Science of Lo-Fi
-                </span>
-              </div>
-            </a>
-          </div>
-        </div>
-
-        </div> {/* Close COMPREHENSIVE FLOATING SCRUBBER + TUNER STICKY WRAPPER */}
+      <div className="relative z-10 max-w-7xl mx-auto px-4 py-8 md:px-8 md:py-10 flex flex-col min-h-screen justify-between gap-8 pb-32">
 
         {/* HEADER BLOCK */}
         <header className="border-b border-white/10 pb-6 flex flex-col md:flex-row justify-between items-start md:items-end gap-5 relative group">
@@ -1953,6 +1733,165 @@ export default function App() {
           </div>
         </header>
 
+        {/* DYNAMIC STATION FREQUENCY TUNER NAVIGATION (MOVED TO TOP OF HEADER) */}
+        <div className={`w-full max-w-7xl mx-auto z-20 relative text-left bg-zinc-950/25 p-3 rounded-2xl border border-white/5 backdrop-blur-md transition-all duration-300 ${showTuner ? "block animate-fadeIn" : "hidden md:block"}`}>
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-2">
+            <div className="flex items-center gap-2 font-mono text-[9px] text-[#00D1FF] uppercase tracking-widest font-extrabold select-none">
+              <span className="relative flex h-1.5 w-1.5">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#00D1FF] opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-[#00D1FF]"></span>
+              </span>
+              <span>{interfaceLanguage === "en" ? "Midnight Cozy Tuner & Frequency Index" : interfaceLanguage === "de" ? "Gemütlicher Stations-Tuner & Frequenzindex" : "शांत स्टेशन ट्यूनर और आवृत्ति सूचकांक"}</span>
+            </div>
+            <div className="flex items-center gap-2 flex-wrap sm:flex-nowrap">
+              <button
+                type="button"
+                onClick={() => {
+                  if (interfaceLanguage === "en") {
+                    setInterfaceLanguage("de");
+                  } else if (interfaceLanguage === "de") {
+                    setInterfaceLanguage("hi");
+                  } else {
+                    setInterfaceLanguage("en");
+                  }
+                }}
+                className="py-1 px-2.5 rounded-lg border border-white/10 bg-zinc-900/60 text-zinc-350 hover:bg-zinc-800 text-[8.5px] uppercase font-mono font-semibold transition-all shadow-md active:scale-95 cursor-pointer"
+              >
+                🌐 Lang: {interfaceLanguage.toUpperCase()}
+              </button>
+              
+              <button
+                type="button"
+                onClick={() => speakText("Synchronizing offline backup files to Cloud Run. Secure encryption active.")}
+                className="py-1 px-2.5 rounded-lg border border-white/10 bg-zinc-900/60 text-zinc-350 hover:bg-zinc-800 text-[8.5px] uppercase font-mono font-semibold transition-all shadow-md active:scale-95 cursor-pointer"
+              >
+                💾 Sync Backup
+              </button>
+            </div>
+          </div>
+
+          <div 
+            className="flex items-center gap-2 overflow-x-auto pb-1 px-1 snap-x scrollbar-none text-left"
+            style={{ WebkitOverflowScrolling: "touch" }}
+          >
+            {SEO_PAGES.map((combo) => {
+              const isSelected = currentPath === combo.path;
+              return (
+                <a
+                  key={combo.path}
+                  href={combo.path}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setCurrentPath(combo.path);
+                    window.history.pushState({}, "", combo.path);
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                  }}
+                  className={`flex-shrink-0 snap-start p-2 px-3 rounded-xl border text-left transition-all active:scale-97 cursor-pointer group flex items-center gap-2 ${
+                    isSelected 
+                      ? "border-rose-500 bg-rose-500/10 text-white" 
+                      : "bg-zinc-900 border-white/5 hover:border-rose-500/30 hover:bg-rose-950/20 text-zinc-300"
+                  }`}
+                >
+                  <span className={`inline-block w-1.5 h-1.5 rounded-full ${isSelected ? "bg-rose-400 animate-pulse" : "bg-zinc-650 group-hover:bg-zinc-450"}`} />
+                  <div>
+                    <span className="font-mono text-[6.5px] uppercase tracking-wider text-zinc-500 block">
+                      Preset frequency
+                    </span>
+                    <span className="font-sans text-[9.5px] font-bold block whitespace-nowrap">
+                      {combo.headline}
+                    </span>
+                  </div>
+                </a>
+              );
+            })}
+
+            {/* Special Interactive Infographic asset node */}
+            <a
+              key="/science-of-lofi-focus-infographic"
+              href="/science-of-lofi-focus-infographic"
+              onClick={(e) => {
+                e.preventDefault();
+                setCurrentPath("/science-of-lofi-focus-infographic");
+                window.history.pushState({}, "", "/science-of-lofi-focus-infographic");
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              }}
+              className={`flex-shrink-0 snap-start p-2 px-3 rounded-xl border text-left transition-all active:scale-97 cursor-pointer group flex items-center gap-2 ${
+                currentPath === "/science-of-lofi-focus-infographic"
+                  ? "border-amber-500 bg-amber-500/10 text-white"
+                  : "bg-zinc-900 border-white/5 hover:border-amber-500/30 hover:bg-amber-950/20 text-zinc-300"
+              }`}
+            >
+              <span className={`inline-block w-1.5 h-1.5 rounded-full ${currentPath === "/science-of-lofi-focus-infographic" ? "bg-amber-400 animate-pulse" : "bg-zinc-650 group-hover:bg-zinc-450"}`} />
+              <div>
+                <span className="font-mono text-[6.5px] uppercase tracking-wider text-zinc-500 block">
+                  Interactive Asset
+                </span>
+                <span className="font-sans text-[9.5px] font-bold block whitespace-nowrap">
+                  📊 Science of Lo-Fi
+                </span>
+              </div>
+            </a>
+          </div>
+        </div>
+
+
+        {/* PROMINENT PRIMARY ACTION CTA BOARD (NEW USER WELCOME) */}
+        {!isPlaying && (
+          <div className="relative z-30 max-w-7xl mx-auto w-full animate-fadeIn mt-2">
+            <div className="bg-zinc-950/80 rounded-3xl border border-white/10 p-6 md:p-8 backdrop-blur-xl relative overflow-hidden flex flex-col md:flex-row justify-between items-center gap-6 shadow-[0_30px_60px_-15px_rgba(0,0,0,0.9)]">
+              {/* Subtle pulsing background glow matching current vibe accent */}
+              <div 
+                className="absolute -right-24 -bottom-24 w-80 h-80 rounded-full blur-[120px] opacity-15 pointer-events-none transition-all duration-700" 
+                style={{ backgroundColor: activeTheme.accent }}
+              />
+              <div 
+                className="absolute -left-24 -top-24 w-80 h-80 rounded-full blur-[120px] opacity-10 pointer-events-none transition-all duration-700" 
+                style={{ backgroundColor: activeTheme.accent }}
+              />
+
+              <div className="text-left space-y-2 max-w-xl">
+                <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-zinc-900 border border-white/5 font-mono text-[9px] uppercase tracking-wider text-zinc-400 font-bold">
+                  <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse" />
+                  Your obvious first step
+                </div>
+                <h2 className="text-xl md:text-2xl font-serif italic text-white font-black leading-tight tracking-tight">
+                  Start your immersive audio journey
+                </h2>
+                <p className="text-zinc-400 font-light text-xs leading-relaxed font-sans">
+                  Tune in to custom atmospheric wavelengths, toggle binaural brainwave offset patterns, and listen to soothing classical language lyrics synchronized with rich lo-fi melodies.
+                </p>
+              </div>
+
+              <div className="flex flex-col sm:flex-row items-center gap-3 w-full md:w-auto shrink-0">
+                {/* PRIMARY ACTION 1: START LISTENING NOW */}
+                <button
+                  type="button"
+                  id="primary-cta-start-listening"
+                  onClick={handleQuickStartListening}
+                  className="w-full sm:w-auto px-6 py-3.5 rounded-2xl text-xs font-mono font-bold tracking-wide uppercase cursor-pointer transition-all duration-300 flex items-center justify-center gap-2 hover:scale-[1.03] active:scale-97 text-black shadow-lg font-black"
+                  style={{
+                    backgroundColor: activeTheme.accent,
+                    boxShadow: `0 8px 24px -6px ${activeTheme.glowColor}50`
+                  }}
+                >
+                  <Play className="w-3.5 h-3.5 fill-black" />
+                  <span>Start Listening</span>
+                </button>
+
+                {/* PRIMARY ACTION 2: GENERATE YOUR MIX */}
+                <button
+                  type="button"
+                  id="primary-cta-generate-mix"
+                  onClick={handleGenerateRandomMix}
+                  className="w-full sm:w-auto px-6 py-3.5 rounded-2xl text-xs font-mono font-medium tracking-wide bg-zinc-900 hover:bg-zinc-850 text-white border border-white/10 hover:border-white/20 transition-all duration-300 flex items-center justify-center gap-2 hover:scale-[1.03] active:scale-97"
+                >
+                  <span>🧪 Generate Your Mix</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
 
         {/* MAIN STRUCTURAL RESPONSIVE GRID OR DYNAMIC SEO LANDING VIEW */}
         {currentPath && !matchedSEOPage ? (
@@ -1997,7 +1936,7 @@ export default function App() {
             </button>
           </div>
         ) : matchedSEOPage ? (
-          <div className="relative z-20 max-w-4xl mx-auto py-8 md:py-12 px-4 font-sans animate-fadeIn text-left bg-zinc-950/45 p-6 md:p-10 rounded-3xl border border-white/5 backdrop-blur-xl">
+          <div className="relative z-20 max-w-4xl mx-auto py-6 md:py-12 px-3 sm:px-6 font-sans animate-fadeIn text-left bg-zinc-950/45 p-4 sm:p-6 md:p-10 rounded-2xl sm:rounded-3xl border border-white/5 backdrop-blur-xl">
             {/* Dynamic JSON-LD Structured FAQ Schema to inject on page for perfect Google organic crawler visibility */}
             <script type="application/ld+json">
               {JSON.stringify({
@@ -2258,7 +2197,7 @@ export default function App() {
                           key={presetColor}
                           type="button"
                           onClick={() => handleAccentColorChange(currentVibe, presetColor)}
-                          className="w-3.5 h-3.5 rounded-full border border-white/10 transition-transform active:scale-90 cursor-pointer"
+                          className="w-3.5 h-3.5 rounded-full border border-white/10 transition-transform active:scale-95 cursor-pointer"
                           style={{ backgroundColor: presetColor }}
                           title={`Preset ${presetColor}`}
                         />
@@ -2268,341 +2207,404 @@ export default function App() {
                 </div>
               </div>
 
-              {/* Category 2: Synth Customizers */}
+              {/* Category 2: Atmospheric Sound Mixer */}
               <div className="border-t border-white/5 pt-4 space-y-3">
-                <h3 className="text-xs uppercase tracking-widest text-zinc-400 font-semibold font-mono flex items-center justify-between">
-                  <span className="flex items-center gap-1.5">
-                    <Music className="w-3 h-3 text-indigo-400" />
-                    2. Synth Properties
-                  </span>
-                </h3>
-
-                {/* Oscillator Waves Choice */}
-                <div>
-                  <span className="block text-[9px] font-mono text-zinc-500 uppercase tracking-widest mb-1.5">Core Waveform Shape</span>
-                  <div className="grid grid-cols-4 gap-1.5">
-                    {(["sine", "triangle", "square", "sawtooth"] as OscillatorType[]).map((shape) => (
-                      <button
-                        key={shape}
-                        type="button"
-                        onClick={() => setSynthWaveform(shape)}
-                        className={`py-1 text-[8px] font-mono rounded-lg border transition-all cursor-pointer capitalize ${
-                          synthWaveform === shape
-                            ? "bg-indigo-500/10 border-indigo-500/40 text-indigo-300 font-bold"
-                            : "bg-zinc-900/40 border-white/5 text-zinc-500 hover:text-zinc-350"
-                        }`}
-                      >
-                        {shape}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                {/* BPM Custom Tempo Slider */}
-                <div>
-                  <div className="flex justify-between text-2xs font-mono text-zinc-400 mb-1">
-                    <span>Synthesizer Tempo</span>
-                    <span className="text-zinc-300 font-bold">{activeBpm} BPM</span>
-                  </div>
-                  <input
-                    type="range"
-                    min="55"
-                    max="115"
-                    step="1"
-                    value={activeBpm}
-                    aria-label="Synthesizer Tempo"
-                    onChange={(e) => setActiveBpm(parseInt(e.target.value))}
-                    className="w-full accent-indigo-500 hover:accent-indigo-400 h-1 rounded-lg bg-zinc-900 cursor-pointer"
-                  />
-                </div>
-              </div>
-
-              {/* Category 3: Sound overlays mixer */}
-              <div className="border-t border-white/5 pt-4 space-y-3.5">
-                <h3 className="text-xs uppercase tracking-widest text-zinc-400 font-semibold font-mono flex items-center gap-1.5">
-                  <Volume2 className="w-3 h-3 text-emerald-400" />
-                  3. Decibel Sound Mixer
-                </h3>
-
-                {/* Synth Master level */}
-                <div>
-                  <div className="flex justify-between text-[10px] font-mono text-zinc-450 mb-1">
-                    <span>Acoustic Melody Synth</span>
-                    <span>{Math.round(masterVolume * 100)}%</span>
-                  </div>
-                  <input
-                    type="range"
-                    min="0"
-                    max="1"
-                    step="0.01"
-                    value={masterVolume}
-                    aria-label="Synth Master Volume"
-                    onChange={(e) => setMasterVolume(parseFloat(e.target.value))}
-                    className="w-full accent-indigo-500 h-1 rounded-lg bg-zinc-900 cursor-pointer"
-                  />
-                </div>
-
-                {/* Rain ambient static level */}
-                <div>
-                  <div className="flex justify-between text-[10px] font-mono text-zinc-450 mb-1">
-                    <span>Rain Tape Hiss</span>
-                    <span>{Math.round(rainVolume * 100)}%</span>
-                  </div>
-                  <input
-                    type="range"
-                    min="0"
-                    max="1"
-                    step="0.01"
-                    value={rainVolume}
-                    aria-label="Rain Tape Hiss"
-                    onChange={(e) => setRainVolume(parseFloat(e.target.value))}
-                    className="w-full accent-indigo-500 h-1 rounded-lg bg-zinc-900 cursor-pointer"
-                  />
-                </div>
-
-                {/* Ocean Wind static level */}
-                <div>
-                  <div className="flex justify-between text-[10px] font-mono text-zinc-450 mb-1">
-                    <span>Ocean Shore Breeze</span>
-                    <span>{Math.round(oceanVolume * 100)}%</span>
-                  </div>
-                  <input
-                    type="range"
-                    min="0"
-                    max="1"
-                    step="0.01"
-                    value={oceanVolume}
-                    aria-label="Ocean Shore Breeze Volume"
-                    onChange={(e) => setOceanVolume(parseFloat(e.target.value))}
-                    className="w-full accent-indigo-500 h-1 rounded-lg bg-zinc-900 cursor-pointer"
-                  />
-                </div>
-
-                {/* Vinyl Crackle static level */}
-                <div>
-                  <div className="flex justify-between text-[10px] font-mono text-zinc-450 mb-1">
-                    <span>Analog Vinyl Crackles</span>
-                    <span>{Math.round(vinylVolume * 100)}%</span>
-                  </div>
-                  <input
-                    type="range"
-                    min="0"
-                    max="1"
-                    step="0.01"
-                    value={vinylVolume}
-                    aria-label="Analog Vinyl Crackles Volume"
-                    onChange={(e) => setVinylVolume(parseFloat(e.target.value))}
-                    className="w-full accent-indigo-500 h-1 rounded-lg bg-zinc-900 cursor-pointer"
-                  />
-                </div>
-              </div>
-
-              {/* Category 4: Binaural Cognitive Waves Deck */}
-              <div className="border-t border-white/5 pt-4 space-y-3">
-                <div className="flex items-center justify-between">
-                  <h3 className="text-xs uppercase tracking-widest text-zinc-400 font-semibold font-mono flex items-center gap-1.5">
-                    <Radio className="w-3 h-3 text-rose-400" />
-                    4. Binaural Beats Focus
-                  </h3>
+                <div className="flex items-center justify-between text-xs uppercase tracking-widest text-[#00D1FF] font-semibold font-mono">
                   <button
                     type="button"
-                    onClick={() => {
-                      const finalActive = !isBinauralActive;
-                      setIsBinauralActive(finalActive);
-                      speakText(finalActive ? "Binaural mental focus wave is now activated." : "Binaural beat is deactivated.");
-                    }}
-                    className={`px-2 py-0.5 text-[9px] font-mono font-bold rounded-lg border cursor-pointer transition-all ${
-                      isBinauralActive
-                        ? "bg-rose-500/10 border-rose-500/30 text-rose-400 shadow-[0_0_8px_rgba(244,63,94,0.1)]"
-                        : "bg-zinc-900/40 border-white/5 text-zinc-500"
-                    }`}
+                    onClick={() => setSidebarExpanded(prev => ({ ...prev, mixer: !prev.mixer }))}
+                    className="flex items-center gap-1.5 hover:text-white transition-colors cursor-pointer"
                   >
-                    {isBinauralActive ? "Active" : "Off"}
+                    <Sliders className="w-3.5 h-3.5 text-[#00D1FF]" />
+                    2. Lofi Sound Mixer
                   </button>
+                  <div className="flex items-center gap-1.5">
+                    <button
+                      type="button"
+                      onClick={() => setShowInactiveMixer(!showInactiveMixer)}
+                      className={`px-1.5 py-0.5 rounded text-[8px] font-mono font-bold tracking-wider uppercase transition-all duration-200 cursor-pointer ${
+                        showInactiveMixer
+                          ? "bg-purple-500/20 text-purple-400 border border-purple-500/40"
+                          : "bg-zinc-900 border border-white/5 text-zinc-500 hover:text-zinc-300"
+                      }`}
+                    >
+                      {showInactiveMixer ? "Show All" : "Hide 0%"}
+                    </button>
+                  </div>
                 </div>
 
-                {isBinauralActive && (
-                  <div className="space-y-2.5 bg-zinc-950/40 p-2.5 rounded-2xl border border-white/5 animate-fadeIn">
-                    {/* Choose cognitive state offset hz */}
-                    <div className="grid grid-cols-4 gap-1">
-                      {[
-                        { label: "Sleep", val: 4, desc: "4Hz (Delta)" },
-                        { label: "Calm", val: 6, desc: "6Hz (Theta)" },
-                        { label: "Learn", val: 10, desc: "10Hz (Alpha)" },
-                        { label: "Focus", val: 15, desc: "15Hz (Beta)" }
-                      ].map((preset) => (
-                        <button
-                          type="button"
-                          key={preset.label}
-                          onClick={() => {
-                            setBinauralOffset(preset.val);
-                            speakText(`Tuned to ${preset.desc} wave.`);
-                          }}
-                          className={`py-1 rounded text-[8px] font-mono cursor-pointer border ${
-                            binauralOffset === preset.val
-                              ? "bg-rose-500/10 border-rose-500/20 text-rose-300 font-semibold"
-                              : "bg-transparent border-transparent text-zinc-500 hover:text-zinc-300"
-                          }`}
-                          title={preset.desc}
-                        >
-                          {preset.label}
-                        </button>
-                      ))}
+                {sidebarExpanded.mixer && (
+                  <div className="space-y-3.5 pt-1.5 animate-fadeIn pr-1 text-left">
+                    {(() => {
+                      const mixerSliders = [
+                        { id: "rain", label: "Lofi Rain Static", val: rainVolume, setter: setRainVolume, icon: "🌧️" },
+                        { id: "ocean", label: "Ocean Shore Waves", val: oceanVolume, setter: setOceanVolume, icon: "🌊" },
+                        { id: "vinyl", label: "Vinyl Crackles", val: vinylVolume, setter: setVinylVolume, icon: "📻" },
+                      ];
+
+                      const activeMixerSliders = mixerSliders.filter(s => showInactiveMixer || s.val > 0);
+
+                      if (activeMixerSliders.length === 0) {
+                        return (
+                          <div className="p-4 rounded-2xl bg-zinc-950/40 border border-white/5 text-center text-zinc-500 text-[10px] space-y-2 font-mono">
+                            <p>Mixer is empty (all channels are silent at 0%).</p>
+                            <button
+                              type="button"
+                              onClick={() => {
+                                setRainVolume(0.35);
+                                setOceanVolume(0.2);
+                                setVinylVolume(0.15);
+                                if (!isPlaying && synthRef.current) {
+                                  synthRef.current.start(currentTime);
+                                  setIsPlaying(true);
+                                }
+                              }}
+                              className="px-2.5 py-1 bg-indigo-500/10 hover:bg-indigo-500/20 text-indigo-400 hover:text-indigo-300 border border-indigo-500/30 rounded-lg font-bold transition-all cursor-pointer text-[9px]"
+                            >
+                              Activate Preset Mix
+                            </button>
+                          </div>
+                        );
+                      }
+
+                      return activeMixerSliders.map((slider) => {
+                        return (
+                          <div key={slider.id} className="p-3 rounded-2xl bg-zinc-950/40 border border-white/5 flex flex-col justify-between gap-2 transition-all">
+                            <div className="flex justify-between items-center text-[10px] font-mono text-zinc-400">
+                              <span className="flex items-center gap-1.5">
+                                <span>{slider.icon}</span>
+                                <span className="font-semibold text-zinc-350">${slider.label}</span>
+                              </span>
+                              <span className="font-bold text-[#00D1FF]">{Math.round(slider.val * 100)}%</span>
+                            </div>
+                            <input
+                              type="range"
+                              min="0"
+                              max="1"
+                              step="0.01"
+                              value={slider.val}
+                              aria-label={`${slider.label} Volume`}
+                              onChange={(e) => {
+                                slider.setter(parseFloat(e.target.value));
+                                if (!isPlaying && synthRef.current) {
+                                  synthRef.current.start(currentTime);
+                                  setIsPlaying(true);
+                                }
+                              }}
+                              className="w-full accent-[#00D1FF] hover:accent-[#00D1FF] h-2 rounded-lg bg-zinc-900 cursor-pointer py-1 border border-white/5"
+                              style={{ minHeight: "44px" }}
+                            />
+                          </div>
+                        );
+                      });
+                    })()}
+                  </div>
+                )}
+              </div>
+
+              {/* Category 4: Advanced Audio & Synthesis Settings (Grouped Master Expandable) */}
+              <div className="border-t border-white/5 pt-4 space-y-3">
+                <button
+                  type="button"
+                  onClick={() => setSidebarExpanded(prev => ({ ...prev, advanced: !prev.advanced }))}
+                  className="w-full flex items-center justify-between text-xs uppercase tracking-widest text-[#00D1FF] font-semibold font-mono hover:text-white transition-colors cursor-pointer"
+                >
+                  <span className="flex items-center gap-1.5 animate-pulse">
+                    <Sliders className="w-3.5 h-3.5" />
+                    4. Advanced Audio Settings
+                  </span>
+                  <div className="flex items-center gap-2">
+                    {(isBinauralActive || sleepSecondsLeft > 0) && (
+                      <span className="text-[8px] bg-[#00D1FF]/10 text-[#00D1FF] border border-[#00D1FF]/20 px-1.5 py-0.2 rounded font-mono uppercase font-black">Active</span>
+                    )}
+                    <span className="text-[10px] text-zinc-500 transition-transform duration-300" style={{ transform: sidebarExpanded.advanced ? "rotate(180deg)" : "rotate(0deg)" }}>
+                      ▼
+                    </span>
+                  </div>
+                </button>
+
+                {sidebarExpanded.advanced && (
+                  <div className="space-y-4 pt-1.5 animate-fadeIn pr-1 text-left">
+                    {/* Sub-Section A: Synth Properties */}
+                    <div className="space-y-3 p-3.5 rounded-2xl bg-zinc-950/60 border border-white/5">
+                      <div className="flex items-center justify-between text-[10px] font-mono text-zinc-400 border-b border-white/5 pb-2 uppercase font-bold tracking-wider">
+                        <span className="flex items-center gap-1 text-indigo-400">
+                          <Music className="w-3 h-3" />
+                          Acoustic Synth
+                        </span>
+                        <span className="text-zinc-500 text-[8px] font-normal">Custom Wave</span>
+                      </div>
+                      
+                      {/* Oscillator Waves Choice */}
+                      <div>
+                        <span className="block text-[8px] font-mono text-zinc-500 uppercase tracking-widest mb-1.5">Core Waveform Shape</span>
+                        <div className="grid grid-cols-2 sm:grid-cols-4 gap-1.5">
+                          {(["sine", "triangle", "square", "sawtooth"] as OscillatorType[]).map((shape) => (
+                            <button
+                              key={shape}
+                              type="button"
+                              onClick={() => setSynthWaveform(shape)}
+                              className={`py-2 sm:py-1 text-[10px] sm:text-[8px] font-mono rounded-lg border transition-all cursor-pointer capitalize ${
+                                synthWaveform === shape
+                                  ? "bg-indigo-500/15 border-indigo-500/40 text-indigo-300 font-bold"
+                                  : "bg-zinc-900/40 border-white/5 text-zinc-500 hover:text-zinc-350"
+                              }`}
+                            >
+                              {shape}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* BPM Custom Tempo Slider */}
+                      <div>
+                        <div className="flex justify-between text-[10px] font-mono text-zinc-450 mb-1.5">
+                          <span>Tempo Pace</span>
+                          <span className="text-indigo-300 font-bold">{activeBpm} BPM</span>
+                        </div>
+                        <input
+                          type="range"
+                          min="55"
+                          max="115"
+                          step="1"
+                          value={activeBpm}
+                          aria-label="Synthesizer Tempo"
+                          onChange={(e) => setActiveBpm(parseInt(e.target.value))}
+                          className="w-full accent-indigo-500 hover:accent-indigo-400 h-2.5 sm:h-1.5 rounded-lg bg-zinc-900 cursor-pointer py-1.5 sm:py-0.5 border border-white/5"
+                        />
+                      </div>
                     </div>
 
-                    {/* Binaural Vol control */}
-                    <div>
-                      <div className="flex justify-between text-[8px] font-mono text-zinc-500 mb-0.5">
-                        <span>Cognitive Signal Intensity</span>
-                        <span>{Math.round(binauralVolume * 100)}%</span>
+                    {/* Sub-Section B: Binaural Cognitive Beats */}
+                    <div className="space-y-3 p-3.5 rounded-2xl bg-zinc-950/60 border border-white/5">
+                      <div className="flex items-center justify-between text-[10px] font-mono border-b border-white/5 pb-2 uppercase font-bold tracking-wider">
+                        <span className="flex items-center gap-1 text-rose-400">
+                          <Radio className="w-3 h-3" />
+                          Binaural Beats
+                        </span>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            const finalActive = !isBinauralActive;
+                            setIsBinauralActive(finalActive);
+                            speakText(finalActive ? "Binaural mental focus wave is now activated." : "Binaural beat is deactivated.");
+                          }}
+                          className={`px-2 py-0.5 text-[9px] font-mono font-bold rounded border cursor-pointer transition-all ${
+                            isBinauralActive
+                              ? "bg-rose-500/15 border-rose-500/30 text-rose-300 shadow-[0_0_8px_rgba(244,63,94,0.1)]"
+                              : "bg-zinc-900 border-white/5 text-zinc-550 hover:text-zinc-350"
+                          }`}
+                        >
+                          {isBinauralActive ? "Active" : "Off"}
+                        </button>
                       </div>
-                      <input
-                        type="range"
-                        min="0"
-                        max="1"
-                        step="0.05"
-                        value={binauralVolume}
-                        aria-label="Binaural Level"
-                        onChange={(e) => setBinauralVolume(parseFloat(e.target.value))}
-                        className="w-full accent-rose-500 h-1 rounded bg-zinc-900 cursor-pointer"
-                      />
+
+                      <div className="space-y-2.5">
+                        {/* Choose cognitive state offset hz */}
+                        <div className="grid grid-cols-2 sm:grid-cols-4 gap-1.5">
+                          {[
+                            { label: "Sleep", val: 4, desc: "4Hz (Delta)" },
+                            { label: "Calm", val: 6, desc: "6Hz (Theta)" },
+                            { label: "Learn", val: 10, desc: "10Hz (Alpha)" },
+                            { label: "Focus", val: 15, desc: "15Hz (Beta)" }
+                          ].map((preset) => (
+                            <button
+                              type="button"
+                              key={preset.label}
+                              onClick={() => {
+                                setBinauralOffset(preset.val);
+                                speakText(`Tuned to ${preset.desc} wave.`);
+                              }}
+                              className={`py-2 sm:py-1 rounded-lg text-[10px] sm:text-[8px] font-mono cursor-pointer border transition-all ${
+                                binauralOffset === preset.val
+                                  ? "bg-rose-500/15 border-rose-500/30 text-rose-300 font-bold"
+                                  : "bg-transparent border-white/5 text-zinc-550 hover:text-zinc-350 hover:border-white/10"
+                              }`}
+                              title={preset.desc}
+                            >
+                              {preset.label}
+                            </button>
+                          ))}
+                        </div>
+
+                        {/* Binaural Vol control */}
+                        <div>
+                          <div className="flex justify-between text-[10px] font-mono text-zinc-450 mb-1.5">
+                            <span>Signal Intensity</span>
+                            <span className="font-bold text-rose-300">{Math.round(binauralVolume * 100)}%</span>
+                          </div>
+                          <input
+                            type="range"
+                            min="0"
+                            max="1"
+                            step="0.05"
+                            value={binauralVolume}
+                            aria-label="Binaural Level"
+                            onChange={(e) => setBinauralVolume(parseFloat(e.target.value))}
+                            className="w-full h-2.5 sm:h-1.5 rounded-lg bg-zinc-900 cursor-pointer accent-rose-500 py-1.5 sm:py-0.5 border border-white/5"
+                          />
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Sub-Section C: Sleep Auto-Shutdown */}
+                    <div className="space-y-3 p-3.5 rounded-2xl bg-zinc-950/60 border border-white/5">
+                      <div className="flex items-center justify-between text-[10px] font-mono border-b border-white/5 pb-2 uppercase font-bold tracking-wider">
+                        <span className="flex items-center gap-1 text-amber-400">
+                          <Clock className="w-3 h-3" />
+                          Shutdown Timer
+                        </span>
+                        {sleepSecondsLeft > 0 && (
+                          <span className="text-[9px] text-[#00D1FF] font-black animate-pulse">
+                            {Math.floor(sleepSecondsLeft / 60)}M remaining
+                          </span>
+                        )}
+                      </div>
+
+                      <div className="space-y-2.5">
+                        {sleepSecondsLeft > 0 && (
+                          <div className="bg-zinc-930 border border-[#00D1FF]/15 px-3 py-1.5 rounded-xl flex items-center justify-between text-[#00D1FF] bg-[#00D1FF]/5">
+                            <span className="text-[9px] font-mono uppercase tracking-wider">Time Left:</span>
+                            <span className="text-xs font-mono font-bold animate-pulse">{Math.floor(sleepSecondsLeft / 60)}m {sleepSecondsLeft % 60}s</span>
+                          </div>
+                        )}
+                        <div className="relative">
+                          <select
+                            value={sleepMinutes}
+                            aria-label="Sleep Timer Selector"
+                            onChange={(e) => {
+                              const val = parseInt(e.target.value);
+                              setSleepMinutes(val);
+                              if (val > 0) {
+                                speakText(`Set sleep timer to shut off playing in ${val} minutes.`);
+                              } else {
+                                speakText("Sleep shutdown timer disabled.");
+                              }
+                            }}
+                            className="w-full bg-zinc-900 border border-white/5 text-xs text-zinc-300 px-3 py-2 rounded-xl focus:outline-none focus:border-[#00D1FF]/40 transition-all font-mono cursor-pointer"
+                          >
+                            <option value={0}>Disabled (Continuous Streams)</option>
+                            <option value={5}>5 Minutes Shutdown</option>
+                            <option value={15}>15 Minutes Shutdown</option>
+                            <option value={30}>30 Minutes Shutdown</option>
+                            <option value={45}>45 Minutes Shutdown</option>
+                            <option value={60}>60 Minutes (1 Hour Max)</option>
+                          </select>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 )}
               </div>
 
-              {/* Category 5: Sleep Auto-Shutdown countdown */}
-              <div className="border-t border-white/5 pt-4 space-y-2 text-left">
-                <div className="flex justify-between items-center font-mono">
-                  <span className="text-xs uppercase tracking-widest text-zinc-400 font-semibold flex items-center gap-1.5">
-                    <Clock className="w-3 h-3 text-amber-400" />
-                    5. Sleep Auto-Shutdown
-                  </span>
-                  {sleepSecondsLeft > 0 && (
-                    <span className="text-[9px] text-[#00D1FF] font-bold animate-pulse bg-[#00D1FF]/5 border border-[#00D1FF]/10 px-1.5 py-0.5 rounded">
-                      {Math.floor(sleepSecondsLeft / 60)}m {sleepSecondsLeft % 60}s left
-                    </span>
-                  )}
-                </div>
-
-                <div className="relative">
-                  <select
-                    value={sleepMinutes}
-                    aria-label="Sleep Timer Selector"
-                    onChange={(e) => {
-                      const val = parseInt(e.target.value);
-                      setSleepMinutes(val);
-                      if (val > 0) {
-                        speakText(`Set sleep timer to shut off playing in ${val} minutes.`);
-                      } else {
-                        speakText("Sleep shutdown timer disabled.");
-                      }
-                    }}
-                    className="w-full bg-zinc-900 border border-white/5 text-xs text-zinc-300 px-3 py-2 rounded-xl focus:outline-none focus:border-indigo-500 transition-all font-mono cursor-pointer"
-                  >
-                    <option value={0}>Disabled (Continuous Streams)</option>
-                    <option value={5}>5 Minutes Shutdown</option>
-                    <option value={15}>15 Minutes Shutdown</option>
-                    <option value={30}>30 Minutes Shutdown</option>
-                    <option value={45}>45 Minutes Shutdown</option>
-                    <option value={60}>60 Minutes (1 Hour Max)</option>
-                  </select>
-                </div>
-              </div>
-
               {/* Category 6: Interactive Background Atmosphere Visuals */}
               <div className="border-t border-white/5 pt-4 space-y-3">
-                <h3 className="text-xs uppercase tracking-widest text-[#00D1FF] font-semibold font-mono flex items-center justify-between">
+                <button
+                  type="button"
+                  onClick={() => setSidebarExpanded(prev => ({ ...prev, visual: !prev.visual }))}
+                  className="w-full flex items-center justify-between text-xs uppercase tracking-widest text-[#00D1FF] font-semibold font-mono hover:text-white transition-colors cursor-pointer"
+                >
                   <span className="flex items-center gap-1.5">
-                    <Sparkles className="w-3 h-3" />
+                    <Sparkles className="w-3 h-3 text-[#00D1FF]" />
                     6. Ambient Visual Canvas
                   </span>
-                  <span className="text-[8px] opacity-60 font-mono bg-indigo-500/10 text-indigo-400 px-1.5 py-0.5 rounded uppercase">HQ Layer</span>
-                </h3>
-                
-                {/* Visual state picker */}
-                <div>
-                  <span className="block text-[9px] font-mono text-zinc-500 uppercase tracking-widest mb-1.5">Background Mode</span>
-                  <div className="grid grid-cols-3 gap-1">
-                    {[
-                      { id: "off", label: "Off" },
-                      { id: "static", label: "Static" },
-                      { id: "animated", label: "Lively Zoom" }
-                    ].map((mode) => (
-                      <button
-                        key={mode.id}
-                        type="button"
-                        onClick={() => {
-                          setVisualMode(mode.id as any);
-                          speakText(`Atmospheric background set to ${mode.label} mode.`);
-                        }}
-                        className={`py-1 text-[9px] font-mono rounded-lg border transition-all cursor-pointer text-center ${
-                          visualMode === mode.id
-                            ? "bg-[#00D1FF]/10 border-[#00D1FF]/30 text-[#00D1FF] font-bold"
-                            : "bg-zinc-900/40 border-white/5 text-zinc-500 hover:text-zinc-350"
-                        }`}
-                      >
-                        {mode.label}
-                      </button>
-                    ))}
+                  <div className="flex items-center gap-2">
+                    {visualMode !== "off" && (
+                      <span className="text-[8px] bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 px-1.5 py-0.2 rounded font-mono uppercase">HQ on</span>
+                    )}
+                    <span className="text-[10px] text-zinc-500 transition-transform duration-300" style={{ transform: sidebarExpanded.visual ? "rotate(180deg)" : "rotate(0deg)" }}>
+                      ▼
+                    </span>
                   </div>
-                </div>
+                </button>
 
-                {/* Direct tactile layer overwrites as requested for premium mood integrations */}
-                <div className="space-y-1.5">
-                  <span className="block text-[9px] font-mono text-zinc-500 uppercase tracking-widest">Toggle Premium Visual Packs</span>
-                  <div className="grid grid-cols-2 gap-1.5">
-                    <button
-                      type="button"
-                      onClick={() => {
-                        const val = !manualCampfire;
-                        setManualCampfire(val);
-                        speakText(val ? "Campfire cozy visual override activated." : "Campfire overlay deactivated.");
-                      }}
-                      className={`py-1.5 px-2 text-[9px] font-mono rounded-lg border transition-all flex items-center justify-center gap-1 cursor-pointer ${
-                        manualCampfire
-                          ? "bg-amber-500/10 border-amber-500/30 text-amber-400 font-semibold"
-                          : "bg-zinc-900/40 border-white/5 text-zinc-400 hover:text-zinc-300"
-                      }`}
-                    >
-                      <span className="text-2xs">🔥</span>
-                      <span>Campfire Cozy {manualCampfire ? "On" : "Add"}</span>
-                    </button>
-
-                    <button
-                      type="button"
-                      onClick={() => {
-                        const val = !manualTrain;
-                        setManualTrain(val);
-                        speakText(val ? "Train ride scenic visual override activated." : "Train ride overlay deactivated.");
-                      }}
-                      className={`py-1.5 px-2 text-[9px] font-mono rounded-lg border transition-all flex items-center justify-center gap-1 cursor-pointer ${
-                        manualTrain
-                          ? "bg-[#00D1FF]/10 border-[#00D1FF]/30 text-[#00D1FF] font-semibold"
-                          : "bg-zinc-900/40 border-white/5 text-zinc-400 hover:text-zinc-300"
-                      }`}
-                    >
-                      <span className="text-2xs">🚂</span>
-                      <span>Train Scenic {manualTrain ? "On" : "Add"}</span>
-                    </button>
-                  </div>
-                </div>
-
-                {/* Active Layer Indicators HUD display */}
-                {visualMode !== "off" && (
-                  <div className="bg-zinc-950/40 p-2.5 rounded-xl border border-white/5">
-                    <span className="block text-[8px] font-mono text-zinc-500 uppercase tracking-widest mb-1">Active Atmosphere Layers ({activeVisualLayers.length})</span>
-                    {activeVisualLayers.length > 0 ? (
-                      <div className="flex flex-wrap gap-1">
-                        {activeVisualLayers.map((l) => (
-                          <span key={l.id} className="text-[8px] font-mono bg-zinc-900 border border-white/10 text-zinc-350 px-1.5 py-0.5 rounded capitalize flex items-center gap-1">
-                            <span className="w-1 h-1 rounded-full bg-emerald-400 animate-pulse" />
-                            {l.id}
-                          </span>
+                {sidebarExpanded.visual && (
+                  <div className="space-y-3 animate-fadeIn pt-1">
+                    {/* Visual state picker */}
+                    <div>
+                      <span className="block text-[9px] font-mono text-zinc-500 uppercase tracking-widest mb-1.5">Background Mode</span>
+                      <div className="grid grid-cols-3 gap-1">
+                        {[
+                          { id: "off", label: "Off" },
+                          { id: "static", label: "Static" },
+                          { id: "animated", label: "Lively Zoom" }
+                        ].map((mode) => (
+                          <button
+                            key={mode.id}
+                            type="button"
+                            onClick={() => {
+                              setVisualMode(mode.id as any);
+                              speakText(`Atmospheric background set to ${mode.label} mode.`);
+                            }}
+                            className={`py-1 text-[9px] font-mono rounded-lg border transition-all cursor-pointer text-center ${
+                              visualMode === mode.id
+                                ? "bg-[#00D1FF]/10 border-[#00D1FF]/30 text-[#00D1FF] font-bold"
+                                : "bg-zinc-900/40 border-white/5 text-zinc-500 hover:text-zinc-350"
+                            }`}
+                          >
+                            {mode.label}
+                          </button>
                         ))}
                       </div>
-                    ) : (
-                      <span className="text-[8px] font-mono text-zinc-650 block italic">Choose tracks, adjust mixer, or tap overlays above to launch scenery.</span>
+                    </div>
+
+                    {/* Direct tactile layer overwrites as requested for premium mood integrations */}
+                    <div className="space-y-1.5">
+                      <span className="block text-[9px] font-mono text-zinc-500 uppercase tracking-widest">Toggle Premium Visual Packs</span>
+                      <div className="grid grid-cols-2 gap-1.5">
+                        <button
+                          type="button"
+                          onClick={() => {
+                            const val = !manualCampfire;
+                            setManualCampfire(val);
+                            speakText(val ? "Campfire cozy visual override activated." : "Campfire overlay deactivated.");
+                          }}
+                          className={`py-1.5 px-2 text-[9px] font-mono rounded-lg border transition-all flex items-center justify-center gap-1 cursor-pointer ${
+                            manualCampfire
+                              ? "bg-amber-500/10 border-amber-500/30 text-amber-400 font-semibold"
+                              : "bg-zinc-900/40 border-white/5 text-zinc-400 hover:text-zinc-350"
+                          }`}
+                        >
+                          <span className="text-2xs">🔥</span>
+                          <span>Campfire Cozy {manualCampfire ? "On" : "Add"}</span>
+                        </button>
+
+                        <button
+                          type="button"
+                          onClick={() => {
+                            const val = !manualTrain;
+                            setManualTrain(val);
+                            speakText(val ? "Train ride scenic visual override activated." : "Train ride overlay deactivated.");
+                          }}
+                          className={`py-1.5 px-2 text-[9px] font-mono rounded-lg border transition-all flex items-center justify-center gap-1 cursor-pointer ${
+                            manualTrain
+                              ? "bg-[#00D1FF]/10 border-[#00D1FF]/30 text-[#00D1FF] font-semibold"
+                              : "bg-zinc-900/40 border-white/5 text-zinc-400 hover:text-zinc-350"
+                          }`}
+                        >
+                          <span className="text-2xs">🚂</span>
+                          <span>Train Scenic {manualTrain ? "On" : "Add"}</span>
+                        </button>
+                      </div>
+                    </div>
+
+                    {/* Active Layer Indicators HUD display */}
+                    {visualMode !== "off" && (
+                      <div className="bg-zinc-950/40 p-2.5 rounded-xl border border-white/5">
+                        <span className="block text-[8px] font-mono text-zinc-500 uppercase tracking-widest mb-1">Active Atmosphere Layers ({activeVisualLayers.length})</span>
+                        {activeVisualLayers.length > 0 ? (
+                          <div className="flex flex-wrap gap-1">
+                            {activeVisualLayers.map((l) => (
+                              <span key={l.id} className="text-[8px] font-mono bg-zinc-900 border border-white/10 text-zinc-350 px-1.5 py-0.5 rounded capitalize flex items-center gap-1">
+                                <span className="w-1 h-1 rounded-full bg-emerald-400 animate-pulse" />
+                                {l.id}
+                              </span>
+                            ))}
+                          </div>
+                        ) : (
+                          <span className="text-[8px] font-mono text-zinc-650 block italic">Choose tracks, adjust mixer, or tap overlays above to launch scenery.</span>
+                        )}
+                      </div>
                     )}
                   </div>
                 )}
@@ -2803,53 +2805,53 @@ export default function App() {
             <div className="bg-zinc-950/80 rounded-3xl border border-white/5 p-6 md:p-8 relative shadow-2xl flex flex-col gap-6">
               
               {/* Central control navigation tab layout */}
-              <div className="flex border-b border-white/5 bg-zinc-950/30 p-1 rounded-2xl gap-0.5 sm:gap-1">
+              <div className="grid grid-cols-2 sm:flex border-b border-white/5 bg-zinc-950/30 p-1.5 rounded-2xl gap-1.5 sm:gap-1">
                 <button
                   type="button"
                   onClick={() => setActiveCenterTab("karaoke")}
-                  className={`flex-1 py-2 text-2xs font-mono tracking-wider sm:tracking-widest uppercase text-center rounded-xl transition-all flex items-center justify-center gap-1 cursor-pointer ${
+                  className={`flex-1 min-h-[44px] py-2 px-2 text-[10px] sm:text-2xs font-mono tracking-wider sm:tracking-widest uppercase text-center rounded-xl transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
                     activeCenterTab === "karaoke"
                       ? "text-white bg-zinc-900 border border-white/10 shadow-sm"
-                      : "text-zinc-500 hover:text-zinc-300"
+                      : "text-zinc-500 hover:text-zinc-350"
                   }`}
                 >
-                  <Music className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-[#00D1FF]" />
+                  <Music className="w-3.5 h-3.5 text-[#00D1FF]" />
                   <span>Karaoke<span className="hidden sm:inline"> Scroller</span></span>
                 </button>
                 <button
                   type="button"
                   onClick={() => setActiveCenterTab("presets")}
-                  className={`flex-1 py-2 text-2xs font-mono tracking-wider sm:tracking-widest uppercase text-center rounded-xl transition-all flex items-center justify-center gap-1 cursor-pointer ${
+                  className={`flex-1 min-h-[44px] py-2 px-2 text-[10px] sm:text-2xs font-mono tracking-wider sm:tracking-widest uppercase text-center rounded-xl transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
                     activeCenterTab === "presets"
                       ? "text-white bg-zinc-900 border border-white/10 shadow-sm"
-                      : "text-zinc-500 hover:text-zinc-300"
+                      : "text-zinc-500 hover:text-zinc-350"
                   }`}
                 >
-                  <Layers className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-[#00D1FF]" />
+                  <Layers className="w-3.5 h-3.5 text-[#00D1FF]" />
                   <span><span className="hidden sm:inline">Calm </span>Presets</span>
                 </button>
                 <button
                   type="button"
                   onClick={() => setActiveCenterTab("submit")}
-                  className={`flex-1 py-1 px-1 text-2xs font-mono tracking-wider sm:tracking-widest uppercase text-center rounded-xl transition-all flex items-center justify-center gap-1 cursor-pointer ${
+                  className={`flex-1 min-h-[44px] py-1.5 px-2 text-[10px] sm:text-2xs font-mono tracking-wider sm:tracking-widest uppercase text-center rounded-xl transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
                     activeCenterTab === "submit"
                       ? "text-white bg-zinc-900 border border-white/10 shadow-sm"
-                      : "text-zinc-500 hover:text-zinc-300"
+                      : "text-zinc-500 hover:text-zinc-350"
                   }`}
                 >
-                  <RefreshCw className="w-3 h-3 text-[#00D1FF]" />
+                  <RefreshCw className="w-3.5 h-3.5 text-[#00D1FF]" />
                   <span>Submit<span className="hidden sm:inline"> Song</span></span>
                 </button>
                 <button
                   type="button"
                   onClick={() => setActiveCenterTab("nature")}
-                  className={`flex-1 py-1 px-1 text-2xs font-mono tracking-wider sm:tracking-widest uppercase text-center rounded-xl transition-all flex items-center justify-center gap-1 cursor-pointer ${
+                  className={`flex-1 min-h-[44px] py-1.5 px-2 text-[10px] sm:text-2xs font-mono tracking-wider sm:tracking-widest uppercase text-center rounded-xl transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
                     activeCenterTab === "nature"
                       ? "text-white bg-zinc-900 border border-white/10 shadow-sm"
-                      : "text-zinc-500 hover:text-zinc-300"
+                      : "text-zinc-500 hover:text-zinc-350"
                   }`}
                 >
-                  <Bird className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-[#00D1FF]" />
+                  <Bird className="w-3.5 h-3.5 text-[#00D1FF]" />
                   <span>Nature<span className="hidden sm:inline"> Deck</span></span>
                 </button>
               </div>
@@ -2893,10 +2895,10 @@ export default function App() {
                           key={line.id}
                           id={`lyric-line-${line.id}`}
                           onClick={() => handleLyricLineClick(line.time)}
-                          className={`lyric-line font-serif py-3 text-center cursor-pointer transition-all duration-300 w-full px-4 rounded-xl hover:bg-white/5 leading-relaxed break-words outline-none select-none ${
+                          className={`lyric-line font-serif py-3.5 text-center cursor-pointer transition-all duration-300 w-full px-4 rounded-xl hover:bg-white/5 leading-relaxed break-words outline-none select-none ${
                             isActive
-                              ? "active text-white font-extrabold text-lg md:text-xl md:py-4 scale-[1.03] lyric-active-anim"
-                              : "text-zinc-500 hover:text-zinc-300 text-sm md:text-base opacity-40 hover:opacity-80"
+                              ? "active text-white font-extrabold text-[18px] md:text-2xl md:py-4.5 scale-[1.03] lyric-active-anim animate-pulse"
+                              : "text-zinc-400 hover:text-zinc-200 text-[16px] md:text-lg opacity-50 hover:opacity-90"
                           }`}
                           style={isActive ? {
                             color: "#ffffff",
@@ -2916,7 +2918,7 @@ export default function App() {
                     <div className="h-[100px] shrink-0" />
                   </div>
 
-                  <div className="text-center text-[10px] font-mono text-zinc-500">
+                  <div className="text-center text-[10px] font-mono text-zinc-550">
                     Tip: Click any lyric line to jump the lo-fi synthesizer directly to that moment.
                   </div>
                 </div>
@@ -2936,7 +2938,7 @@ export default function App() {
                     </div>
 
                     {/* Sub tabs: Curated, Favorites, Recents, Share */}
-                    <div className="flex bg-zinc-950/50 p-1 rounded-xl gap-0.5 border border-white/5 self-start md:self-auto shrink-0 select-none">
+                    <div className="flex overflow-x-auto whitespace-nowrap scrollbar-none bg-zinc-950/50 p-1 rounded-xl gap-0.5 border border-white/5 self-start md:self-auto shrink-0 select-none max-w-full">
                       {[
                         { id: "all", label: "Curated" },
                         { id: "favorites", label: "Favorites" },
@@ -2947,10 +2949,10 @@ export default function App() {
                           key={sub.id}
                           type="button"
                           onClick={() => setPresetsSubTab(sub.id as any)}
-                          className={`px-2.5 py-1 text-[8.5px] font-mono uppercase rounded-lg tracking-wider transition-all cursor-pointer ${
+                          className={`shrink-0 px-2.5 py-1 text-[8.5px] font-mono uppercase rounded-lg tracking-wider transition-all cursor-pointer ${
                             presetsSubTab === sub.id
                               ? "bg-indigo-500/10 text-[#00D1FF] border border-[#00D1FF]/25 font-bold"
-                              : "text-zinc-500 hover:text-zinc-300 border border-transparent"
+                              : "text-zinc-500 hover:text-zinc-350 border border-transparent"
                           }`}
                         >
                           {sub.label}
@@ -3306,7 +3308,7 @@ export default function App() {
               {/* Tab 4: NATURE SOUNDBOARD */}
               {activeCenterTab === "nature" && (
                 <div className="animate-fadeIn">
-                  <NatureSoundboard />
+                  <NatureSoundboard interfaceLanguage={interfaceLanguage} />
                 </div>
               )}
 
@@ -3842,6 +3844,228 @@ export default function App() {
           />
         )}
 
+      </div>
+
+      {/* COMPREHENSIVE FIXED BOTTOM SCRUBBER FOOTER CONTROLLER */}
+      <div 
+        className="fixed bottom-0 left-0 right-0 z-45 bg-zinc-950/98 border-t border-white/10 backdrop-blur-2xl py-3 px-4 md:px-8 shadow-[0_-15px_30px_rgba(0,0,0,0.85)] w-full font-sans transition-colors duration-500"
+        style={{
+          boxShadow: isPlaying ? `0 -15px 40px -15px ${activeTheme.accent}15` : "none"
+        }}
+      >
+        <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-3 md:gap-5 w-full">
+          
+          {/* Row 1: Player buttons, playing info, and radio tuner index trigger for mobile */}
+          <div className="flex items-center justify-between gap-3 w-full md:w-auto">
+            <div className="flex items-center gap-3">
+              <div className="relative shrink-0 select-none">
+                {isPlaying && (
+                  <span 
+                    className="absolute inset-0 rounded-full animate-ping opacity-25" 
+                    style={{ backgroundColor: activeTheme.accent }}
+                  />
+                )}
+                <button
+                  id="midnight-playback-main-btn"
+                  onClick={handleTogglePlayback}
+                  className="w-11 h-11 md:w-12 md:h-12 rounded-full border text-white flex items-center justify-center cursor-pointer transition-all duration-300 shadow-lg relative z-10 hover:scale-105 active:scale-95"
+                  style={{
+                    borderColor: isPlaying ? activeTheme.accent : "rgba(255, 255, 255, 0.3)",
+                    backgroundColor: isPlaying ? `${activeTheme.accent}15` : "rgba(255, 255, 255, 0.03)",
+                    boxShadow: isPlaying ? `0 0 12px ${activeTheme.glowColor}40` : "none"
+                  }}
+                  title={isPlaying ? "Pause track" : "Play track"}
+                >
+                  {isPlaying ? (
+                    <Pause className="w-4 h-4 md:w-5 md:h-5 text-white" style={{ fill: activeTheme.accent }} />
+                  ) : (
+                    <Play className="w-4 h-4 md:w-5 md:h-5 text-white fill-white translate-x-[1px]" />
+                  )}
+                </button>
+              </div>
+              
+              <div className="text-left font-sans max-w-[140px] sm:max-w-[220px]">
+                <span className="text-[7px] md:text-[8px] font-mono uppercase tracking-[0.2em] opacity-50 block">// Station Active</span>
+                <h4 className="text-2xs md:text-sm font-extrabold text-white tracking-wide truncate" style={{ color: isPlaying ? activeTheme.accent : "#ffffff" }}>{activeSongTitle}</h4>
+                
+                <p className="text-[8px] md:text-[10px] text-zinc-550 font-mono mt-0.5 flex items-center gap-2">
+                  <span className={`inline-block w-1.5 h-1.5 rounded-full ${isPlaying ? "bg-emerald-400 animate-pulse" : "bg-amber-400"}`} />
+                  <span>{isPlaying ? "RECEIVING" : "STANDBY"}</span>
+                  {isPlaying ? (
+                    <span className="inline-flex items-end gap-[1.5px] h-3 w-4 px-0.5 pb-[1.5px]" aria-hidden="true" title="Audio Stream active">
+                      <span className="w-[1.5px] bg-[#00D1FF] rounded-full animate-soundwave-1 origin-bottom" style={{ minHeight: "3px" }} />
+                      <span className="w-[1.5px] bg-[#00D1FF] rounded-full animate-soundwave-2 origin-bottom" style={{ animationDelay: "0.15s", minHeight: "3px" }} />
+                      <span className="w-[1.5px] bg-[#00D1FF] rounded-full animate-soundwave-3 origin-bottom" style={{ animationDelay: "0.08s", minHeight: "3px" }} />
+                      <span className="w-[1.5px] bg-[#00D1FF] rounded-full animate-soundwave-4 origin-bottom" style={{ animationDelay: "0.22s", minHeight: "3px" }} />
+                    </span>
+                  ) : (
+                    <span className="inline-flex items-end gap-[1.5px] h-3 w-4 px-0.5 pb-[1.5px] opacity-40" aria-hidden="true">
+                      <span className="w-[1.5px] h-[3px] bg-zinc-650 rounded-full" />
+                      <span className="w-[1.5px] h-[3px] bg-zinc-650 rounded-full" />
+                      <span className="w-[1.5px] h-[3px] bg-zinc-650 rounded-full" />
+                      <span className="w-[1.5px] h-[3px] bg-zinc-650 rounded-full" />
+                    </span>
+                  )}
+                </p>
+              </div>
+            </div>
+
+            {/* Quick interactive tuner triggers & vibe indicator specific to mobile layout */}
+            <div className="flex items-center gap-1 sm:gap-1.5 md:hidden">
+              <button
+                type="button"
+                onClick={() => setShowTuner(!showTuner)}
+                className={`min-h-[44px] py-1 px-2.5 rounded-xl border uppercase text-[8.5px] font-mono font-bold select-none cursor-pointer duration-300 transition-all ${
+                  showTuner 
+                    ? "border-sky-500 bg-sky-500/10 text-sky-400" 
+                    : "border-white/10 bg-white/5 text-zinc-400 hover:text-white"
+                }`}
+              >
+                📡 {showTuner ? "Tuner" : "Tune"}
+              </button>
+              <button
+                type="button"
+                onClick={() => setShowSoundConsole(!showSoundConsole)}
+                className={`min-h-[44px] py-1 px-2.5 rounded-xl border uppercase text-[8.5px] font-mono font-bold select-none cursor-pointer duration-300 transition-all ${
+                  showSoundConsole
+                    ? "border-purple-500 bg-purple-500/10 text-purple-450"
+                    : "border-white/10 bg-white/5 text-zinc-400 hover:text-white"
+                }`}
+              >
+                🎛️ Console
+              </button>
+              <button
+                type="button"
+                onClick={() => setShowEchoTerminal(!showEchoTerminal)}
+                className={`min-h-[44px] py-1 px-2.5 rounded-xl border uppercase text-[8.5px] font-mono font-bold select-none cursor-pointer duration-300 transition-all ${
+                  showEchoTerminal
+                    ? "border-emerald-500 bg-emerald-500/10 text-emerald-400"
+                    : "border-white/10 bg-white/5 text-zinc-400 hover:text-white"
+                }`}
+              >
+                📟 Signal
+              </button>
+            </div>
+          </div>
+
+          {/* Row 2: Seeker progress slider */}
+          <div className="flex-grow w-full md:flex-1 flex items-center gap-3">
+            <span className="font-mono text-[10px] text-zinc-400 select-none">
+              {formatTime(currentTime)}
+            </span>
+
+            <div
+              id="lyrics-play-bar-scrubber"
+              onClick={handleSeek}
+              className="progress-track flex-grow h-2.5 rounded-full bg-zinc-900/80 border border-white/5 relative cursor-pointer group transition-all"
+              style={{ minHeight: "44px", display: "flex", alignItems: "center" }}
+            >
+              <div className="w-full h-1.5 md:h-2 bg-zinc-900 rounded-full overflow-hidden relative">
+                {/* Audio visual progress fill node */}
+                <div
+                  className="progress-fill absolute left-0 top-0 h-full rounded-full transition-all duration-75"
+                  style={{
+                    width: `${(currentTime / totalDuration) * 100}%`,
+                    background: `linear-gradient(to right, ${activeTheme.accent}, #00D1FF)`,
+                    boxShadow: `0 0 8px ${activeTheme.glowColor}`
+                  }}
+                />
+              </div>
+            </div>
+
+            <span className="font-mono text-[10px] text-zinc-550 select-none">
+              -{formatTime(Math.max(0, totalDuration - currentTime))}
+            </span>
+          </div>
+
+          {/* Row 3: Expanded Volume and Sleep Controls on sticky bottom bar */}
+          <div className="flex items-center justify-between md:justify-end gap-5 text-xs font-mono text-zinc-400 w-full md:w-auto">
+            
+            {/* Countdown / Sleep clock */}
+            <div className="flex items-center gap-2 bg-zinc-900/60 border border-white/5 py-1 px-3 rounded-xl transition-all hover:bg-zinc-900 focus-within:border-indigo-500/40">
+              <Moon className={`w-3.5 h-3.5 ${sleepSecondsLeft > 0 ? "text-indigo-500 animate-pulse" : "text-zinc-550"}`} />
+              <select
+                value={sleepMinutes}
+                aria-label="Sticky Footer Sleep Timer Preset Selector"
+                onChange={(e) => {
+                  const val = parseInt(e.target.value);
+                  setSleepMinutes(val);
+                  if (val > 0) {
+                    speakText(`Sleep timer set to shut off in ${val} minutes.`);
+                  } else {
+                    speakText("Sleep shutdown timer disabled.");
+                  }
+                }}
+                className="bg-transparent text-[10px] font-mono text-zinc-350 focus:outline-none border-none py-1 pr-1 cursor-pointer outline-none font-bold"
+                style={{ minHeight: "26px" }}
+              >
+                <option value={0} className="bg-zinc-950 text-zinc-300">Countdown: Off</option>
+                <option value={5} className="bg-zinc-950 text-zinc-300">5 Min</option>
+                <option value={15} className="bg-zinc-950 text-zinc-300">15 Min</option>
+                <option value={30} className="bg-zinc-950 text-zinc-300">30 Min</option>
+                <option value={45} className="bg-zinc-950 text-zinc-300">45 Min</option>
+                <option value={60} className="bg-zinc-950 text-zinc-300">60 Min</option>
+              </select>
+              {sleepSecondsLeft > 0 && (
+                <span className="text-[10px] font-mono font-black text-[#00D1FF] border-l border-white/10 pl-2 animate-pulse">
+                  {Math.floor(sleepSecondsLeft / 60)}:{(sleepSecondsLeft % 60).toString().padStart(2, "0")}
+                </span>
+              )}
+            </div>
+
+            {/* Master Volume with speaker status and mute toggle */}
+            <div className="flex items-center gap-1.5 bg-zinc-900/40 px-2 rounded-xl border border-white/5">
+              <button
+                type="button"
+                onClick={() => {
+                  if (masterVolume > 0) {
+                    setMasterVolume(0);
+                    speakText("Muted master volume.");
+                  } else {
+                    setMasterVolume(0.5);
+                    speakText("Volume set to fifty percent.");
+                  }
+                }}
+                className="text-zinc-400 hover:text-white transition-colors cursor-pointer p-1"
+                style={{ minHeight: "44px", minWidth: "36px", display: "flex", alignItems: "center", justifyContent: "center" }}
+                title={masterVolume > 0 ? "Mute audio stream" : "Unmute audio stream"}
+              >
+                {masterVolume > 0 ? (
+                  <Volume2 className="w-3.5 h-3.5 text-[#00D1FF]" />
+                ) : (
+                  <VolumeX className="w-3.5 h-3.5 text-rose-500 animate-pulse" />
+                )}
+              </button>
+              <input
+                type="range"
+                min="0"
+                max="1"
+                step="0.01"
+                value={masterVolume}
+                aria-label="Master Output Volume Range"
+                onChange={(e) => setMasterVolume(parseFloat(e.target.value))}
+                className="w-16 sm:w-20 md:w-24 h-1.5 rounded-full bg-zinc-900 cursor-pointer accent-[#00D1FF] transition-all"
+                style={{ minHeight: "44px" }}
+              />
+              <span className="font-mono text-[9px] text-zinc-550 min-w-[28px] text-right font-black">
+                {Math.round(masterVolume * 100)}%
+              </span>
+            </div>
+
+            {/* Accent colored state badge on desktop */}
+            <div 
+              className="hidden sm:flex items-center gap-1 px-2.5 py-1.5 rounded-xl border uppercase tracking-wider text-[8.5px] font-bold select-none text-right font-mono"
+              style={{
+                borderColor: `${activeTheme.accent}33`,
+                backgroundColor: `${activeTheme.accent}0a`,
+                color: activeTheme.accent
+              }}
+            >
+              <span>{currentVibe}</span>
+            </div>
+          </div>
+          
+        </div>
       </div>
     </div>
   );

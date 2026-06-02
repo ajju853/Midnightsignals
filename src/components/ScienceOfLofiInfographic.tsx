@@ -188,7 +188,7 @@ export default function ScienceOfLofiInfographic({ isEmbedded = false }: { isEmb
               max="100"
               value={fatigueLevel}
               onChange={(e) => setFatigueLevel(Number(e.target.value))}
-              className="w-full h-1 bg-zinc-800 rounded-lg appearance-none cursor-pointer accent-emerald-400"
+              className="w-full h-2.5 sm:h-1.5 bg-zinc-800 rounded-lg appearance-none cursor-pointer accent-emerald-400 py-1 sm:py-0 border border-white/5"
             />
 
             <div className="flex items-center justify-between text-2xs mt-1">
