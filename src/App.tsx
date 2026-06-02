@@ -106,12 +106,12 @@ export default function App() {
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [masterVolume, setMasterVolume] = useState(0.6);
-  const [rainVolume, setRainVolume] = useState(0.2);
+  const [rainVolume, setRainVolume] = useState(0.0);
   const [currentVibe, setCurrentVibe] = useState<VibeType>("dreamy");
 
   // Advanced Lofi Multi-Track Overlay Mixer States
-  const [oceanVolume, setOceanVolume] = useState(0.1);
-  const [vinylVolume, setVinylVolume] = useState(0.12);
+  const [oceanVolume, setOceanVolume] = useState(0.0);
+  const [vinylVolume, setVinylVolume] = useState(0.0);
 
   // Binaural Cognitive Focus Wave Generator States
   const [isBinauralActive, setIsBinauralActive] = useState(false);
@@ -135,6 +135,9 @@ export default function App() {
 
   // Creative Panel Tab Selection on central view card
   const [activeCenterTab, setActiveCenterTab] = useState<"karaoke" | "presets" | "submit" | "nature">("nature");
+
+  // Quick Preset Selection
+  const [activeQuickPreset, setActiveQuickPreset] = useState<"focus" | "sleep" | "flow" | null>(null);
 
   // Client-side SEO Programmatic Router State
   const [currentPath, setCurrentPath] = useState<string>(() => {
@@ -901,6 +904,109 @@ export default function App() {
     setFloatingSignals((prev) => [newSignal, ...prev]);
   };
 
+  const handleQuickPreset = (mode: "focus" | "sleep" | "flow") => {
+    setActiveQuickPreset(mode);
+    if (!synthRef.current) return;
+
+    if (mode === "focus") {
+      setActiveBpm(74);
+      setRainVolume(0.35);
+      setVinylVolume(0.12);
+      setOceanVolume(0.0);
+      setIsBinauralActive(true);
+      setBinauralOffset(15); // 15Hz Beta Focus
+      setActiveSongTitle("Deep Focus Sequence");
+      setActiveArtistName("Midnight Channels");
+      
+      const launchEvent = new CustomEvent("launch-seo-preset", {
+        detail: {
+          activeChannels: {
+            birds: false,
+            owl: false,
+            trees: true,
+            ocean: false,
+            crickets: false
+          },
+          channelVolumes: {
+            birds: 0,
+            owl: 0,
+            trees: 0.35,
+            ocean: 0,
+            crickets: 0
+          }
+        }
+      });
+      window.dispatchEvent(launchEvent);
+      speakText("Deep Focus preset activated. Concentrating neural frequencies.");
+    } else if (mode === "sleep") {
+      setActiveBpm(60);
+      setRainVolume(0.1);
+      setVinylVolume(0.05);
+      setOceanVolume(0.5);
+      setIsBinauralActive(true);
+      setBinauralOffset(2); // 2Hz Delta Sleep
+      setActiveSongTitle("Deep Rest & Hibernate");
+      setActiveArtistName("Somnus Frequency");
+
+      const launchEvent = new CustomEvent("launch-seo-preset", {
+        detail: {
+          activeChannels: {
+            birds: false,
+            owl: true,
+            trees: false,
+            ocean: true,
+            crickets: true
+          },
+          channelVolumes: {
+            birds: 0,
+            owl: 0.45,
+            trees: 0,
+            ocean: 0.5,
+            crickets: 0.25
+          }
+        }
+      });
+      window.dispatchEvent(launchEvent);
+      speakText("Sleep and Hibernate preset activated. Delta sleep waves initiated.");
+    } else if (mode === "flow") {
+      setActiveBpm(88);
+      setRainVolume(0.05);
+      setVinylVolume(0.15);
+      setOceanVolume(0.0);
+      setIsBinauralActive(true);
+      setBinauralOffset(10); // 10Hz Alpha Creative Flow
+      setActiveSongTitle("Creative Flow Resonance");
+      setActiveArtistName("Aether Waves");
+
+      const launchEvent = new CustomEvent("launch-seo-preset", {
+        detail: {
+          activeChannels: {
+            birds: true,
+            owl: false,
+            trees: true,
+            ocean: false,
+            crickets: false
+          },
+          channelVolumes: {
+            birds: 0.6,
+            owl: 0,
+            trees: 0.35,
+            ocean: 0,
+            crickets: 0
+          }
+        }
+      });
+      window.dispatchEvent(launchEvent);
+      speakText("Creative Flow preset activated. Stimulating alpha brainwaves.");
+    }
+
+    // Auto toggle synth playing if currently paused
+    if (!isPlaying) {
+      synthRef.current.start(0);
+      setIsPlaying(true);
+    }
+  };
+
   // Triggers main media playback controls (Play / Pause toggle)
   const handleTogglePlayback = () => {
     if (!synthRef.current) return;
@@ -1540,23 +1646,62 @@ export default function App() {
             </h1>
           </div>
           
-          <div className="text-left md:text-right font-mono text-zinc-500 text-xs w-full md:w-auto border-l md:border-l-0 md:border-r border-white/10 pl-4 md:pl-0 md:pr-4 py-1">
-            <div className="text-zinc-300 font-serif italic text-lg font-bold">
-              {activeArtistName}
+          <div className="text-left md:text-right font-mono text-zinc-500 text-xs w-full md:w-auto border-l md:border-l-0 md:border-r border-white/10 pl-4 md:pl-0 md:pr-4 py-1 flex flex-col md:items-end gap-3">
+            <div>
+              <div className="text-zinc-300 font-serif italic text-lg font-bold">
+                {activeArtistName}
+              </div>
+              <div className="text-[10px] tracking-wider uppercase mt-1.5 flex items-center md:justify-end gap-2 text-zinc-400">
+                <span className="inline-block w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                Station Code: CLOUD_RUN
+                <span className="text-zinc-650">•</span>
+                <span className="text-zinc-500">Live Feedback</span>
+              </div>
             </div>
-            <div className="text-[10px] tracking-wider uppercase mt-1.5 flex items-center md:justify-end gap-2 text-zinc-400">
-              <span className="inline-block w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
-              Station Code: CLOUD_RUN
-              <span className="text-zinc-650">•</span>
-              <span className="text-zinc-500">Live Feedback</span>
+
+            {/* QUICK-PRESET BAR */}
+            <div className="flex flex-wrap items-center gap-1.5 bg-zinc-900/80 p-1 rounded-xl border border-white/5 backdrop-blur-sm self-start md:self-auto">
+              <span className="text-[8px] uppercase tracking-wider text-zinc-500 font-mono px-1.5 font-bold">Presets:</span>
+              
+              <button
+                id="qp-deep-focus"
+                onClick={() => handleQuickPreset("focus")}
+                className={`px-2 py-1 rounded-lg text-[10px] font-medium transition-all duration-300 flex items-center gap-1 cursor-pointer select-none ${
+                  activeQuickPreset === "focus"
+                    ? "bg-sky-500/20 text-sky-300 border border-sky-400/30 shadow-[0_0_8px_rgba(56,189,248,0.2)] font-semibold"
+                    : "text-zinc-400 hover:text-white border border-transparent hover:bg-white/5 hover:scale-102"
+                }`}
+              >
+                🎯 Focus
+              </button>
+
+              <button
+                id="qp-sleep"
+                onClick={() => handleQuickPreset("sleep")}
+                className={`px-2 py-1 rounded-lg text-[10px] font-medium transition-all duration-300 flex items-center gap-1 cursor-pointer select-none ${
+                  activeQuickPreset === "sleep"
+                    ? "bg-purple-500/20 text-purple-300 border border-purple-400/30 shadow-[0_0_8px_rgba(168,85,247,0.2)] font-semibold"
+                    : "text-zinc-400 hover:text-white border border-transparent hover:bg-white/5 hover:scale-102"
+                }`}
+              >
+                🌙 Sleep
+              </button>
+
+              <button
+                id="qp-creative-flow"
+                onClick={() => handleQuickPreset("flow")}
+                className={`px-2 py-1 rounded-lg text-[10px] font-medium transition-all duration-300 flex items-center gap-1 cursor-pointer select-none ${
+                  activeQuickPreset === "flow"
+                    ? "bg-emerald-500/20 text-emerald-300 border border-emerald-400/30 shadow-[0_0_8px_rgba(16,185,129,0.2)] font-semibold"
+                    : "text-zinc-400 hover:text-white border border-transparent hover:bg-white/5 hover:scale-102"
+                }`}
+              >
+                ✨ Flow
+              </button>
             </div>
           </div>
         </header>
 
-        {/* SECURE ACCOUNTS PORTAL SIMULATOR */}
-        <section className="relative z-20">
-          <AccountsSimulator onLoginStatusChange={(acc) => setActiveAccount(acc)} />
-        </section>
 
         {/* MAIN STRUCTURAL RESPONSIVE GRID OR DYNAMIC SEO LANDING VIEW */}
         {currentPath && !matchedSEOPage ? (
@@ -2350,6 +2495,8 @@ export default function App() {
                   addLocalSignal={addLocalSignal}
                   activeBpm={activeBpm}
                   isPlaying={isPlaying}
+                  rainVolume={rainVolume}
+                  isBirdsActive={natureSoundboardState.isPlaying && natureSoundboardState.activeChannels.birds}
                 />
               </div>
             </div>

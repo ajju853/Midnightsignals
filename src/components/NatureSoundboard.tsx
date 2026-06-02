@@ -37,6 +37,11 @@ export default function NatureSoundboard() {
     trees: true,
     ocean: false,
     crickets: true,
+    mountainWind: false,
+    brook: false,
+    desertBreeze: false,
+    morningMist: false,
+    caveEchoes: false,
   });
 
   // Synchronize Nature active states to global ambient layers
@@ -56,6 +61,11 @@ export default function NatureSoundboard() {
     trees: 0.35,
     ocean: 0.3,
     crickets: 0.25,
+    mountainWind: 0.4,
+    brook: 0.45,
+    desertBreeze: 0.35,
+    morningMist: 0.3,
+    caveEchoes: 0.4,
   });
 
   // Chosen bird sound preset for clicking the Bird Icon play buttons
@@ -357,6 +367,119 @@ export default function NatureSoundboard() {
     setSoundLogs((prev) => [mixLog, ...prev.slice(0, 5)]);
   };
 
+  const soundboardLayers = [
+    {
+      id: "birds",
+      name: "Songbirds",
+      tagline: "Live Whistles",
+      icon: <Bird className="w-5 h-5" />,
+      activeClass: "bg-sky-500/5 border-sky-400/20 text-sky-400",
+      dotColor: "#38bdf8",
+      instantTrigger: () => triggerFavBirdSoundInstant(),
+      title: "Click bird icon to instantly play selected songbird style!"
+    },
+    {
+      id: "owl",
+      name: "Canopy Owl",
+      tagline: "Periodic Hoot",
+      icon: <span className="text-lg">🦉</span>,
+      activeClass: "bg-purple-500/5 border-purple-400/20 text-purple-400",
+      dotColor: "#c084fc",
+      instantTrigger: () => triggerOwlSoundInstant(),
+      title: "Click owl icon to hear a double hoot!"
+    },
+    {
+      id: "ocean",
+      name: "Ocean Swell",
+      tagline: "Tidal Water",
+      icon: <Waves className="w-5 h-5" />,
+      activeClass: "bg-cyan-500/5 border-cyan-400/20 text-cyan-400",
+      dotColor: "#22d3ee",
+      instantTrigger: () => handleToggleChannel("ocean"),
+      title: "Toggle ocean waves"
+    },
+    {
+      id: "trees",
+      name: "Swaying Trees",
+      tagline: "Leaf Rustle",
+      icon: <Trees className="w-5 h-5" />,
+      activeClass: "bg-emerald-500/5 border-emerald-400/20 text-emerald-400",
+      dotColor: "#34d399",
+      instantTrigger: () => handleToggleChannel("trees"),
+      title: "Toggle tree breeze"
+    },
+    {
+      id: "crickets",
+      name: "Summer Crickets",
+      tagline: "Chirrup Loop",
+      icon: <span className="text-lg">🦗</span>,
+      activeClass: "bg-amber-500/5 border-amber-400/20 text-amber-400",
+      dotColor: "#fbbf24",
+      instantTrigger: () => handleToggleChannel("crickets"),
+      title: "Toggle cricket chirrs"
+    },
+    {
+      id: "mountainWind",
+      name: "Mountain Wind",
+      tagline: "Alpine Breeze",
+      icon: <span className="text-lg">💨</span>,
+      activeClass: "bg-teal-500/5 border-teal-400/20 text-teal-400",
+      dotColor: "#2dd4bf",
+      instantTrigger: () => handleToggleChannel("mountainWind"),
+      title: "Toggle distant mountain wind"
+    },
+    {
+      id: "brook",
+      name: "Brook Bubbling",
+      tagline: "Flowing Cave",
+      icon: <span className="text-lg">💧</span>,
+      activeClass: "bg-blue-500/5 border-blue-400/20 text-blue-400",
+      dotColor: "#60a5fa",
+      instantTrigger: () => handleToggleChannel("brook"),
+      title: "Toggle bubbling brook"
+    },
+    {
+      id: "desertBreeze",
+      name: "Desert Breeze",
+      tagline: "Dry Whistle",
+      icon: <span className="text-lg">🏜️</span>,
+      activeClass: "bg-orange-500/5 border-orange-400/20 text-orange-400",
+      dotColor: "#fb923c",
+      instantTrigger: () => handleToggleChannel("desertBreeze"),
+      title: "Toggle dry desert breeze"
+    },
+    {
+      id: "morningMist",
+      name: "Morning Mist",
+      tagline: "Soft Dew Hiss",
+      icon: <span className="text-lg">🌫️</span>,
+      activeClass: "bg-slate-500/5 border-slate-400/20 text-slate-400",
+      dotColor: "#94a3b8",
+      instantTrigger: () => handleToggleChannel("morningMist"),
+      title: "Toggle soft morning mist"
+    },
+    {
+      id: "caveEchoes",
+      name: "Cave Echoes",
+      tagline: "Cavern Drips",
+      icon: <span className="text-lg">🪨</span>,
+      activeClass: "bg-indigo-500/5 border-indigo-400/20 text-indigo-400",
+      dotColor: "#818cf8",
+      instantTrigger: () => {
+        if (!synthRef.current) return;
+        if (!activeChannels.caveEchoes) {
+          handleToggleChannel("caveEchoes");
+        }
+        if (!isPlaying) {
+          synthRef.current.start();
+          setIsPlaying(true);
+        }
+        synthRef.current.triggerProceduralCaveEcho();
+      },
+      title: "Toggle cave echoes dripping"
+    }
+  ];
+
   return (
     <div className="bg-zinc-950/80 rounded-3xl border border-white/5 overflow-hidden flex flex-col p-5 space-y-4 shadow-xl">
       
@@ -467,16 +590,38 @@ export default function NatureSoundboard() {
                   {[
                     {
                       name: "Morning Paradise",
-                      desc: "Awaken to majestic birds and deep morning ambient wind chimes.",
+                      desc: "Awaken to majestic birds and deep morning ambient wind chimes with soft morning mist.",
                       color: "text-emerald-400 border-emerald-400/25 bg-emerald-500/5",
                       channels: { 
                         birds: { active: true, volume: 0.8 }, 
                         trees: { active: true, volume: 0.4 }, 
                         ocean: { active: false, volume: 0.1 }, 
                         crickets: { active: false, volume: 0.15 }, 
-                        owl: { active: false, volume: 0.3 } 
+                        owl: { active: false, volume: 0.3 },
+                        mountainWind: { active: false, volume: 0.2 },
+                        brook: { active: true, volume: 0.5 },
+                        desertBreeze: { active: false, volume: 0.1 },
+                        morningMist: { active: true, volume: 0.6 },
+                        caveEchoes: { active: false, volume: 0.2 }
                       },
                       favBirdId: "nightingale"
+                    },
+                    {
+                      name: "Ancient Cave Whispers",
+                      desc: "Cavernous water drips echoing in stone vaults, deep cold mountain wind, and bubbling springs.",
+                      color: "text-indigo-400 border-indigo-500/25 bg-indigo-500/5",
+                      channels: { 
+                        birds: { active: false, volume: 0.1 }, 
+                        trees: { active: false, volume: 0.2 }, 
+                        ocean: { active: false, volume: 0.1 }, 
+                        crickets: { active: false, volume: 0.1 }, 
+                        owl: { active: true, volume: 0.4 },
+                        mountainWind: { active: true, volume: 0.55 },
+                        brook: { active: true, volume: 0.4 },
+                        desertBreeze: { active: false, volume: 0.1 },
+                        morningMist: { active: false, volume: 0.2 },
+                        caveEchoes: { active: true, volume: 0.8 }
+                      }
                     },
                     {
                       name: "Rainy Café",
@@ -487,8 +632,31 @@ export default function NatureSoundboard() {
                         trees: { active: true, volume: 0.7 }, 
                         ocean: { active: true, volume: 0.3 }, 
                         crickets: { active: false, volume: 0.1 }, 
-                        owl: { active: false, volume: 0.2 } 
+                        owl: { active: false, volume: 0.2 },
+                        mountainWind: { active: true, volume: 0.3 },
+                        brook: { active: false, volume: 0.2 },
+                        desertBreeze: { active: false, volume: 0.1 },
+                        morningMist: { active: true, volume: 0.4 },
+                        caveEchoes: { active: false, volume: 0.2 }
                       }
+                    },
+                    {
+                      name: "Desert Oasis",
+                      desc: "Dry howling winds, warm sifting breeze sand gusts, and a serene hidden pool stream.",
+                      color: "text-orange-400 border-orange-500/25 bg-orange-500/5",
+                      channels: { 
+                        birds: { active: true, volume: 0.4 }, 
+                        trees: { active: false, volume: 0.2 }, 
+                        ocean: { active: false, volume: 0.1 }, 
+                        crickets: { active: true, volume: 0.3 }, 
+                        owl: { active: false, volume: 0.2 },
+                        mountainWind: { active: false, volume: 0.2 },
+                        brook: { active: true, volume: 0.6 },
+                        desertBreeze: { active: true, volume: 0.8 },
+                        morningMist: { active: false, volume: 0.1 },
+                        caveEchoes: { active: false, volume: 0.1 }
+                      },
+                      favBirdId: "woodthrush"
                     },
                     {
                       name: "Forest Meditation",
@@ -499,7 +667,12 @@ export default function NatureSoundboard() {
                         trees: { active: true, volume: 0.7 }, 
                         owl: { active: true, volume: 0.5 }, 
                         ocean: { active: false, volume: 0.1 }, 
-                        crickets: { active: false, volume: 0.15 } 
+                        crickets: { active: false, volume: 0.15 },
+                        mountainWind: { active: false, volume: 0.2 },
+                        brook: { active: true, volume: 0.5 },
+                        desertBreeze: { active: false, volume: 0.1 },
+                        morningMist: { active: true, volume: 0.3 },
+                        caveEchoes: { active: false, volume: 0.2 }
                       },
                       favBirdId: "woodthrush"
                     },
@@ -512,34 +685,14 @@ export default function NatureSoundboard() {
                         trees: { active: true, volume: 0.35 }, 
                         ocean: { active: true, volume: 0.8 }, 
                         crickets: { active: false, volume: 0.1 }, 
-                        owl: { active: false, volume: 0.2 } 
+                        owl: { active: false, volume: 0.2 },
+                        mountainWind: { active: false, volume: 0.2 },
+                        brook: { active: false, volume: 0.2 },
+                        desertBreeze: { active: true, volume: 0.4 },
+                        morningMist: { active: true, volume: 0.5 },
+                        caveEchoes: { active: false, volume: 0.1 }
                       },
                       favBirdId: "tui"
-                    },
-                    {
-                      name: "Deep Sleep Heavy Rain",
-                      desc: "Strong storm-like noise, wind-swept forest, and active nightly crickets.",
-                      color: "text-[#00D1FF] border-[#00D1FF]/25 bg-[#00D1FF]/5",
-                      channels: { 
-                        birds: { active: false, volume: 0.1 }, 
-                        trees: { active: true, volume: 0.6 }, 
-                        ocean: { active: true, volume: 0.75 }, 
-                        crickets: { active: true, volume: 0.55 }, 
-                        owl: { active: false, volume: 0.1 } 
-                      }
-                    },
-                    {
-                      name: "YouTube Relaxation Standard",
-                      desc: "Highly-immersive custom combo including our signature whistling schoolboy thrush.",
-                      color: "text-rose-400 border-rose-400/25 bg-rose-500/5",
-                      channels: { 
-                        birds: { active: true, volume: 0.85 }, 
-                        trees: { active: true, volume: 0.6 }, 
-                        ocean: { active: true, volume: 0.45 }, 
-                        crickets: { active: true, volume: 0.35 }, 
-                        owl: { active: true, volume: 0.35 } 
-                      },
-                      favBirdId: "malabarwhistlingthrush"
                     }
                   ].map((preset) => (
                     <button
@@ -754,177 +907,45 @@ export default function NatureSoundboard() {
 
       {/* Interactive Bird Soundboard Selection Grid */}
       <div className="grid grid-cols-2 md:grid-cols-5 gap-2.5">
-        
-        {/* FIRST: BIRDS */}
-        <div 
-          className={`p-3 rounded-2xl border transition-all flex flex-col items-center text-center gap-2 relative ${
-            activeChannels.birds 
-              ? "bg-sky-500/5 border-sky-400/20" 
-              : "bg-zinc-900/40 border-white/5 grayscale"
-          }`}
-        >
-          <button
-            type="button"
-            onClick={triggerFavBirdSoundInstant}
-            className="w-10 h-10 rounded-full bg-sky-500/10 hover:bg-sky-500/20 text-sky-400 flex items-center justify-center border border-sky-500/20 cursor-pointer active:scale-90 shadow"
-            title="Click bird icon to instantly play selected songbird style!"
+        {soundboardLayers.map((layer) => (
+          <div 
+            key={layer.id}
+            className={`p-3 rounded-2xl border transition-all flex flex-col items-center text-center gap-2 relative ${
+              activeChannels[layer.id] 
+                ? layer.activeClass 
+                : "bg-zinc-900/40 border-white/5 grayscale"
+            }`}
           >
-            <Bird className="w-5 h-5" />
-          </button>
-          
-          <div className="text-center">
-            <span className="text-[10px] font-mono font-bold text-zinc-300 block">Songbirds</span>
-            <span className="text-[9px] text-sky-400/80 font-mono">Live Synthesized</span>
+            <button
+              type="button"
+              onClick={layer.instantTrigger}
+              className={`w-10 h-10 rounded-full flex items-center justify-center border cursor-pointer active:scale-90 shadow transition-colors ${
+                activeChannels[layer.id]
+                  ? "bg-white/10 border-white/20 text-white"
+                  : "bg-white/5 border-white/5 text-zinc-400 hover:bg-white/10"
+              }`}
+              title={layer.title}
+            >
+              {layer.icon}
+            </button>
+            
+            <div className="text-center">
+              <span className="text-[10px] font-mono font-bold text-zinc-300 block">{layer.name}</span>
+              <span className="text-[9px] text-zinc-500 font-mono">{layer.tagline}</span>
+            </div>
+
+            <button
+              type="button"
+              onClick={() => handleToggleChannel(layer.id)}
+              className="absolute top-1.5 right-1.5 w-3 h-3 rounded-full border transition-all cursor-pointer"
+              style={{ 
+                borderColor: activeChannels[layer.id] ? layer.dotColor : "rgba(255,255,255,0.1)",
+                backgroundColor: activeChannels[layer.id] ? layer.dotColor : "transparent"
+              }}
+              title="Toggle Continuous Stream"
+            />
           </div>
-
-          <button
-            type="button"
-            onClick={() => handleToggleChannel("birds")}
-            className="absolute top-1.5 right-1.5 w-3 h-3 rounded-full border transition-all cursor-pointer"
-            style={{ 
-              borderColor: activeChannels.birds ? "#38bdf8" : "rgba(255,255,255,0.1)",
-              backgroundColor: activeChannels.birds ? "#38bdf8" : "transparent"
-            }}
-            title="Toggle Continuous Stream"
-          />
-        </div>
-
-        {/* SECOND: OWL (woodland wisdom) */}
-        <div 
-          className={`p-3 rounded-2xl border transition-all flex flex-col items-center text-center gap-2 relative ${
-            activeChannels.owl 
-              ? "bg-purple-500/5 border-purple-400/20" 
-              : "bg-zinc-900/40 border-white/5 grayscale"
-          }`}
-        >
-          <button
-            type="button"
-            onClick={triggerOwlSoundInstant}
-            className="w-10 h-10 rounded-full bg-purple-500/10 hover:bg-purple-500/20 text-purple-400 flex items-center justify-center border border-purple-500/20 cursor-pointer active:scale-90 shadow"
-            title="Click owl icon to hear a double hoot!"
-          >
-            <span className="text-lg font-sans">🦉</span>
-          </button>
-          
-          <div className="text-center">
-            <span className="text-[10px] font-mono font-bold text-zinc-300 block">Canopy Owl</span>
-            <span className="text-[9px] text-purple-400/80 font-mono">Periodic Hoot</span>
-          </div>
-
-          <button
-            type="button"
-            onClick={() => handleToggleChannel("owl")}
-            className="absolute top-1.5 right-1.5 w-3 h-3 rounded-full border transition-all cursor-pointer"
-            style={{ 
-              borderColor: activeChannels.owl ? "#c084fc" : "rgba(255,255,255,0.1)",
-              backgroundColor: activeChannels.owl ? "#c084fc" : "transparent"
-            }}
-            title="Toggle Continuous Stream"
-          />
-        </div>
-
-        {/* THIRD: OCEAN SHORE */}
-        <div 
-          className={`p-3 rounded-2xl border transition-all flex flex-col items-center text-center gap-2 relative ${
-            activeChannels.ocean 
-              ? "bg-cyan-500/5 border-cyan-400/20" 
-              : "bg-zinc-900/40 border-white/5 grayscale"
-          }`}
-        >
-          <button
-            type="button"
-            onClick={() => handleToggleChannel("ocean")}
-            className="w-10 h-10 rounded-full bg-cyan-500/10 hover:bg-cyan-500/20 text-cyan-400 flex items-center justify-center border border-cyan-500/20 cursor-pointer active:scale-90 shadow"
-            title="Toggle ocean waves"
-          >
-            <Waves className="w-5 h-5" />
-          </button>
-          
-          <div className="text-center">
-            <span className="text-[10px] font-mono font-bold text-zinc-300 block">Ocean Swell</span>
-            <span className="text-[9px] text-cyan-400/80 font-mono">Tidal Water</span>
-          </div>
-
-          <button
-            type="button"
-            onClick={() => handleToggleChannel("ocean")}
-            className="absolute top-1.5 right-1.5 w-3 h-3 rounded-full border transition-all cursor-pointer"
-            style={{ 
-              borderColor: activeChannels.ocean ? "#22d3ee" : "rgba(255,255,255,0.1)",
-              backgroundColor: activeChannels.ocean ? "#22d3ee" : "transparent"
-            }}
-            title="Toggle Continuous Stream"
-          />
-        </div>
-
-        {/* FOURTH: TREES FOREST */}
-        <div 
-          className={`p-3 rounded-2xl border transition-all flex flex-col items-center text-center gap-2 relative ${
-            activeChannels.trees 
-              ? "bg-emerald-500/5 border-emerald-400/20" 
-              : "bg-zinc-900/40 border-white/5 grayscale"
-          }`}
-        >
-          <button
-            type="button"
-            onClick={() => handleToggleChannel("trees")}
-            className="w-10 h-10 rounded-full bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 flex items-center justify-center border border-emerald-500/20 cursor-pointer active:scale-90 shadow"
-            title="Toggle tree breeze"
-          >
-            <Trees className="w-5 h-5" />
-          </button>
-          
-          <div className="text-center">
-            <span className="text-[10px] font-mono font-bold text-zinc-300 block">Swaying Trees</span>
-            <span className="text-[9px] text-emerald-400/80 font-mono">Leaf Rustle</span>
-          </div>
-
-          <button
-            type="button"
-            onClick={() => handleToggleChannel("trees")}
-            className="absolute top-1.5 right-1.5 w-3 h-3 rounded-full border transition-all cursor-pointer"
-            style={{ 
-              borderColor: activeChannels.trees ? "#34d399" : "rgba(255,255,255,0.1)",
-              backgroundColor: activeChannels.trees ? "#34d399" : "transparent"
-            }}
-            title="Toggle Continuous Stream"
-          />
-        </div>
-
-        {/* FIFTH: CRICKETS */}
-        <div 
-          className={`p-3 rounded-2xl border transition-all flex flex-col items-center text-center gap-2 relative ${
-            activeChannels.crickets 
-              ? "bg-amber-500/5 border-amber-400/20" 
-              : "bg-zinc-900/40 border-white/5 grayscale"
-          }`}
-        >
-          <button
-            type="button"
-            onClick={() => handleToggleChannel("crickets")}
-            className="w-10 h-10 rounded-full bg-amber-500/10 hover:bg-amber-500/20 text-amber-400 flex items-center justify-center border border-amber-500/20 cursor-pointer active:scale-90 shadow"
-            title="Toggle cricket chirrs"
-          >
-            <span className="text-lg font-sans">🦗</span>
-          </button>
-          
-          <div className="text-center">
-            <span className="text-[10px] font-mono font-bold text-zinc-300 block">Summer Crickets</span>
-            <span className="text-[9px] text-amber-400/80 font-mono">Chirrup Loop</span>
-          </div>
-
-          <button
-            type="button"
-            onClick={() => handleToggleChannel("crickets")}
-            className="absolute top-1.5 right-1.5 w-3 h-3 rounded-full border transition-all cursor-pointer"
-            style={{ 
-              borderColor: activeChannels.crickets ? "#fbbf24" : "rgba(255,255,255,0.1)",
-              backgroundColor: activeChannels.crickets ? "#fbbf24" : "transparent"
-            }}
-            title="Toggle Continuous Stream"
-          />
-        </div>
-
+        ))}
       </div>
 
       {/* Sound Settings Form: Select Fav, Custom Volume Mixer Sliders */}
@@ -1064,63 +1085,41 @@ export default function NatureSoundboard() {
         </div>
 
         {/* MULTI CHANNEL NATURAL VOLUME OVERLAYS */}
-        <div className="bg-zinc-950 p-4.5 rounded-2xl border border-white/5 space-y-2.5 justify-center flex flex-col">
+        <div className="bg-zinc-950 p-4.5 rounded-2xl border border-white/5 space-y-3.5 justify-center flex flex-col">
           <div className="text-3xs font-mono uppercase tracking-widest text-zinc-500 mb-0.5">
             Decibel Volume Controller
           </div>
           
-          {/* Bird volume slider */}
-          <div className="space-y-1">
-            <div className="flex justify-between text-[10px] font-mono text-zinc-400">
-              <span className="flex items-center gap-1">🐤 Forest Songbirds</span>
-              <span>{Math.round(channelVolumes.birds * 100)}%</span>
-            </div>
-            <input
-              type="range"
-              min="0"
-              max="1"
-              step="0.01"
-              value={channelVolumes.birds}
-              aria-label="Forest Songbirds volume"
-              onChange={(e) => handleVolumeChange("birds", parseFloat(e.target.value))}
-              className="w-full accent-sky-400 h-1 bg-zinc-900 rounded-lg cursor-pointer"
-            />
-          </div>
-
-          {/* Swaying Forest wind/leaves volume slider */}
-          <div className="space-y-1">
-            <div className="flex justify-between text-[10px] font-mono text-zinc-400">
-              <span className="flex items-center gap-1">🌲 Swaying Trees</span>
-              <span>{Math.round(channelVolumes.trees * 100)}%</span>
-            </div>
-            <input
-              type="range"
-              min="0"
-              max="1"
-              step="0.01"
-              value={channelVolumes.trees}
-              aria-label="Swaying Trees volume"
-              onChange={(e) => handleVolumeChange("trees", parseFloat(e.target.value))}
-              className="w-full accent-emerald-400 h-1 bg-zinc-900 rounded-lg cursor-pointer"
-            />
-          </div>
-
-          {/* Ocean volume slider */}
-          <div className="space-y-1">
-            <div className="flex justify-between text-[10px] font-mono text-zinc-400">
-              <span className="flex items-center gap-1">🌊 Ocean Wave Swells</span>
-              <span>{Math.round(channelVolumes.ocean * 100)}%</span>
-            </div>
-            <input
-              type="range"
-              min="0"
-              max="1"
-              step="0.01"
-              value={channelVolumes.ocean}
-              aria-label="Ocean Wave Swells volume"
-              onChange={(e) => handleVolumeChange("ocean", parseFloat(e.target.value))}
-              className="w-full accent-cyan-400 h-1 bg-zinc-900 rounded-lg cursor-pointer"
-            />
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-3 max-h-[220px] overflow-y-auto pr-1 scrollbar-thin">
+            {[
+              { id: "birds", label: "🐤 Forest Songbirds", accent: "accent-sky-400" },
+              { id: "trees", label: "🌲 Swaying Trees", accent: "accent-emerald-400" },
+              { id: "ocean", label: "🌊 Ocean Wave Swells", accent: "accent-cyan-400" },
+              { id: "crickets", label: "🦗 Summer Crickets", accent: "accent-amber-500" },
+              { id: "owl", label: "🦉 Canopy Owl", accent: "accent-purple-500" },
+              { id: "mountainWind", label: "💨 Mountain Wind", accent: "accent-teal-400" },
+              { id: "brook", label: "💧 Brook Bubbling", accent: "accent-blue-400" },
+              { id: "desertBreeze", label: "🏜️ Desert Breeze", accent: "accent-orange-400" },
+              { id: "morningMist", label: "🌫️ Morning Mist", accent: "accent-slate-400" },
+              { id: "caveEchoes", label: "🪨 Cave Echoes", accent: "accent-indigo-400" },
+            ].map((slider) => (
+              <div key={slider.id} className="space-y-1">
+                <div className="flex justify-between text-[10px] font-mono text-zinc-400">
+                  <span className="flex items-center gap-1">{slider.label}</span>
+                  <span>{Math.round((channelVolumes[slider.id] ?? 0) * 100)}%</span>
+                </div>
+                <input
+                  type="range"
+                  min="0"
+                  max="1"
+                  step="0.01"
+                  value={channelVolumes[slider.id] ?? 0}
+                  aria-label={`${slider.label} volume`}
+                  onChange={(e) => handleVolumeChange(slider.id, parseFloat(e.target.value))}
+                  className={`w-full ${slider.accent} h-1 bg-zinc-900 rounded-lg cursor-pointer`}
+                />
+              </div>
+            ))}
           </div>
         </div>
 

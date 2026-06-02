@@ -12,6 +12,12 @@ export class NatureSynth {
   private oceanGain: GainNode | null = null;
   private cricketsGain: GainNode | null = null;
   private woodlandGain: GainNode | null = null;
+  
+  private mountainWindGain: GainNode | null = null;
+  private brookGain: GainNode | null = null;
+  private desertBreezeGain: GainNode | null = null;
+  private morningMistGain: GainNode | null = null;
+  private caveEchoesGain: GainNode | null = null;
 
   // LFO & Constant source nodes for sweeps
   private treesNoiseSource: AudioBufferSourceNode | null = null;
@@ -23,6 +29,18 @@ export class NatureSynth {
   private cricketsNoiseSource: AudioBufferSourceNode | null = null;
   private cricketsFilter: BiquadFilterNode | null = null;
 
+  private mountainWindNoiseSource: AudioBufferSourceNode | null = null;
+  private mountainWindFilter: BiquadFilterNode | null = null;
+
+  private desertBreezeNoiseSource: AudioBufferSourceNode | null = null;
+  private desertBreezeFilter: BiquadFilterNode | null = null;
+
+  private morningMistNoiseSource: AudioBufferSourceNode | null = null;
+  private morningMistFilter: BiquadFilterNode | null = null;
+
+  private brookNoiseSource: AudioBufferSourceNode | null = null;
+  private brookFilter: BiquadFilterNode | null = null;
+
   // Active volume levels
   private volumes: { [key: string]: number } = {
     birds: 0.4,
@@ -30,6 +48,11 @@ export class NatureSynth {
     trees: 0.25,
     ocean: 0.2,
     crickets: 0.15,
+    mountainWind: 0.35,
+    brook: 0.4,
+    desertBreeze: 0.3,
+    morningMist: 0.25,
+    caveEchoes: 0.35,
   };
 
   // Active status toggles
@@ -39,12 +62,19 @@ export class NatureSynth {
     trees: false,
     ocean: false,
     crickets: false,
+    mountainWind: false,
+    brook: false,
+    desertBreeze: false,
+    morningMist: false,
+    caveEchoes: false,
   };
 
   // Keep track of periodic interval loops
   private birdLoopId: any = null;
   private owlLoopId: any = null;
   private cricketsLoopId: any = null;
+  private caveEchoesLoopId: any = null;
+  private brookBubbleLoopId: any = null;
 
   public isPlaying = false;
 
@@ -88,10 +118,34 @@ export class NatureSynth {
       this.cricketsGain.gain.setValueAtTime(this.activeStates.crickets ? this.volumes.crickets : 0.0, this.ctx.currentTime);
       this.cricketsGain.connect(this.masterGain);
 
+      this.mountainWindGain = this.ctx.createGain();
+      this.mountainWindGain.gain.setValueAtTime(this.activeStates.mountainWind ? this.volumes.mountainWind : 0.0, this.ctx.currentTime);
+      this.mountainWindGain.connect(this.masterGain);
+
+      this.brookGain = this.ctx.createGain();
+      this.brookGain.gain.setValueAtTime(this.activeStates.brook ? this.volumes.brook : 0.0, this.ctx.currentTime);
+      this.brookGain.connect(this.masterGain);
+
+      this.desertBreezeGain = this.ctx.createGain();
+      this.desertBreezeGain.gain.setValueAtTime(this.activeStates.desertBreeze ? this.volumes.desertBreeze : 0.0, this.ctx.currentTime);
+      this.desertBreezeGain.connect(this.masterGain);
+
+      this.morningMistGain = this.ctx.createGain();
+      this.morningMistGain.gain.setValueAtTime(this.activeStates.morningMist ? this.volumes.morningMist : 0.0, this.ctx.currentTime);
+      this.morningMistGain.connect(this.masterGain);
+
+      this.caveEchoesGain = this.ctx.createGain();
+      this.caveEchoesGain.gain.setValueAtTime(this.activeStates.caveEchoes ? this.volumes.caveEchoes : 0.0, this.ctx.currentTime);
+      this.caveEchoesGain.connect(this.masterGain);
+
       // Start continuous atmospheric noise loops
       this.setupTreesGenerator();
       this.setupOceanGenerator();
       this.setupCricketsGenerator();
+      this.setupMountainWindGenerator();
+      this.setupBrookGenerator();
+      this.setupDesertBreezeGenerator();
+      this.setupMorningMistGenerator();
 
     } catch (e) {
       console.error("Nature ambient sound AudioContext initialization failed", e);
@@ -227,6 +281,99 @@ export class NatureSynth {
     }, 1100);
   }
 
+  private setupMountainWindGenerator() {
+    if (!this.ctx || !this.mountainWindGain) return;
+
+    const buffer = this.createNoiseBuffer("brown");
+    this.mountainWindNoiseSource = this.ctx.createBufferSource();
+    this.mountainWindNoiseSource.buffer = buffer;
+    this.mountainWindNoiseSource.loop = true;
+
+    this.mountainWindFilter = this.ctx.createBiquadFilter();
+    this.mountainWindFilter.type = "bandpass";
+    this.mountainWindFilter.frequency.setValueAtTime(180, this.ctx.currentTime);
+    this.mountainWindFilter.Q.setValueAtTime(1.5, this.ctx.currentTime);
+
+    this.mountainWindNoiseSource.connect(this.mountainWindFilter);
+    this.mountainWindFilter.connect(this.mountainWindGain);
+    this.mountainWindNoiseSource.start();
+
+    // Whistling alpine wind modulation (slow sweeping)
+    const modulateMountainWind = () => {
+      if (!this.ctx || !this.isPlaying || !this.mountainWindFilter || !this.activeStates.mountainWind) return;
+      const now = this.ctx.currentTime;
+      const windSwell = Math.sin(now * 0.15) * 110 + 200;
+      this.mountainWindFilter.frequency.exponentialRampToValueAtTime(Math.max(80, windSwell), now + 1.2);
+    };
+    setInterval(modulateMountainWind, 1300);
+  }
+
+  private setupBrookGenerator() {
+    if (!this.ctx || !this.brookGain) return;
+
+    // Use pink noise for continuous background streaming water
+    const buffer = this.createNoiseBuffer("pink");
+    this.brookNoiseSource = this.ctx.createBufferSource();
+    this.brookNoiseSource.buffer = buffer;
+    this.brookNoiseSource.loop = true;
+
+    this.brookFilter = this.ctx.createBiquadFilter();
+    this.brookFilter.type = "lowpass";
+    this.brookFilter.frequency.setValueAtTime(450, this.ctx.currentTime);
+
+    this.brookNoiseSource.connect(this.brookFilter);
+    this.brookFilter.connect(this.brookGain);
+    this.brookNoiseSource.start();
+  }
+
+  private setupDesertBreezeGenerator() {
+    if (!this.ctx || !this.desertBreezeGain) return;
+
+    const buffer = this.createNoiseBuffer("pink");
+    this.desertBreezeNoiseSource = this.ctx.createBufferSource();
+    this.desertBreezeNoiseSource.buffer = buffer;
+    this.desertBreezeNoiseSource.loop = true;
+
+    this.desertBreezeFilter = this.ctx.createBiquadFilter();
+    this.desertBreezeFilter.type = "bandpass";
+    this.desertBreezeFilter.frequency.setValueAtTime(800, this.ctx.currentTime);
+    this.desertBreezeFilter.Q.setValueAtTime(4.0, this.ctx.currentTime);
+
+    this.desertBreezeNoiseSource.connect(this.desertBreezeFilter);
+    this.desertBreezeFilter.connect(this.desertBreezeGain);
+    this.desertBreezeNoiseSource.start();
+
+    // Desert sand gusts modulator (whistling wind drafts)
+    const modulateDesertBreeze = () => {
+      if (!this.ctx || !this.isPlaying || !this.desertBreezeFilter || !this.activeStates.desertBreeze) return;
+      const now = this.ctx.currentTime;
+      const sandGust = 900 + Math.sin(now * 0.28) * 350 + Math.cos(now * 0.44) * 150;
+      this.desertBreezeFilter.frequency.exponentialRampToValueAtTime(Math.max(400, sandGust), now + 1.0);
+    };
+    setInterval(modulateDesertBreeze, 1100);
+  }
+
+  private setupMorningMistGenerator() {
+    if (!this.ctx || !this.morningMistGain) return;
+
+    const buffer = this.createNoiseBuffer("white");
+    this.morningMistNoiseSource = this.ctx.createBufferSource();
+    this.morningMistNoiseSource.buffer = buffer;
+    this.morningMistNoiseSource.loop = true;
+
+    this.morningMistFilter = this.ctx.createBiquadFilter();
+    this.morningMistFilter.type = "lowpass";
+    this.morningMistFilter.frequency.setValueAtTime(2500, this.ctx.currentTime);
+
+    const softVolumeGate = this.ctx.createGain();
+    softVolumeGate.gain.setValueAtTime(0.08, this.ctx.currentTime);
+
+    this.morningMistNoiseSource.connect(this.morningMistFilter);
+    this.morningMistFilter.connect(softVolumeGate);
+    softVolumeGate.connect(this.morningMistGain);
+    this.morningMistNoiseSource.start();
+  }
+
   // --- ANIMAL SOUND TRIGGERS ---
 
   private startLoopingSchedules() {
@@ -244,13 +391,105 @@ export class NatureSynth {
       if (!this.activeStates.owl || !this.isPlaying) return;
       this.triggerProceduralOwl();
     }, 12000);
+
+    // Cave echoes scheduler
+    this.caveEchoesLoopId = setInterval(() => {
+      if (!this.activeStates.caveEchoes || !this.isPlaying) return;
+      this.triggerProceduralCaveEcho();
+    }, 4500);
+
+    // Brook bubbling scheduler
+    this.brookBubbleLoopId = setInterval(() => {
+      if (!this.activeStates.brook || !this.isPlaying) return;
+      // Trigger multiple tiny bubbles!
+      const count = Math.floor(Math.random() * 3) + 1;
+      for (let i = 0; i < count; i++) {
+        setTimeout(() => {
+          this.triggerProceduralBrookBubble();
+        }, i * (80 + Math.random() * 120));
+      }
+    }, 550);
   }
 
   private stopLoopingSchedules() {
     if (this.birdLoopId) clearInterval(this.birdLoopId);
     if (this.owlLoopId) clearInterval(this.owlLoopId);
+    if (this.caveEchoesLoopId) clearInterval(this.caveEchoesLoopId);
+    if (this.brookBubbleLoopId) clearInterval(this.brookBubbleLoopId);
     this.birdLoopId = null;
     this.owlLoopId = null;
+    this.caveEchoesLoopId = null;
+    this.brookBubbleLoopId = null;
+  }
+
+  public triggerProceduralCaveEcho() {
+    if (!this.ctx || !this.caveEchoesGain || !this.isPlaying || !this.activeStates.caveEchoes) return;
+
+    const now = this.ctx.currentTime;
+    
+    //stalactites dripping!
+    const baseFreq = 800 + Math.random() * 800; 
+    const duration = 0.12 + Math.random() * 0.15;
+
+    // Trigger standard drip
+    this.createDripNode(baseFreq, duration, now, 0.22);
+
+    // Cavern reflection echo 1 (slightly lower pitch, delayed)
+    const delay1 = 0.18 + Math.random() * 0.1;
+    this.createDripNode(baseFreq * 0.95, duration * 0.9, now + delay1, 0.08);
+
+    // Cavern reflection echo 2 (much fainter, deep echo)
+    const delay2 = delay1 + 0.22 + Math.random() * 0.12;
+    this.createDripNode(baseFreq * 0.9, duration * 0.8, now + delay2, 0.03);
+
+    this.onVoiceTriggerCallback("Ancient Cavern Echo", "💧", "Crystal water droplets echoing in caves");
+  }
+
+  private createDripNode(frequency: number, duration: number, startTime: number, volume: number) {
+    if (!this.ctx || !this.caveEchoesGain) return;
+
+    const osc = this.ctx.createOscillator();
+    const amp = this.ctx.createGain();
+    
+    osc.connect(amp);
+    amp.connect(this.caveEchoesGain);
+    
+    osc.type = "sine";
+    
+    osc.frequency.setValueAtTime(frequency, startTime);
+    osc.frequency.exponentialRampToValueAtTime(frequency * 1.5, startTime + duration);
+
+    amp.gain.setValueAtTime(0.001, startTime);
+    amp.gain.linearRampToValueAtTime(volume, startTime + duration * 0.1);
+    amp.gain.exponentialRampToValueAtTime(0.001, startTime + duration);
+
+    osc.start(startTime);
+    osc.stop(startTime + duration + 0.05);
+  }
+
+  public triggerProceduralBrookBubble() {
+    if (!this.ctx || !this.brookGain || !this.isPlaying || !this.activeStates.brook) return;
+
+    const now = this.ctx.currentTime;
+    const osc = this.ctx.createOscillator();
+    const amp = this.ctx.createGain();
+
+    osc.connect(amp);
+    amp.connect(this.brookGain);
+
+    osc.type = "sine";
+
+    // Bubbling sound character
+    const baseFreq = 250 + Math.random() * 400;
+    osc.frequency.setValueAtTime(baseFreq, now);
+    osc.frequency.exponentialRampToValueAtTime(baseFreq * 2.1, now + 0.06);
+
+    amp.gain.setValueAtTime(0.001, now);
+    amp.gain.linearRampToValueAtTime(0.06, now + 0.01);
+    amp.gain.exponentialRampToValueAtTime(0.001, now + 0.05);
+
+    osc.start(now);
+    osc.stop(now + 0.08);
   }
 
   // Sweet high-pitched synthesized bird whistles
@@ -454,6 +693,11 @@ export class NatureSynth {
       this.treesGain?.gain.setValueAtTime(0, now);
       this.oceanGain?.gain.setValueAtTime(0, now);
       this.cricketsGain?.gain.setValueAtTime(0, now);
+      this.mountainWindGain?.gain.setValueAtTime(0, now);
+      this.brookGain?.gain.setValueAtTime(0, now);
+      this.desertBreezeGain?.gain.setValueAtTime(0, now);
+      this.morningMistGain?.gain.setValueAtTime(0, now);
+      this.caveEchoesGain?.gain.setValueAtTime(0, now);
     }
   }
 
@@ -484,6 +728,11 @@ export class NatureSynth {
     if (channel === "trees") return this.treesGain;
     if (channel === "ocean") return this.oceanGain;
     if (channel === "crickets") return this.cricketsGain;
+    if (channel === "mountainWind") return this.mountainWindGain;
+    if (channel === "brook") return this.brookGain;
+    if (channel === "desertBreeze") return this.desertBreezeGain;
+    if (channel === "morningMist") return this.morningMistGain;
+    if (channel === "caveEchoes") return this.caveEchoesGain;
     return null;
   }
 
@@ -496,6 +745,11 @@ export class NatureSynth {
     this.treesGain?.gain.setValueAtTime(this.activeStates.trees ? this.volumes.trees : 0.0, now);
     this.oceanGain?.gain.setValueAtTime(this.activeStates.ocean ? this.volumes.ocean : 0.0, now);
     this.cricketsGain?.gain.setValueAtTime(this.activeStates.crickets ? this.volumes.crickets : 0.0, now);
+    this.mountainWindGain?.gain.setValueAtTime(this.activeStates.mountainWind ? this.volumes.mountainWind : 0.0, now);
+    this.brookGain?.gain.setValueAtTime(this.activeStates.brook ? this.volumes.brook : 0.0, now);
+    this.desertBreezeGain?.gain.setValueAtTime(this.activeStates.desertBreeze ? this.volumes.desertBreeze : 0.0, now);
+    this.morningMistGain?.gain.setValueAtTime(this.activeStates.morningMist ? this.volumes.morningMist : 0.0, now);
+    this.caveEchoesGain?.gain.setValueAtTime(this.activeStates.caveEchoes ? this.volumes.caveEchoes : 0.0, now);
   }
 
   public getChannelVolume(channel: string): number {

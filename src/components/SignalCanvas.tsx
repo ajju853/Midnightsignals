@@ -9,6 +9,8 @@ interface SignalCanvasProps {
   addLocalSignal: (text: string, vibe: VibeType) => void;
   activeBpm?: number;
   isPlaying?: boolean;
+  rainVolume?: number;
+  isBirdsActive?: boolean;
 }
 
 export default function SignalCanvas({
@@ -18,7 +20,9 @@ export default function SignalCanvas({
   floatingSignals,
   addLocalSignal,
   activeBpm = 80,
-  isPlaying = false
+  isPlaying = false,
+  rainVolume = 0.0,
+  isBirdsActive = false
 }: SignalCanvasProps) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   
@@ -124,6 +128,35 @@ export default function SignalCanvas({
   useEffect(() => {
     isStarShowerActiveRef.current = isStarShowerActive;
   }, [isStarShowerActive]);
+
+  // Continuous bird silhouette spawns when active in NatureSoundboard
+  useEffect(() => {
+    if (!isBirdsActive) return;
+
+    const spawnBird = () => {
+      const canvas = canvasRef.current;
+      if (!canvas) return;
+      const startY = Math.random() * (canvas.height - 100) + 30;
+      flyingBirdsRef.current.push({
+        x: -40,
+        y: startY,
+        targetX: canvas.width + 60,
+        targetY: startY + (Math.random() * 60 - 30),
+        size: Math.random() * 6 + 12,
+        speed: Math.random() * 1.0 + 1.5,
+        symbol: "silhouette",
+        trail: []
+      });
+      if (flyingBirdsRef.current.length > 20) {
+        flyingBirdsRef.current.shift();
+      }
+    };
+
+    spawnBird();
+    const interval = setInterval(spawnBird, 4500);
+
+    return () => clearInterval(interval);
+  }, [isBirdsActive]);
 
   const starShowerParticlesRef = useRef<{
     x: number;
@@ -376,8 +409,9 @@ export default function SignalCanvas({
             return;
           }
           ctx.beginPath();
-          ctx.arc(t.x, t.y, (bird.size * 0.35) * t.age, 0, Math.PI * 2);
-          ctx.fillStyle = `rgba(56, 189, 248, ${t.age * 0.38})`;
+          ctx.arc(t.x, t.y, (bird.size * 0.25) * t.age, 0, Math.PI * 2);
+          const trailColor = vibe === "neon" ? `rgba(244, 63, 94, ${t.age * 0.2})` : `rgba(56, 189, 248, ${t.age * 0.22})`;
+          ctx.fillStyle = trailColor;
           ctx.fill();
         });
 
@@ -386,11 +420,23 @@ export default function SignalCanvas({
         bird.x += Math.cos(stepAngle) * bird.speed;
         bird.y += Math.sin(stepAngle) * bird.speed;
 
-        // Render bird symbol emoji
-        ctx.fillStyle = "rgba(255, 255, 255, 0.95)";
-        ctx.font = `${bird.size}px sans-serif`;
-        ctx.textAlign = "center";
-        ctx.fillText(bird.symbol, bird.x, bird.y);
+        // Render bird symbol or silhouette
+        if (bird.symbol === "silhouette") {
+          // Bird vector silhouette: draw a continuous smooth wing flapper
+          const flap = Math.sin((Date.now() / 150) * bird.speed) * 0.7 + 0.1;
+          ctx.strokeStyle = vibe === "neon" ? "rgba(244, 63, 94, 0.65)" : "rgba(56, 189, 248, 0.7)";
+          ctx.lineWidth = 1.8;
+          ctx.beginPath();
+          ctx.moveTo(bird.x - bird.size, bird.y);
+          ctx.quadraticCurveTo(bird.x - bird.size * 0.5, bird.y - bird.size * 0.5 * flap, bird.x, bird.y + bird.size * 0.15);
+          ctx.quadraticCurveTo(bird.x + bird.size * 0.5, bird.y - bird.size * 0.5 * flap, bird.x + bird.size, bird.y);
+          ctx.stroke();
+        } else {
+          ctx.fillStyle = "rgba(255, 255, 255, 0.95)";
+          ctx.font = `${bird.size}px sans-serif`;
+          ctx.textAlign = "center";
+          ctx.fillText(bird.symbol, bird.x, bird.y);
+        }
 
         // Remove bird if it flies off-screen
         if (bird.x > canvas.width + 50) {
@@ -627,6 +673,57 @@ export default function SignalCanvas({
         onMouseLeave={handleCanvasMouseLeave}
         className={`w-full h-full block ${hoveredSignalId ? "cursor-pointer" : "cursor-crosshair"}`}
       />
+
+      {/* CSS-Based Rain Overlay */}
+      {rainVolume > 0 && (
+        <div 
+          className="absolute inset-0 pointer-events-none overflow-hidden transition-opacity duration-500" 
+          style={{ opacity: Math.min(1.0, rainVolume * 1.5) }}
+        >
+          <style>{`
+            @keyframes css-rain-fall {
+              0% {
+                transform: translateY(-50px) rotate(12deg);
+                opacity: 0;
+              }
+              15% {
+                opacity: 0.85;
+              }
+              85% {
+                opacity: 0.85;
+              }
+              100% {
+                transform: translateY(350px) rotate(12deg);
+                opacity: 0;
+              }
+            }
+            .animate-css-rain-drop {
+              animation: css-rain-fall linear infinite;
+            }
+          `}</style>
+          {Array.from({ length: 24 }).map((_, i) => {
+            const delay = Math.random() * -12;
+            const duration = 0.6 + Math.random() * 1.2;
+            const left = Math.random() * 100;
+            const height = 15 + Math.random() * 20;
+            const speedMultiplier = 0.8 + (rainVolume * 0.6);
+            return (
+              <div
+                key={i}
+                className="absolute w-[1.2px] rounded-full animate-css-rain-drop"
+                style={{
+                  left: `${left}%`,
+                  top: `-60px`,
+                  height: `${height}px`,
+                  animationDelay: `${delay}s`,
+                  animationDuration: `${duration / speedMultiplier}s`,
+                  background: "linear-gradient(to bottom, rgba(56, 189, 248, 0), rgba(56, 189, 248, 0.45))",
+                }}
+              />
+            );
+          })}
+        </div>
+      )}
 
       {/* Floating Instructions/Status overlay */}
       <div className="absolute top-4 left-4 pointer-events-none bg-zinc-900/95 backdrop-blur-md px-3 py-1.5 rounded-xl border border-zinc-800 flex items-center space-x-2 animate-fadeIn">

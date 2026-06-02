@@ -120,7 +120,7 @@ export class MidnightSynth {
     this.rainFilter.Q.setValueAtTime(1.0, this.ctx.currentTime);
 
     this.rainGain = this.ctx.createGain();
-    this.rainGain.gain.setValueAtTime(0.012, this.ctx.currentTime); // Quiet crackling/rain background
+    this.rainGain.gain.setValueAtTime(0.0, this.ctx.currentTime); // Quiet crackling/rain background (muted by default)
 
     whiteNoise.connect(this.rainFilter);
     this.rainFilter.connect(this.rainGain);
