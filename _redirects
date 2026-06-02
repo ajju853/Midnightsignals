@@ -1,5 +1,1 @@
-# SPA routing - send all missing routes to index.html
-/*    /index.html    200
-
-# Ensure well-known paths work
-/.well-known/*    /.well-known/:splat   200
+/* /index.html 200
