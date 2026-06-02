@@ -1,5 +1,6 @@
 import express from "express";
 import path from "path";
+import fs from "fs";
 import { createServer as createViteServer } from "vite";
 import { GoogleGenAI, Type } from "@google/genai";
 import "dotenv/config";
@@ -49,10 +50,8 @@ app.get("/ads.txt", (req, res) => {
   res.sendFile(path.join(process.cwd(), "public", "ads.txt"));
 });
 
-// Serve sitemap.xml for Google/Bing crawler bot indexing
-app.get(["/sitemap.xml", "/api/sitemap.xml"], (req, res) => {
-  res.setHeader("Content-Type", "application/xml");
-  
+// Helper to generate and automatically update sitemap.xml on disk
+export function generateAndSaveSitemap() {
   const combos = [
     "/ocean-waves-and-rain",
     "/ocean-waves-and-crickets",
@@ -97,6 +96,34 @@ app.get(["/sitemap.xml", "/api/sitemap.xml"], (req, res) => {
   }
   
   xml += `</urlset>`;
+
+  try {
+    // Write to root sitemap.xml
+    fs.writeFileSync(path.join(process.cwd(), "sitemap.xml"), xml, "utf8");
+    
+    // Write to public/sitemap.xml
+    const publicDir = path.join(process.cwd(), "public");
+    if (!fs.existsSync(publicDir)) {
+      fs.mkdirSync(publicDir, { recursive: true });
+    }
+    fs.writeFileSync(path.join(publicDir, "sitemap.xml"), xml, "utf8");
+    
+    // Write to dist/sitemap.xml if the dist folder already exists
+    const distDir = path.join(process.cwd(), "dist");
+    if (fs.existsSync(distDir)) {
+      fs.writeFileSync(path.join(distDir, "sitemap.xml"), xml, "utf8");
+    }
+  } catch (err) {
+    console.error("[Midnight Signals] Failed to write sitemap.xml:", err);
+  }
+
+  return xml;
+}
+
+// Serve sitemap.xml for Google/Bing crawler bot indexing
+app.get(["/sitemap.xml", "/api/sitemap.xml"], (req, res) => {
+  res.setHeader("Content-Type", "application/xml");
+  const xml = generateAndSaveSitemap();
   res.send(xml);
 });
 
@@ -237,6 +264,13 @@ Ensure you return nothing but valid JSON. Do not wrap the JSON output in markdow
 });
 
 async function startServer() {
+  // Automatically generate and write sitemap.xml on startup
+  try {
+    generateAndSaveSitemap();
+  } catch (sitemapErr) {
+    console.error("Startup sitemap generation error:", sitemapErr);
+  }
+
   // Integrate Vite for hot module replacement and client rendering
   if (process.env.NODE_ENV !== "production") {
     const vite = await createViteServer({
