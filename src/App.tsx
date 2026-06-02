@@ -32,7 +32,9 @@ import { MidnightSynth } from "./lib/synthEngine";
 import SignalCanvas from "./components/SignalCanvas";
 import NatureSoundboard from "./components/NatureSoundboard";
 import { calmLofiPresets, LofiPreset } from "./calmLyricsPresets";
-import { SEO_PAGES, SEOPageData } from "./seoData";
+import { SEO_PAGES, SEOPageData, generateFAQSchema } from "./seoData";
+import ScienceOfLofiInfographic from "./components/ScienceOfLofiInfographic";
+import EmbeddableInfographic from "./components/EmbeddableInfographic";
 import { BookOpen, MapPin, ExternalLink, Flame, Compass, Heart, Share2, Clipboard, Plus } from "lucide-react";
 
 // SaaS Premium, Contact, Compliance and Exporter systems
@@ -158,22 +160,100 @@ export default function App() {
     return () => window.removeEventListener("popstate", handlePopState);
   }, []);
 
+  // Update mobile-first meta tags (viewport and theme-color) dynamically
+  const updateMobileMetaTags = (path: string) => {
+    if (typeof document === "undefined") return;
+
+    let themeColor = "#050505";
+    const viewport = "width=device-width, initial-scale=1.0, maximum-scale=5.0";
+
+    // Support custom active page or path matching
+    const activePage = SEO_PAGES.find((p) => p.path === path);
+    if (!activePage && path === "/science-of-lofi-focus-infographic") {
+      themeColor = "#120a21";
+    }
+
+    if (activePage) {
+      if (activePage.vibe === "dreamy") themeColor = "#0b1329";
+      else if (activePage.vibe === "melancholy") themeColor = "#0a0f1d";
+      else if (activePage.vibe === "hopeful") themeColor = "#021c15";
+      else if (activePage.vibe === "neon") themeColor = "#0f071a";
+    } else {
+      if (path === "/ocean-waves-and-rain") themeColor = "#0b1329";
+      else if (path === "/ocean-waves-and-crickets") themeColor = "#0a0e1c";
+      else if (path === "/ocean-waves-and-owl-sounds") themeColor = "#0c1022";
+      else if (path === "/songbirds-and-forest-breeze") themeColor = "#031a12";
+      else if (path === "/rain-and-vinyl-crackles") themeColor = "#110b1a";
+      else if (path === "/neon-lofi-and-ocean-sounds") themeColor = "#140c21";
+      else if (path === "/embed/science-of-lofi") themeColor = "#09090b";
+    }
+
+    // Update Theme Color
+    let themeMeta = document.querySelector('meta[name="theme-color"]');
+    if (!themeMeta) {
+      themeMeta = document.createElement("meta");
+      themeMeta.setAttribute("name", "theme-color");
+      document.head.appendChild(themeMeta);
+    }
+    themeMeta.setAttribute("content", themeColor);
+
+    // Update Viewport
+    let viewportMeta = document.querySelector('meta[name="viewport"]');
+    if (!viewportMeta) {
+      viewportMeta = document.createElement("meta");
+      viewportMeta.setAttribute("name", "viewport");
+      document.head.appendChild(viewportMeta);
+    }
+    viewportMeta.setAttribute("content", viewport);
+  };
+
   // Update dynamic titles, metas, and structured FAQs dynamically on currentPath change
   useEffect(() => {
     if (typeof document !== "undefined") {
-      const activePage = SEO_PAGES.find((p) => p.path === currentPath);
+      let title = "Midnight Signals | AI Ambient Radio, Lofi Sleep Sound Mixer & Nature Sound Generator";
+      let description = "Create custom lofi radio stations with ocean waves, bird songs, rain ambience, AI lyrics and sleep-friendly soundscapes. Free online ambient sound generator.";
+
+      // Update mobile-first meta tags specifically via custom helper
+      updateMobileMetaTags(currentPath);
+
+      // Support custom matched infographic path
+      let activePage = SEO_PAGES.find((p) => p.path === currentPath);
+      if (!activePage && currentPath === "/science-of-lofi-focus-infographic") {
+        title = "The Science of Lo-Fi Soundscapes & Cognitive Focus | Scientific Infographic";
+        description = "Learn how lofi rhythms, pink noise, and organic auditory features induce deep focus, attention restoration, and alleviate stress. Interactive science infographic.";
+      }
+
       if (activePage) {
-        document.title = activePage.title;
-        const metaDesc = document.querySelector('meta[name="description"]');
-        if (metaDesc) {
-          metaDesc.setAttribute("content", activePage.metaDescription);
+        title = activePage.title;
+        description = activePage.metaDescription;
+      }
+
+      document.title = title;
+
+      // Update Description
+      let metaDesc = document.querySelector('meta[name="description"]');
+      if (!metaDesc) {
+        metaDesc = document.createElement("meta");
+        metaDesc.setAttribute("name", "description");
+        document.head.appendChild(metaDesc);
+      }
+      metaDesc.setAttribute("content", description);
+
+      // Inject JSON-LD FAQ Schema dynamically
+      let schemaScript = document.getElementById("faq-schema-jsonld");
+      if (activePage && activePage.faqs && activePage.faqs.length > 0) {
+        const schema = generateFAQSchema(activePage);
+        if (schema) {
+          if (!schemaScript) {
+            schemaScript = document.createElement("script");
+            schemaScript.setAttribute("id", "faq-schema-jsonld");
+            schemaScript.setAttribute("type", "application/ld+json");
+            document.head.appendChild(schemaScript);
+          }
+          schemaScript.textContent = JSON.stringify(schema);
         }
-      } else {
-        document.title = "Midnight Signals | AI Ambient Radio, Lofi Sleep Sound Mixer & Nature Sound Generator";
-        const metaDesc = document.querySelector('meta[name="description"]');
-        if (metaDesc) {
-          metaDesc.setAttribute("content", "Create custom lofi radio stations with ocean waves, bird songs, rain ambience, AI lyrics and sleep-friendly soundscapes. Free online ambient sound generator.");
-        }
+      } else if (schemaScript) {
+        schemaScript.remove();
       }
 
       // Manage/Update canonical link tag dynamically to resolve search index readiness
@@ -1216,6 +1296,60 @@ export default function App() {
   // Dynamic programmatic SEO page parser
   let matchedSEOPage = SEO_PAGES.find((p) => p.path === currentPath);
   
+  if (currentPath === "/science-of-lofi-focus-infographic") {
+    matchedSEOPage = {
+      path: "/science-of-lofi-focus-infographic",
+      title: "The Science of Lo-Fi Soundscapes & Cognitive Focus | Scientific Infographic",
+      metaDescription: "Learn how lofi rhythms, pink noise, and organic auditory features induce deep focus, attention restoration, and alleviate stress. Interactive science infographic.",
+      keywords: ["science of lofi", "lofi acoustic focus", "attention restoration theory", "binaural beats science", "nature sound therapy"],
+      headline: "The Science of Lo-Fi & Focus",
+      subheading: "An interactive, web-synthesized exploration of alpha brainwaves, pink noise maskers, and cognitive restoration cycles.",
+      accentColor: "from-amber-500 to-orange-400",
+      vibe: "dreamy" as const,
+      introText: "Welcome to our technical songwriter and digital sound research hub. Sound therapy is more than simple static loops. By studying human brainwaves and cognitive limits, we designed a client-side synthesizer that dynamically triggers flow states. Below, interact with our custom research-grade infographic, customize your active frequencies, and copy the embed code to host this premium asset on your own music blog.",
+      sections: [
+        {
+          title: "How to Read & Leverage the Lo-Fi Focus Asset",
+          paragraphs: [
+            "We believe in sharing high-quality, scientifically sound resources with the global ambient beat community. This custom, interactive infographic was built completely from scratch using modern react interfaces to illustrate brainwave frequency ranges (Delta, Theta, Alpha, Beta) and Attention Restoration Theory curves.",
+            "If you are a music writer, content creator, or study blog operator, you are fully authorized to embed this responsive chart into your own published reviews and articles. Simply scroll down to the Exporter widget, copy the safe iframe embed snippet, and drop it in your CMS editor. Please remember to attribute Midnight Signals as the original creator of this tool!"
+          ]
+        }
+      ],
+      faqs: [
+        {
+          question: "Can I embed this infographic for free?",
+          answer: "Yes! There are no hidden fees or paywalls. Simply copy the iframe code block and drop it directly onto any HTML or WordPress site to share this interactive asset."
+        },
+        {
+          question: "How does the brainwave simulator correspond to actual sound?",
+          answer: "The simulated frequencies in the infographic match actual physical brain frequencies. Midnight Signals’ built-in Binaural focus node lets you apply a real 6Hz (Theta) offset to help your ears adapt to deep concentration states organically."
+        }
+      ],
+      presetConfig: {
+        activeChannels: {
+          birds: true,
+          owl: false,
+          trees: true,
+          ocean: true,
+          crickets: true
+        },
+        channelVolumes: {
+          birds: 0.2,
+          owl: 0.0,
+          trees: 0.4,
+          ocean: 0.3,
+          crickets: 0.2
+        },
+        customLyrics: "Frequencies in modern sound,\nScience that is deep and profound,\nKeep the focus steady and light,\nGuiding you through the quiet night...",
+        customTitle: "Science of Solitude",
+        customArtist: "Acoustic Research Center",
+        bpm: 72,
+        synthWaveform: "triangle"
+      }
+    };
+  }
+  
   if (!matchedSEOPage && currentPath) {
     const combos = [
       { path: "/ocean-waves-and-rain", headline: "Ocean Waves & Soft Rain", vibe: "dreamy" as const, basePreset: SEO_PAGES[0] },
@@ -1340,6 +1474,14 @@ export default function App() {
   ];
 
   const activeVisualLayers = visualLayersConfig.filter(l => l.active);
+
+  if (currentPath === "/embed/science-of-lofi") {
+    return (
+      <div id="midnight-lofi-embed-frame" className="w-full min-h-screen bg-zinc-950 p-4 md:p-6 flex items-center justify-center font-sans overflow-x-hidden">
+        <EmbeddableInfographic isEmbedded={true} />
+      </div>
+    );
+  }
 
   return (
     <div
@@ -1629,6 +1771,33 @@ export default function App() {
                 </a>
               );
             })}
+
+            {/* Special Interactive Infographic asset node */}
+            <a
+              key="/science-of-lofi-focus-infographic"
+              href="/science-of-lofi-focus-infographic"
+              onClick={(e) => {
+                e.preventDefault();
+                setCurrentPath("/science-of-lofi-focus-infographic");
+                window.history.pushState({}, "", "/science-of-lofi-focus-infographic");
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              }}
+              className={`flex-shrink-0 snap-start p-2 px-3 rounded-xl border text-left transition-all active:scale-97 cursor-pointer group flex items-center gap-2 ${
+                currentPath === "/science-of-lofi-focus-infographic"
+                  ? "border-amber-500 bg-amber-500/10 text-white"
+                  : "bg-zinc-900 border-white/5 hover:border-amber-500/30 hover:bg-amber-950/20 text-zinc-300"
+              }`}
+            >
+              <span className={`inline-block w-1.5 h-1.5 rounded-full ${currentPath === "/science-of-lofi-focus-infographic" ? "bg-amber-400 animate-pulse" : "bg-zinc-650 group-hover:bg-zinc-450"}`} />
+              <div>
+                <span className="font-mono text-[6.5px] uppercase tracking-wider text-zinc-500 block">
+                  Interactive Asset
+                </span>
+                <span className="font-sans text-[9.5px] font-bold block whitespace-nowrap">
+                  📊 Science of Lo-Fi
+                </span>
+              </div>
+            </a>
           </div>
         </div>
 
@@ -1860,6 +2029,13 @@ export default function App() {
                   </div>
                 ))}
               </div>
+
+              {/* Interactive Infographic asset injection */}
+              {(currentPath === "/science-of-lofi-focus-infographic" || currentPath === "/lofi-radio-generator") && (
+                <div className="border-t border-white/5 pt-8 max-w-3xl">
+                  <EmbeddableInfographic isEmbedded={false} />
+                </div>
+              )}
 
               {/* Dynamic FAQ Accordions */}
               <div className="space-y-4 border-t border-white/5 pt-8 max-w-3xl">

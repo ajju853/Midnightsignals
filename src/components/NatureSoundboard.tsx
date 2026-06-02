@@ -78,6 +78,11 @@ export default function NatureSoundboard() {
   const [timerRemainingSeconds, setTimerRemainingSeconds] = useState<number>(0);
   const [customTimerInput, setCustomTimerInput] = useState<string>("15");
 
+  // Redesigned Sound Mixer state variables
+  const [showInactiveChannels, setShowInactiveChannels] = useState<boolean>(false);
+  const [isAdvancedExpanded, setIsAdvancedExpanded] = useState<boolean>(false);
+  const [activeDraggingChannel, setActiveDraggingChannel] = useState<string | null>(null);
+
   // Floating notifications logging live procedurally triggered sounds
   const [soundLogs, setSoundLogs] = useState<SoundboardNotifier[]>([]);
 
@@ -178,6 +183,14 @@ export default function NatureSoundboard() {
     setChannelVolumes((prev) => ({ ...prev, [channel]: vol }));
     if (synthRef.current) {
       synthRef.current.setVolume(channel, vol);
+    }
+    // Simulate haptic feedback on input touch
+    if (typeof navigator !== "undefined" && navigator.vibrate) {
+      try {
+        navigator.vibrate(10);
+      } catch (err) {
+        // Safe catch for browser restrictions
+      }
     }
   };
 
@@ -1084,43 +1097,249 @@ export default function NatureSoundboard() {
           </div>
         </div>
 
-        {/* MULTI CHANNEL NATURAL VOLUME OVERLAYS */}
-        <div className="bg-zinc-950 p-4.5 rounded-2xl border border-white/5 space-y-3.5 justify-center flex flex-col">
-          <div className="text-3xs font-mono uppercase tracking-widest text-zinc-500 mb-0.5">
-            Decibel Volume Controller
-          </div>
+        {/* MULTI CHANNEL NATURAL VOLUME OVERLAYS - STYLISH, ACCESSIBLE, AND PHONE OPTIMAL */}
+        <div className="bg-zinc-950 p-4 sm:p-5 rounded-2xl border border-white/5 space-y-4 hover:border-purple-500/10 transition-all flex flex-col shadow-xl select-none">
           
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-3 max-h-[220px] overflow-y-auto pr-1 scrollbar-thin">
-            {[
-              { id: "birds", label: "🐤 Forest Songbirds", accent: "accent-sky-400" },
-              { id: "trees", label: "🌲 Swaying Trees", accent: "accent-emerald-400" },
-              { id: "ocean", label: "🌊 Ocean Wave Swells", accent: "accent-cyan-400" },
-              { id: "crickets", label: "🦗 Summer Crickets", accent: "accent-amber-500" },
-              { id: "owl", label: "🦉 Canopy Owl", accent: "accent-purple-500" },
-              { id: "mountainWind", label: "💨 Mountain Wind", accent: "accent-teal-400" },
-              { id: "brook", label: "💧 Brook Bubbling", accent: "accent-blue-400" },
-              { id: "desertBreeze", label: "🏜️ Desert Breeze", accent: "accent-orange-400" },
-              { id: "morningMist", label: "🌫️ Morning Mist", accent: "accent-slate-400" },
-              { id: "caveEchoes", label: "🪨 Cave Echoes", accent: "accent-indigo-400" },
-            ].map((slider) => (
-              <div key={slider.id} className="space-y-1">
-                <div className="flex justify-between text-[10px] font-mono text-zinc-400">
-                  <span className="flex items-center gap-1">{slider.label}</span>
-                  <span>{Math.round((channelVolumes[slider.id] ?? 0) * 100)}%</span>
-                </div>
-                <input
-                  type="range"
-                  min="0"
-                  max="1"
-                  step="0.01"
-                  value={channelVolumes[slider.id] ?? 0}
-                  aria-label={`${slider.label} volume`}
-                  onChange={(e) => handleVolumeChange(slider.id, parseFloat(e.target.value))}
-                  className={`w-full ${slider.accent} h-1 bg-zinc-900 rounded-lg cursor-pointer`}
-                />
-              </div>
-            ))}
+          {/* Sticky Header with Controls */}
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 pb-3 border-b border-white/5 sticky top-0 bg-zinc-950 z-10">
+            <div className="flex flex-col">
+              <span className="text-[10px] font-mono uppercase tracking-widest text-[#00D1FF] font-black">
+                🎚️ Analog Mixer
+              </span>
+              <span className="text-[8.5px] text-zinc-550 font-mono tracking-tight uppercase">
+                Decibel Volume Controller
+              </span>
+            </div>
+            
+            <div className="flex items-center justify-end gap-1.5 self-end sm:self-auto w-full sm:w-auto">
+              {/* Show Inactive Channels Toggle Button */}
+              <button
+                type="button"
+                onClick={() => {
+                  setShowInactiveChannels(!showInactiveChannels);
+                  // Simulate haptic vibration
+                  if (typeof navigator !== "undefined" && navigator.vibrate) {
+                    try { navigator.vibrate(12); } catch(e) {}
+                  }
+                }}
+                className={`px-2 py-1 rounded-lg border text-[8.5px] font-mono font-bold tracking-wider uppercase transition-all duration-200 cursor-pointer flex items-center gap-1 ${
+                  showInactiveChannels
+                    ? "bg-purple-500/20 text-purple-400 border-purple-500/40"
+                    : "bg-zinc-900 border-white/5 text-zinc-400 hover:text-zinc-200"
+                }`}
+                aria-label={showInactiveChannels ? "Hide silent channels" : "Show silent channels"}
+              >
+                <span>{showInactiveChannels ? "● Show All" : "○ Hide 0%"}</span>
+              </button>
+
+              {/* Reset to 0% Button (↺) */}
+              <button
+                type="button"
+                onClick={() => {
+                  // Set all channel volumes to 0!
+                  const zeroedVols = { ...channelVolumes };
+                  Object.keys(zeroedVols).forEach((key) => {
+                    zeroedVols[key] = 0;
+                    if (synthRef.current) {
+                      synthRef.current.setVolume(key, 0);
+                    }
+                  });
+                  setChannelVolumes(zeroedVols);
+                  
+                  // Trigger quick double-haptic vibration pattern
+                  if (typeof navigator !== "undefined" && navigator.vibrate) {
+                    try { navigator.vibrate([15, 30, 15]); } catch(e) {}
+                  }
+                }}
+                className="p-1 px-2.5 bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 hover:text-rose-300 border border-rose-500/30 hover:border-rose-500/50 rounded-lg text-xs font-mono font-bold tracking-wider uppercase transition-all duration-300 hover:scale-103 active:scale-95 cursor-pointer flex items-center gap-1"
+                aria-label="Reset all channels to 0%"
+                title="Reset all channels to 0%"
+              >
+                <span>↺</span> <span className="text-[8.5px] font-mono">Reset</span>
+              </button>
+            </div>
           </div>
+
+          {/* Slider Row Render Helper */}
+          {(() => {
+            const renderSlider = (slider: { id: string; label: string; accent: string; icon: string }) => {
+              const vol = channelVolumes[slider.id] ?? 0;
+              const isVolZero = vol === 0;
+
+              // Filter out 0% volume if showInactiveChannels is false
+              if (isVolZero && !showInactiveChannels) return null;
+
+              const percentage = Math.round(vol * 100);
+              const isDragging = activeDraggingChannel === slider.id;
+
+              return (
+                <div
+                  key={slider.id}
+                  style={{ minHeight: "2.75rem" }} // exact 44px min-height as per guideline
+                  className={`flex flex-col sm:flex-row sm:items-center justify-between gap-1.5 sm:gap-4 p-2.5 rounded-xl border transition-all duration-300 relative group overflow-hidden ${
+                    isDragging
+                      ? "bg-purple-950/15 border-purple-500/40 shadow-[0_0_15px_rgba(168,85,247,0.15)]"
+                      : isVolZero
+                      ? "bg-zinc-900/10 border-white/[0.02] opacity-50"
+                      : "bg-zinc-900/30 border-white/5 hover:border-purple-500/15 hover:bg-zinc-900/50"
+                  }`}
+                >
+                  {/* Dynamic background progress bar underlay */}
+                  {!isVolZero && (
+                    <div
+                      className="absolute inset-y-0 left-0 bg-purple-500/[0.02] pointer-events-none transition-all duration-300"
+                      style={{ width: `${percentage}%` }}
+                    />
+                  )}
+
+                  {/* Icon + Label + Percentage indicator */}
+                  <div className="flex items-center justify-between w-full sm:w-[11.5rem] shrink-0 relative z-10 select-none">
+                    <span className="flex items-center gap-1.5 text-[11px] font-sans font-bold tracking-wide text-zinc-355 group-hover:text-white transition-colors">
+                      <span className="text-sm shrink-0">{slider.icon}</span>
+                      <span className="truncate">{slider.label}</span>
+                    </span>
+                    <span
+                      className={`font-mono text-[11px] font-bold transition-all duration-200 tracking-tight shrink-0 ${
+                        isDragging
+                          ? "text-purple-400 scale-110 text-shadow-[0_0_8px_#a855f7]"
+                          : isVolZero
+                          ? "text-zinc-600"
+                          : "text-zinc-400"
+                      }`}
+                    >
+                      {percentage}%
+                    </span>
+                  </div>
+
+                  {/* Volume Slider Inputs */}
+                  <div className="flex-1 w-full flex items-center h-8 sm:h-auto py-1 relative z-10">
+                    <input
+                      type="range"
+                      min="0"
+                      max="1"
+                      step="0.01"
+                      value={vol}
+                      aria-label={`${slider.label} volume`}
+                      onMouseDown={() => setActiveDraggingChannel(slider.id)}
+                      onTouchStart={() => setActiveDraggingChannel(slider.id)}
+                      onMouseUp={() => setActiveDraggingChannel(null)}
+                      onTouchEnd={() => setActiveDraggingChannel(null)}
+                      onTouchCancel={() => setActiveDraggingChannel(null)}
+                      onBlur={() => setActiveDraggingChannel(null)}
+                      onChange={(e) => handleVolumeChange(slider.id, parseFloat(e.target.value))}
+                      className={`w-full h-1.5 rounded-lg appearance-none cursor-pointer bg-zinc-950 border border-white/5 focus:outline-none transition-all duration-200
+                        ${slider.accent}
+                        [&::-webkit-slider-thumb]:w-5
+                        [&::-webkit-slider-thumb]:h-5
+                        [&::-webkit-slider-thumb]:rounded-full
+                        [&::-webkit-slider-thumb]:appearance-none
+                        [&::-webkit-slider-thumb]:border
+                        [&::-webkit-slider-thumb]:border-white/20
+                        [&::-webkit-slider-thumb]:bg-purple-500
+                        [&::-webkit-slider-thumb]:shadow-[0_0_12px_#a855f7]
+                        [&::-webkit-slider-thumb]:transition-all
+                        [&::-webkit-slider-thumb]:duration-150
+                        [&::-webkit-slider-thumb]:active:scale-130
+                        [&::-webkit-slider-thumb]:active:bg-purple-400
+                        [&::-webkit-slider-thumb]:active:shadow-[0_0_18px_#c084fc]
+                        
+                        [&::-moz-range-thumb]:w-5
+                        [&::-moz-range-thumb]:h-5
+                        [&::-moz-range-thumb]:rounded-full
+                        [&::-moz-range-thumb]:border
+                        [&::-moz-range-thumb]:border-white/20
+                        [&::-moz-range-thumb]:bg-purple-500
+                        [&::-moz-range-thumb]:shadow-[0_0_12px_#a855f7]
+                        [&::-moz-range-thumb]:transition-all
+                        [&::-moz-range-thumb]:duration-150
+                        [&::-moz-range-thumb]:active:scale-130
+                        [&::-moz-range-thumb]:active:bg-purple-400
+                        [&::-moz-range-thumb]:active:shadow-[0_0_18px_#c084fc]
+                      `}
+                    />
+                  </div>
+                </div>
+              );
+            };
+
+            const coreSliders = [
+              { id: "birds", label: "Forest Songbirds", accent: "accent-sky-400 [&::-webkit-slider-thumb]:bg-sky-400 [&::-moz-range-thumb]:bg-sky-400 [&::-webkit-slider-thumb]:shadow-[0_0_12px_#38bdf8] [&::-moz-range-thumb]:shadow-[0_0_12px_#38bdf8]", icon: "🐤" },
+              { id: "trees", label: "Swaying Trees", accent: "accent-emerald-400 [&::-webkit-slider-thumb]:bg-emerald-400 [&::-moz-range-thumb]:bg-emerald-400 [&::-webkit-slider-thumb]:shadow-[0_0_12px_#34d399] [&::-moz-range-thumb]:shadow-[0_0_12px_#34d399]", icon: "🌲" },
+              { id: "ocean", label: "Ocean Wave Swells", accent: "accent-cyan-400 [&::-webkit-slider-thumb]:bg-cyan-400 [&::-moz-range-thumb]:bg-cyan-400 [&::-webkit-slider-thumb]:shadow-[0_0_12px_#22d3ee] [&::-moz-range-thumb]:shadow-[0_0_12px_#22d3ee]", icon: "🌊" },
+              { id: "crickets", label: "Summer Crickets", accent: "accent-amber-500 [&::-webkit-slider-thumb]:bg-amber-500 [&::-moz-range-thumb]:bg-amber-500 [&::-webkit-slider-thumb]:shadow-[0_0_12px_#f59e0b] [&::-moz-range-thumb]:shadow-[0_0_12px_#f59e0b]", icon: "🦗" },
+              { id: "owl", label: "Canopy Owl", accent: "accent-purple-500 [&::-webkit-slider-thumb]:bg-purple-500 [&::-moz-range-thumb]:bg-purple-500 [&::-webkit-slider-thumb]:shadow-[0_0_12px_#a855f7] [&::-moz-range-thumb]:shadow-[0_0_12px_#a855f7]", icon: "🦉" },
+            ];
+
+            const advancedSliders = [
+              { id: "mountainWind", label: "Mountain Wind", accent: "accent-teal-400 [&::-webkit-slider-thumb]:bg-teal-400 [&::-moz-range-thumb]:bg-teal-400 [&::-webkit-slider-thumb]:shadow-[0_0_12px_#2dd4bf] [&::-moz-range-thumb]:shadow-[0_0_12px_#2dd4bf]", icon: "💨" },
+              { id: "brook", label: "Brook Bubbling", accent: "accent-blue-400 [&::-webkit-slider-thumb]:bg-blue-400 [&::-moz-range-thumb]:bg-blue-400 [&::-webkit-slider-thumb]:shadow-[0_0_12px_#60a5fa] [&::-moz-range-thumb]:shadow-[0_0_12px_#60a5fa]", icon: "💧" },
+              { id: "desertBreeze", label: "Desert Breeze", accent: "accent-orange-400 [&::-webkit-slider-thumb]:bg-orange-400 [&::-moz-range-thumb]:bg-orange-400 [&::-webkit-slider-thumb]:shadow-[0_0_12px_#fb923c] [&::-moz-range-thumb]:shadow-[0_0_12px_#fb923c]", icon: "🏜️" },
+              { id: "morningMist", label: "Morning Mist", accent: "accent-slate-400 [&::-webkit-slider-thumb]:bg-slate-400 [&::-moz-range-thumb]:bg-slate-400 [&::-webkit-slider-thumb]:shadow-[0_0_12px_#94a3b8] [&::-moz-range-thumb]:shadow-[0_0_12px_#94a3b8]", icon: "🌫️" },
+              { id: "caveEchoes", label: "Cave Echoes", accent: "accent-indigo-400 [&::-webkit-slider-thumb]:bg-indigo-400 [&::-moz-range-thumb]:bg-indigo-400 [&::-webkit-slider-thumb]:shadow-[0_0_12px_#818cf8] [&::-moz-range-thumb]:shadow-[0_0_12px_#818cf8]", icon: "🪨" },
+            ];
+
+            const renderedCoreElements = coreSliders.map(renderSlider).filter(Boolean);
+            const renderedAdvancedElements = advancedSliders.map(renderSlider).filter(Boolean);
+
+            const hasCoreContent = renderedCoreElements.length > 0;
+            const hasAdvancedContent = renderedAdvancedElements.length > 0;
+
+            return (
+              <div className="flex flex-col gap-2.5">
+                {/* Core Sliders Container */}
+                {hasCoreContent ? (
+                  <div className="flex flex-col gap-2.5">
+                    {renderedCoreElements}
+                  </div>
+                ) : null}
+
+                {/* Advanced Sliders Accordion */}
+                <div className="border-t border-white/5 pt-3 mt-1">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setIsAdvancedExpanded(!isAdvancedExpanded);
+                      // Simulate haptic vibration on mobile
+                      if (typeof navigator !== "undefined" && navigator.vibrate) {
+                        try { navigator.vibrate(10); } catch(e) {}
+                      }
+                    }}
+                    className="w-full flex items-center justify-between text-[10px] font-mono font-bold uppercase tracking-widest text-zinc-500 hover:text-white transition-colors py-1.5 cursor-pointer"
+                  >
+                    <span>⚙️ Advanced Elements {hasAdvancedContent && `(${renderedAdvancedElements.length})`}</span>
+                    <span className="text-[#00D1FF] transition-transform duration-300" style={{ transform: isAdvancedExpanded ? "rotate(180deg)" : "rotate(0deg)" }}>
+                      ▼
+                    </span>
+                  </button>
+
+                  <div
+                    className={`transition-all duration-300 ease-in-out overflow-hidden flex flex-col gap-2.5 ${
+                      isAdvancedExpanded
+                        ? "max-h-[1000px] opacity-100 mt-2.5"
+                        : "max-h-0 opacity-0 pointer-events-none"
+                    }`}
+                  >
+                    {hasAdvancedContent ? (
+                      renderedAdvancedElements
+                    ) : (
+                      <div className="py-4 text-center font-mono text-[9px] text-zinc-600 uppercase tracking-widest bg-zinc-950/40 rounded-xl border border-white/[0.02]">
+                        No active advanced sliders. Turn on "Show 0%" above to add layers.
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                {/* If absolutely nothing is rendered on screen */}
+                {!hasCoreContent && !renderedAdvancedElements.some(Boolean) && (
+                  <div className="py-6 text-center font-mono text-[9px] text-zinc-600 bg-zinc-900/10 border border-white/5 rounded-xl flex flex-col gap-1 px-4 leading-relaxed">
+                    <span className="text-white font-bold uppercase text-[10px]">All mixer channels are at 0%</span>
+                    <span>To craft your ambient scape, tap the "Show 0%" button in the header and slide up forest, ocean, trees or crickets.</span>
+                  </div>
+                )}
+              </div>
+            );
+          })()}
+
         </div>
 
       </div>

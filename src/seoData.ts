@@ -407,3 +407,20 @@ export const SEO_PAGES: SEOPageData[] = [
     }
   }
 ];
+
+export function generateFAQSchema(page: SEOPageData) {
+  if (!page.faqs || page.faqs.length === 0) return null;
+  return {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": page.faqs.map((faq) => ({
+      "@type": "Question",
+      "name": faq.question,
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": faq.answer
+      }
+    }))
+  };
+}
+

@@ -4,7 +4,7 @@ import fs from "fs";
 import { createServer as createViteServer } from "vite";
 import { GoogleGenAI, Type } from "@google/genai";
 import "dotenv/config";
-import { SEO_PAGES } from "./src/seoData";
+import { SEO_PAGES, generateFAQSchema } from "./src/seoData";
 
 const app = express();
 const PORT = 3000;
@@ -62,34 +62,60 @@ export function generateAndSaveSitemap() {
   ];
   
   const baseUrl = "https://midnight-signals.cloud"; // Production domain fallback
-  const currentDate = new Date().toISOString().split("T")[0];
+
+  // Helper to extract actual modified dates of source files
+  const getFileModDate = (relativeFilePath: string): string => {
+    try {
+      const fullPath = path.join(process.cwd(), relativeFilePath);
+      if (fs.existsSync(fullPath)) {
+        const stats = fs.statSync(fullPath);
+        return stats.mtime.toISOString().split("T")[0];
+      }
+    } catch (e) {
+      console.warn(`Could not fetch stats for ${relativeFilePath}`);
+    }
+    return new Date().toISOString().split("T")[0];
+  };
+
+  const homepageMod = getFileModDate("src/App.tsx");
+  const seoDataMod = getFileModDate("src/seoData.ts");
+  const infographicMod = getFileModDate("src/components/EmbeddableInfographic.tsx");
+  const serverMod = getFileModDate("server.ts");
   
   let xml = `<?xml version="1.0" encoding="UTF-8"?>\n`;
   xml += `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n`;
   
-  // Homepage
+  // 1. Homepage
   xml += `  <url>\n`;
   xml += `    <loc>${baseUrl}/</loc>\n`;
-  xml += `    <lastmod>${currentDate}</lastmod>\n`;
+  xml += `    <lastmod>${homepageMod}</lastmod>\n`;
   xml += `    <changefreq>daily</changefreq>\n`;
   xml += `    <priority>1.0</priority>\n`;
   xml += `  </url>\n`;
+
+  // 2. Interactive Science Infographic Page (Linkable Asset)
+  xml += `  <url>\n`;
+  xml += `    <loc>${baseUrl}/science-of-lofi-focus-infographic</loc>\n`;
+  xml += `    <lastmod>${infographicMod}</lastmod>\n`;
+  xml += `    <changefreq>weekly</changefreq>\n`;
+  xml += `    <priority>0.9</priority>\n`;
+  xml += `  </url>\n`;
   
-  // SEO Pages
+  // 3. SEO Pages
   for (const page of SEO_PAGES) {
     xml += `  <url>\n`;
     xml += `    <loc>${baseUrl}${page.path}</loc>\n`;
-    xml += `    <lastmod>${currentDate}</lastmod>\n`;
+    xml += `    <lastmod>${seoDataMod}</lastmod>\n`;
     xml += `    <changefreq>weekly</changefreq>\n`;
     xml += `    <priority>0.8</priority>\n`;
     xml += `  </url>\n`;
   }
   
-  // Custom Combo Presets
+  // 4. Custom Combo Presets
   for (const comboPath of combos) {
     xml += `  <url>\n`;
     xml += `    <loc>${baseUrl}${comboPath}</loc>\n`;
-    xml += `    <lastmod>${currentDate}</lastmod>\n`;
+    xml += `    <lastmod>${serverMod}</lastmod>\n`;
     xml += `    <changefreq>weekly</changefreq>\n`;
     xml += `    <priority>0.7</priority>\n`;
     xml += `  </url>\n`;
@@ -317,7 +343,47 @@ async function startServer() {
         let metaDescription = "Create custom lofi radio stations with ocean waves, bird songs, rain ambience, AI lyrics and sleep-friendly soundscapes. Free online ambient sound generator.";
         let keywords = ["Midnight Signals", "lo-fi music", "AI poetry", "lyric transmission", "chill starlight synthesizer", "relax sound hub", "ambient noise player"];
         
-        const activePage = SEO_PAGES.find((p) => p.path === currentPath);
+        let activePage = SEO_PAGES.find((p) => p.path === currentPath);
+
+        if (!activePage && currentPath === "/science-of-lofi-focus-infographic") {
+          activePage = {
+            path: "/science-of-lofi-focus-infographic",
+            title: "The Science of Lo-Fi Soundscapes & Cognitive Focus | Scientific Infographic",
+            metaDescription: "Learn how lofi rhythms, pink noise, and organic auditory features induce deep focus, attention restoration, and alleviate stress. Interactive science infographic.",
+            keywords: ["science of lofi", "lofi acoustic focus", "attention restoration theory", "binaural beats science", "nature sound therapy"],
+            headline: "The Science of Lo-Fi & Focus",
+            subheading: "An interactive, web-synthesized exploration of alpha brainwaves, pink noise maskers, and cognitive restoration cycles.",
+            accentColor: "from-amber-500 to-orange-400",
+            vibe: "dreamy",
+            introText: "",
+            sections: [],
+            faqs: [
+              {
+                question: "Can I embed this infographic for free?",
+                answer: "Yes! There are no hidden fees or paywalls. Simply copy the iframe code block and drop it directly onto any HTML or WordPress site to share this interactive asset."
+              },
+              {
+                question: "How does the brainwave simulator correspond to actual sound?",
+                answer: "The simulated frequencies in the infographic match actual physical brain frequencies. Midnight Signals’ built-in Binaural focus node lets you apply a real 6Hz (Theta) offset to help your ears adapt to deep concentration states organically."
+              }
+            ],
+            presetConfig: {
+              activeChannels: { birds: true, owl: false, trees: true, ocean: true, crickets: true },
+              channelVolumes: { birds: 0.2, owl: 0.0, trees: 0.4, ocean: 0.3, crickets: 0.2 },
+              customLyrics: "",
+              customTitle: "",
+              customArtist: "",
+              bpm: 72,
+              synthWaveform: "triangle"
+            }
+          };
+        }
+
+        if (!activePage && currentPath === "/embed/science-of-lofi") {
+          title = "Science of Lo-Fi Interactive Embed Frame | Midnight Signals";
+          metaDescription = "Interactive widget showing lofi acoustic curves, cognitive rest patterns, and brain wave bands.";
+        }
+        
         if (activePage) {
           title = activePage.title;
           metaDescription = activePage.metaDescription;
@@ -369,7 +435,17 @@ async function startServer() {
           }
         };
 
-        const jsonLdInjected = `\n    <script type="application/ld+json">${JSON.stringify(structuredData)}</script>\n  </head>`;
+        let jsonLdInjected = `\n    <script type="application/ld+json">${JSON.stringify(structuredData)}</script>`;
+
+        // If the active SEO page has FAQs, we inject additional FAQPage schema!
+        if (activePage) {
+          const faqSchema = generateFAQSchema(activePage);
+          if (faqSchema) {
+            jsonLdInjected += `\n    <script type="application/ld+json">${JSON.stringify(faqSchema)}</script>`;
+          }
+        }
+
+        jsonLdInjected += `\n  </head>`;
         modifiedHtml = modifiedHtml.replace(/<\/head>/i, jsonLdInjected);
 
         res.setHeader("Content-Type", "text/html");
