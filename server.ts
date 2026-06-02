@@ -302,7 +302,79 @@ async function startServer() {
       if (ext && ext !== ".html") {
         return res.status(404).send("Not Found");
       }
-      res.sendFile(path.join(distPath, "index.html"));
+
+      const indexPath = path.join(distPath, "index.html");
+      fs.readFile(indexPath, "utf8", (err, html) => {
+        if (err) {
+          console.error("Error reading production index.html:", err);
+          return res.status(404).send("Not Found");
+        }
+
+        const currentPath = req.path === "/" ? "" : req.path;
+        
+        // Match current route to dynamic SEO data
+        let title = "Midnight Signals | AI Ambient Radio, Lofi Sleep Sound Mixer & Nature Sound Generator";
+        let metaDescription = "Create custom lofi radio stations with ocean waves, bird songs, rain ambience, AI lyrics and sleep-friendly soundscapes. Free online ambient sound generator.";
+        let keywords = ["Midnight Signals", "lo-fi music", "AI poetry", "lyric transmission", "chill starlight synthesizer", "relax sound hub", "ambient noise player"];
+        
+        const activePage = SEO_PAGES.find((p) => p.path === currentPath);
+        if (activePage) {
+          title = activePage.title;
+          metaDescription = activePage.metaDescription;
+          keywords = activePage.keywords;
+        } else {
+          // Check combo pages
+          const combos = [
+            { path: "/ocean-waves-and-rain", headline: "Ocean Waves & Soft Rain" },
+            { path: "/ocean-waves-and-crickets", headline: "Waves & Field Crickets" },
+            { path: "/ocean-waves-and-owl-sounds", headline: "Waves & Woodland Owls" },
+            { path: "/songbirds-and-forest-breeze", headline: "Songbirds & Forest Breeze" },
+            { path: "/rain-and-vinyl-crackles", headline: "Soft Rain & Cozy Vinyl" },
+            { path: "/neon-lofi-and-ocean-sounds", headline: "Neon Lo-Fi & Ocean Surf" }
+          ];
+          const matchedCombo = combos.find((c) => c.path === currentPath);
+          if (matchedCombo) {
+            title = `${matchedCombo.headline} | Custom Lofi Radio Mixer & Nature Sounds`;
+            metaDescription = `Play our automatic relaxation preset blending ${matchedCombo.headline.toLowerCase()} with generative synths. Clean browser-synthesized focus audio.`;
+          }
+        }
+
+        const canonicalUrl = `https://midnight-signals.cloud${currentPath}`;
+
+        // Dynamic element substitutions
+        let modifiedHtml = html.replace(/<title>.*?<\/title>/i, `<title>${title}</title>`);
+        modifiedHtml = modifiedHtml.replace(/(<meta\s+name=["']description["']\s+content=")[^"]*(")/i, `$1${metaDescription}$2`);
+        modifiedHtml = modifiedHtml.replace(/(<meta\s+name=["']keywords["']\s+content=")[^"]*(")/i, `$1${keywords.join(", ")}$2`);
+        modifiedHtml = modifiedHtml.replace(/(<link\s+rel=["']canonical["']\s+href=")[^"]*(")/i, `$1${canonicalUrl}$2`);
+
+        // Inject page-specific Google Structured Data (Schema.org JSON-LD)
+        const structuredData = {
+          "@context": "https://schema.org",
+          "@type": "WebPage",
+          "name": title,
+          "description": metaDescription,
+          "url": canonicalUrl,
+          "isPartOf": {
+            "@type": "WebSite",
+            "name": "Midnight Signals",
+            "url": "https://midnight-signals.cloud/"
+          },
+          "publisher": {
+            "@type": "Organization",
+            "name": "Midnight Signals",
+            "logo": {
+              "@type": "ImageObject",
+              "url": "https://images.unsplash.com/photo-1518609878373-06d740f60d8b?auto=format&fit=crop&w=128&h=128&q=80"
+            }
+          }
+        };
+
+        const jsonLdInjected = `\n    <script type="application/ld+json">${JSON.stringify(structuredData)}</script>\n  </head>`;
+        modifiedHtml = modifiedHtml.replace(/<\/head>/i, jsonLdInjected);
+
+        res.setHeader("Content-Type", "text/html");
+        res.send(modifiedHtml);
+      });
     });
   }
 

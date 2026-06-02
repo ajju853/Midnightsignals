@@ -1544,9 +1544,10 @@ export default function App() {
               <span>Cozy Station Tuner & Frequency Index</span>
             </div>
             {currentPath && (
-              <button
-                type="button"
-                onClick={() => {
+              <a
+                href="/"
+                onClick={(e) => {
+                  e.preventDefault();
                   setCurrentPath("");
                   window.history.pushState({}, "", "/");
                   window.scrollTo({ top: 0, behavior: "smooth" });
@@ -1554,7 +1555,7 @@ export default function App() {
                 className="text-[9px] font-mono text-zinc-400 hover:text-white transition-colors flex items-center gap-1 bg-white/5 hover:bg-white/10 px-2 py-0.5 rounded cursor-pointer"
               >
                 🏠 Return to Main Station
-              </button>
+              </a>
             )}
           </div>
           
@@ -1562,10 +1563,11 @@ export default function App() {
             {SEO_PAGES.map((page) => {
               const isSelected = currentPath === page.path;
               return (
-                <button
+                <a
                   key={page.path}
-                  type="button"
-                  onClick={() => {
+                  href={page.path}
+                  onClick={(e) => {
+                    e.preventDefault();
                     setCurrentPath(page.path);
                     window.history.pushState({}, "", page.path);
                     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -1585,7 +1587,7 @@ export default function App() {
                       {page.headline.replace(" Generator", "").replace(" & Deep Relaxation", "")}
                     </span>
                   </div>
-                </button>
+                </a>
               );
             })}
             
@@ -1600,10 +1602,11 @@ export default function App() {
             ].map((combo) => {
               const isSelected = currentPath === combo.path;
               return (
-                <button
+                <a
                   key={combo.path}
-                  type="button"
-                  onClick={() => {
+                  href={combo.path}
+                  onClick={(e) => {
+                    e.preventDefault();
                     setCurrentPath(combo.path);
                     window.history.pushState({}, "", combo.path);
                     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -1623,7 +1626,7 @@ export default function App() {
                       {combo.headline}
                     </span>
                   </div>
-                </button>
+                </a>
               );
             })}
           </div>
