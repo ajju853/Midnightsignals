@@ -3,7 +3,25 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="google-site-verification" content="google14833afe332cbfc4" />
+    
+    <!-- Google tag (gtag.js) -->
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      window.gtag = gtag;
+      gtag('js', new Date());
+      
+      // Suppress network errors if tracking ID is not configured (e.g. template G-XXXXXXXXXX)
+      var gaId = "%VITE_GA_TRACKING_ID%" || "G-XXXXXXXXXX";
+      if (gaId && gaId !== "%" + "VITE_GA_TRACKING_ID" + "%") {
+        var script = document.createElement('script');
+        script.async = true;
+        script.src = 'https://www.googletagmanager.com/gtag/js?id=' + gaId;
+        document.head.appendChild(script);
+        gtag('config', gaId);
+      }
+    </script>
+
     <title>Midnight Signals - Cozy Lo-Fi Music & AI Poetry Transmitter</title>
     
     <!-- PWA & Favicon support -->

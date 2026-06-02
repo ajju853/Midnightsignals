@@ -42,6 +42,13 @@ export default function NatureSoundboard() {
     desertBreeze: false,
     morningMist: false,
     caveEchoes: false,
+    monsoonRain: false,
+    templeBells: false,
+    peacockCalls: false,
+    nightMarkets: false,
+    tropicalRainforest: false,
+    cicadaChorus: false,
+    mangroveWaves: false,
   });
 
   // Synchronize Nature active states to global ambient layers
@@ -66,6 +73,13 @@ export default function NatureSoundboard() {
     desertBreeze: 0.35,
     morningMist: 0.3,
     caveEchoes: 0.4,
+    monsoonRain: 0.5,
+    templeBells: 0.45,
+    peacockCalls: 0.45,
+    nightMarkets: 0.4,
+    tropicalRainforest: 0.5,
+    cicadaChorus: 0.35,
+    mangroveWaves: 0.4,
   });
 
   // Chosen bird sound preset for clicking the Bird Icon play buttons
@@ -81,6 +95,8 @@ export default function NatureSoundboard() {
   // Redesigned Sound Mixer state variables
   const [showInactiveChannels, setShowInactiveChannels] = useState<boolean>(false);
   const [isAdvancedExpanded, setIsAdvancedExpanded] = useState<boolean>(false);
+  const [isIndianExpanded, setIsIndianExpanded] = useState<boolean>(true); // open to showcase India 500+ retention
+  const [isSeaExpanded, setIsSeaExpanded] = useState<boolean>(true);       // open to showcase Southeast Asian preset
   const [activeDraggingChannel, setActiveDraggingChannel] = useState<string | null>(null);
 
   // Floating notifications logging live procedurally triggered sounds
@@ -173,6 +189,18 @@ export default function NatureSoundboard() {
       synthRef.current.toggleChannel(channel, nextVal);
     }
     
+    // Google Analytics Custom Event tracking
+    if (nextVal && typeof window !== "undefined" && (window as any).gtag) {
+      try {
+        (window as any).gtag("event", "play_sound", {
+          "sound_name": channel,
+          "volume": Math.round((channelVolumes[channel] || 0.5) * 100)
+        });
+      } catch (e) {
+        console.warn("GA Event recording failed:", e);
+      }
+    }
+    
     // Auto start player if toggled active but stopped
     if (nextVal && !isPlaying) {
       handleTogglePlay();
@@ -184,6 +212,19 @@ export default function NatureSoundboard() {
     if (synthRef.current) {
       synthRef.current.setVolume(channel, vol);
     }
+    
+    // Google Analytics Custom Event tracking for volume adjustments
+    if (typeof window !== "undefined" && (window as any).gtag) {
+      try {
+        (window as any).gtag("event", "adjust_volume", {
+          "channel": channel,
+          "value": Math.round(vol * 100)
+        });
+      } catch (e) {
+        console.warn("GA Event recording failed:", e);
+      }
+    }
+
     // Simulate haptic feedback on input touch
     if (typeof navigator !== "undefined" && navigator.vibrate) {
       try {
@@ -342,6 +383,17 @@ export default function NatureSoundboard() {
     // Ensure sound context exists
     if (!synthRef.current) return;
     
+    // Google Analytics Custom Event tracking for preset selection
+    if (typeof window !== "undefined" && (window as any).gtag) {
+      try {
+        (window as any).gtag("event", "select_preset", {
+          "preset_name": preset.name
+        });
+      } catch (e) {
+        console.warn("GA Event recording failed:", e);
+      }
+    }
+
     if (!isPlaying) {
       synthRef.current.start();
       setIsPlaying(true);
@@ -1278,11 +1330,28 @@ export default function NatureSoundboard() {
               { id: "caveEchoes", label: "Cave Echoes", accent: "accent-indigo-400 [&::-webkit-slider-thumb]:bg-indigo-400 [&::-moz-range-thumb]:bg-indigo-400 [&::-webkit-slider-thumb]:shadow-[0_0_12px_#818cf8] [&::-moz-range-thumb]:shadow-[0_0_12px_#818cf8]", icon: "🪨" },
             ];
 
+            const indianSliders = [
+              { id: "monsoonRain", label: "Monsoon soil rain", accent: "accent-orange-500 [&::-webkit-slider-thumb]:bg-orange-500 [&::-moz-range-thumb]:bg-orange-500 [&::-webkit-slider-thumb]:shadow-[0_0_12px_#f97316] [&::-moz-range-thumb]:shadow-[0_0_12px_#f97316]", icon: "⛈️" },
+              { id: "templeBells", label: "Temple brass bells", accent: "accent-yellow-500 [&::-webkit-slider-thumb]:bg-yellow-500 [&::-moz-range-thumb]:bg-yellow-500 [&::-webkit-slider-thumb]:shadow-[0_0_12px_#eab308] [&::-moz-range-thumb]:shadow-[0_0_12px_#eab308]", icon: "🔔" },
+              { id: "peacockCalls", label: "Peacock wild cries", accent: "accent-teal-500 [&::-webkit-slider-thumb]:bg-teal-500 [&::-moz-range-thumb]:bg-teal-500 [&::-webkit-slider-thumb]:shadow-[0_0_12px_#06b6d4] [&::-moz-range-thumb]:shadow-[0_0_12px_#06b6d4]", icon: "🦚" },
+              { id: "nightMarkets", label: "Delhi night markets", accent: "accent-rose-500 [&::-webkit-slider-thumb]:bg-rose-500 [&::-moz-range-thumb]:bg-rose-500 [&::-webkit-slider-thumb]:shadow-[0_0_12px_#f43f5e] [&::-moz-range-thumb]:shadow-[0_0_12px_#f43f5e]", icon: "🏮" },
+            ];
+
+            const seaSliders = [
+              { id: "tropicalRainforest", label: "Tropical rainforest", accent: "accent-emerald-500 [&::-webkit-slider-thumb]:bg-emerald-500 [&::-moz-range-thumb]:bg-emerald-500 [&::-webkit-slider-thumb]:shadow-[0_0_12px_#10b981] [&::-moz-range-thumb]:shadow-[0_0_12px_#10b981]", icon: "🌴" },
+              { id: "cicadaChorus", label: "Cicada chorus SG", accent: "accent-lime-400 [&::-webkit-slider-thumb]:bg-lime-400 [&::-moz-range-thumb]:bg-lime-400 [&::-webkit-slider-thumb]:shadow-[0_0_12px_#a3e635] [&::-moz-range-thumb]:shadow-[0_0_12px_#a3e635]", icon: "🦗" },
+              { id: "mangroveWaves", label: "Mangrove soft waves", accent: "accent-cyan-400 [&::-webkit-slider-thumb]:bg-cyan-400 [&::-moz-range-thumb]:bg-cyan-400 [&::-webkit-slider-thumb]:shadow-[0_0_12px_#22d3ee] [&::-moz-range-thumb]:shadow-[0_0_12px_#22d3ee]", icon: "🌊" },
+            ];
+
             const renderedCoreElements = coreSliders.map(renderSlider).filter(Boolean);
             const renderedAdvancedElements = advancedSliders.map(renderSlider).filter(Boolean);
+            const renderedIndianElements = indianSliders.map(renderSlider).filter(Boolean);
+            const renderedSeaElements = seaSliders.map(renderSlider).filter(Boolean);
 
             const hasCoreContent = renderedCoreElements.length > 0;
             const hasAdvancedContent = renderedAdvancedElements.length > 0;
+            const hasIndianContent = renderedIndianElements.length > 0;
+            const hasSeaContent = renderedSeaElements.length > 0;
 
             return (
               <div className="flex flex-col gap-2.5">
@@ -1292,6 +1361,76 @@ export default function NatureSoundboard() {
                     {renderedCoreElements}
                   </div>
                 ) : null}
+
+                {/* Indian-specific Nature Sounds (P0) */}
+                <div className="border-t border-white/5 pt-3 mt-1">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setIsIndianExpanded(!isIndianExpanded);
+                      if (typeof navigator !== "undefined" && navigator.vibrate) {
+                        try { navigator.vibrate(10); } catch(e) {}
+                      }
+                    }}
+                    className="w-full flex items-center justify-between text-[10px] font-mono font-bold uppercase tracking-widest text-[#FF671F] hover:text-white transition-colors py-1.5 cursor-pointer"
+                  >
+                    <span className="flex items-center gap-1.5">🇮🇳 Indian Vedic Scenery {hasIndianContent && `(${renderedIndianElements.length})`}</span>
+                    <span className="text-[#FF671F] transition-transform duration-300" style={{ transform: isIndianExpanded ? "rotate(180deg)" : "rotate(0deg)" }}>
+                      ▼
+                    </span>
+                  </button>
+
+                  <div
+                    className={`transition-all duration-300 ease-in-out overflow-hidden flex flex-col gap-2.5 ${
+                      isIndianExpanded
+                        ? "max-h-[1000px] opacity-100 mt-2.5"
+                        : "max-h-0 opacity-0 pointer-events-none"
+                    }`}
+                  >
+                    {hasIndianContent ? (
+                      renderedIndianElements
+                    ) : (
+                      <div className="py-2.5 text-center font-mono text-[9px] text-[#06038D] bg-zinc-950/40 rounded-xl border border-white/[0.02]">
+                        No active Indian elements. Turn on "Show 0%" to load native presets.
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                {/* South-East Asia Nature Presets (P1) */}
+                <div className="border-t border-[#009530]/20 pt-3 mt-1">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setIsSeaExpanded(!isSeaExpanded);
+                      if (typeof navigator !== "undefined" && navigator.vibrate) {
+                        try { navigator.vibrate(10); } catch(e) {}
+                      }
+                    }}
+                    className="w-full flex items-center justify-between text-[10px] font-mono font-bold uppercase tracking-widest text-[#009530] hover:text-green-400 transition-colors py-1.5 cursor-pointer"
+                  >
+                    <span className="flex items-center gap-1.5">🇸🇬/🇲🇾 SE Asian Canopy {hasSeaContent && `(${renderedSeaElements.length})`}</span>
+                    <span className="text-[#009530] transition-transform duration-300" style={{ transform: isSeaExpanded ? "rotate(180deg)" : "rotate(0deg)" }}>
+                      ▼
+                    </span>
+                  </button>
+
+                  <div
+                    className={`transition-all duration-300 ease-in-out overflow-hidden flex flex-col gap-2.5 ${
+                      isSeaExpanded
+                        ? "max-h-[1000px] opacity-100 mt-2.5"
+                        : "max-h-0 opacity-0 pointer-events-none"
+                    }`}
+                  >
+                    {hasSeaContent ? (
+                      renderedSeaElements
+                    ) : (
+                      <div className="py-2.5 text-center font-mono text-[9px] text-zinc-600 uppercase tracking-widest bg-zinc-950/40 rounded-xl border border-white/[0.02]">
+                        No active SE Asian presets. Turn on "Show 0%" to load tropical sounds.
+                      </div>
+                    )}
+                  </div>
+                </div>
 
                 {/* Advanced Sliders Accordion */}
                 <div className="border-t border-white/5 pt-3 mt-1">
@@ -1330,7 +1469,7 @@ export default function NatureSoundboard() {
                 </div>
 
                 {/* If absolutely nothing is rendered on screen */}
-                {!hasCoreContent && !renderedAdvancedElements.some(Boolean) && (
+                {!hasCoreContent && !renderedAdvancedElements.some(Boolean) && !renderedIndianElements.some(Boolean) && !renderedSeaElements.some(Boolean) && (
                   <div className="py-6 text-center font-mono text-[9px] text-zinc-600 bg-zinc-900/10 border border-white/5 rounded-xl flex flex-col gap-1 px-4 leading-relaxed">
                     <span className="text-white font-bold uppercase text-[10px]">All mixer channels are at 0%</span>
                     <span>To craft your ambient scape, tap the "Show 0%" button in the header and slide up forest, ocean, trees or crickets.</span>

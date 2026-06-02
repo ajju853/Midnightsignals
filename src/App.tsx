@@ -51,6 +51,47 @@ import {
   DonationSection
 } from "./components/SaaSProducts";
 
+const TRANSLATIONS = {
+  en: {
+    tagline: "Your Mind Needs a Frequency. We Provide It.",
+    vocalSignal: "Vocal Signal Narrator",
+    readLyrics: "Read live lyrics using high-fidelity Indian human narration synthesis.",
+    lyricReader: "Lyric Reader Mode",
+    active: "Active",
+    disabled: "Disabled",
+    availableSystemVoices: "Available System Voices",
+    testAccent: "Test Indian Accent",
+    returnMain: "Return to Main Station",
+    cozyTuner: "Cozy Station Tuner & Frequency Index",
+    totalLnt: "TOTAL LNT",
+    stationStandby: "STANDBY",
+    stationRecv: "RECEIVING",
+    sceneryTitle: "Atmospheric Scenery & Visualizer Mode",
+    scenerySub: "Switch graphics or toggle manual environmental layer overlays below.",
+    mixerTitle: "Procedural Soundscapes Board",
+    mixerToggleAll: "Toggle Loop Engine Play State"
+  },
+  de: {
+    tagline: "Ihr Geist braucht eine Frequenz. Wir liefern sie.",
+    vocalSignal: "Stimm-Signalsprecher",
+    readLyrics: "Live-Liedtexte mit hochpräziser indischer Stimmsynthese vorlesen.",
+    lyricReader: "Liedtext-Vorlesemodus",
+    active: "Aktiv",
+    disabled: "Deaktiviert",
+    availableSystemVoices: "Verfügbare Systemstimmen",
+    testAccent: "Indischen Akzent testen",
+    returnMain: "Zurück zum Hauptsender",
+    cozyTuner: "Gemütlicher Stations-Tuner & Frequenzindex",
+    totalLnt: "GESAMTLAUFZEIT",
+    stationStandby: "STANDBY",
+    stationRecv: "EMPFANG",
+    sceneryTitle: "Atmosphärische Kulisse & Visualisierungsmodus",
+    scenerySub: "Grafiken wechseln oder manuelle Umgebungsebenen-Overlays einblenden.",
+    mixerTitle: "Prozedurales Soundboard",
+    mixerToggleAll: "Wiedergabestatus der Loop-Engine umschalten"
+  }
+};
+
 // Aesthetic colors configuration matching Sophisticated Dark vibes
 const VIBE_THEMES = {
   dreamy: {
@@ -354,6 +395,7 @@ export default function App() {
   ]);
 
   // AI Unsent message and responses state list
+  const [interfaceLanguage, setInterfaceLanguage] = useState<"en" | "de">("en");
   const [unsentMessageInput, setUnsentMessageInput] = useState("");
   const [isSendingEcho, setIsSendingEcho] = useState(false);
   const [echoHistory, setEchoHistory] = useState<EchoItem[]>([
@@ -372,6 +414,7 @@ export default function App() {
   // Indian Vocalist TTS Guide States
   const [voices, setVoices] = useState<SpeechSynthesisVoice[]>([]);
   const [selectedVoiceName, setSelectedVoiceName] = useState<string>("");
+  const [accentLanguage, setAccentLanguage] = useState<"english" | "hindi" | "tamil" | "telugu" | "bengali">("english");
   const [isVocalGuideActive, setIsVocalGuideActive] = useState<boolean>(false);
   const lastSpokenLineIdRef = useRef<number | null>(null);
 
@@ -382,14 +425,41 @@ export default function App() {
         const indianList = allVoices.filter(v => 
           v.lang.toLowerCase().includes("-in") || 
           v.name.toLowerCase().includes("india") || 
-          v.lang.toLowerCase().startsWith("hi")
+          v.name.toLowerCase().includes("sangeeta") ||
+          v.name.toLowerCase().includes("ravi") ||
+          v.name.toLowerCase().includes("heera") ||
+          v.name.toLowerCase().includes("veena") ||
+          v.name.toLowerCase().includes("valluvar") ||
+          v.name.toLowerCase().includes("vani") ||
+          v.lang.toLowerCase().startsWith("hi") ||
+          v.lang.toLowerCase().startsWith("ta") ||
+          v.lang.toLowerCase().startsWith("te") ||
+          v.lang.toLowerCase().startsWith("bn") ||
+          v.lang.toLowerCase().startsWith("mr") ||
+          v.lang.toLowerCase().startsWith("kn") ||
+          v.lang.toLowerCase().startsWith("ml") ||
+          v.lang.toLowerCase().startsWith("gu")
         );
         setVoices(indianList);
         
         if (indianList.length > 0) {
-          const enINVoice = indianList.find(v => v.lang.toLowerCase().includes("en-in") || v.name.toLowerCase().includes("english"));
-          const chosen = enINVoice || indianList[0];
-          setSelectedVoiceName(chosen.name);
+          // If the selected language is tamil/telugu etc, let's prefer finding a voice with that lang prefix
+          let initialVoice = null;
+          if (accentLanguage === "tamil") {
+            initialVoice = indianList.find(v => v.lang.toLowerCase().startsWith("ta"));
+          } else if (accentLanguage === "telugu") {
+            initialVoice = indianList.find(v => v.lang.toLowerCase().startsWith("te"));
+          } else if (accentLanguage === "hindi") {
+            initialVoice = indianList.find(v => v.lang.toLowerCase().startsWith("hi"));
+          } else if (accentLanguage === "bengali") {
+            initialVoice = indianList.find(v => v.lang.toLowerCase().startsWith("bn"));
+          }
+          
+          if (!initialVoice) {
+            initialVoice = indianList.find(v => v.lang.toLowerCase().includes("en-in") || v.name.toLowerCase().includes("english")) || indianList[0];
+          }
+
+          setSelectedVoiceName(initialVoice.name);
         } else {
           const fallback = allVoices.find(v => v.lang.toLowerCase().startsWith("en")) || allVoices[0];
           if (fallback) {
@@ -403,7 +473,7 @@ export default function App() {
         window.speechSynthesis.onvoiceschanged = updateVoices;
       }
     }
-  }, []);
+  }, [accentLanguage]);
 
   const speakText = (text: string) => {
     if (typeof window === "undefined" || !window.speechSynthesis) return;
@@ -428,7 +498,7 @@ export default function App() {
   const [manualCampfire, setManualCampfire] = useState(false);
   const [manualTrain, setManualTrain] = useState(false);
 
-  const [natureSoundboardState, setNatureSoundboardState] = useState({
+  const [natureSoundboardState, setNatureSoundboardState] = useState<{ activeChannels: { [key: string]: boolean }; isPlaying: boolean }>({
     activeChannels: {
       birds: true,
       owl: false,
@@ -1677,28 +1747,37 @@ export default function App() {
 
         {/* DYNAMIC STATION FREQUENCY TUNER NAVIGATION (MOVED TO TOP OF HEADER) */}
         <div className={`w-full max-w-7xl mx-auto z-20 relative text-left bg-zinc-950/25 p-3 rounded-2xl border border-white/5 backdrop-blur-md transition-all duration-300 ${showTuner ? "block animate-fadeIn" : "hidden md:block"}`}>
-          <div className="flex items-center justify-between gap-4 mb-2">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-2">
             <div className="flex items-center gap-2 font-mono text-[9px] text-[#00D1FF] uppercase tracking-widest font-extrabold select-none">
               <span className="relative flex h-1.5 w-1.5">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#00D1FF] opacity-75"></span>
                 <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-[#00D1FF]"></span>
               </span>
-              <span>Cozy Station Tuner & Frequency Index</span>
+              <span>{interfaceLanguage === "en" ? "Midnight Cozy Tuner & Frequency Index" : "Gemütlicher Stations-Tuner & Frequenzindex"}</span>
             </div>
-            {currentPath && (
-              <a
-                href="/"
-                onClick={(e) => {
-                  e.preventDefault();
-                  setCurrentPath("");
-                  window.history.pushState({}, "", "/");
-                  window.scrollTo({ top: 0, behavior: "smooth" });
-                }}
-                className="text-[9px] font-mono text-zinc-400 hover:text-white transition-colors flex items-center gap-1 bg-white/5 hover:bg-white/10 px-2 py-0.5 rounded cursor-pointer"
+            <div className="flex items-center gap-2 flex-wrap sm:flex-nowrap">
+              <button
+                type="button"
+                onClick={() => setInterfaceLanguage(interfaceLanguage === "en" ? "de" : "en")}
+                className="text-[9px] font-mono text-zinc-300 hover:text-white transition-colors flex items-center gap-1.5 bg-white/5 hover:bg-white/10 px-2 py-1 rounded cursor-pointer border border-white/5"
               >
-                🏠 Return to Main Station
-              </a>
-            )}
+                🌐 {interfaceLanguage === "en" ? "Translate: DE 🇩🇪" : "Übersetzen: EN 🇺🇸"}
+              </button>
+              {currentPath && (
+                <a
+                  href="/"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setCurrentPath("");
+                    window.history.pushState({}, "", "/");
+                    window.scrollTo({ top: 0, behavior: "smooth" });
+                  }}
+                  className="text-[9px] font-mono text-zinc-400 hover:text-white transition-colors flex items-center gap-1 bg-white/5 hover:bg-white/10 px-2 py-1 rounded cursor-pointer"
+                >
+                  🏠 {interfaceLanguage === "en" ? "Return to Main Station" : "Zum Hauptsender"}
+                </a>
+              )}
+            </div>
           </div>
           
           <div className="flex overflow-x-auto gap-2 pb-1 scrollbar-thin scrollbar-thumb-white/10 scrollbar-track-transparent snap-x">
@@ -2536,10 +2615,10 @@ export default function App() {
               <div>
                 <h3 className="text-xs uppercase tracking-widest text-[#00D1FF] font-semibold mb-2 font-mono flex items-center gap-2">
                   <span className="text-sm">🇮🇳</span>
-                  Vocal Signal Narrator
+                  {TRANSLATIONS[interfaceLanguage].vocalSignal}
                 </h3>
                 <p className="text-[10px] text-zinc-500 font-mono leading-relaxed mb-3">
-                  Read live lyrics using high-fidelity Indian human narration synthesis.
+                  {TRANSLATIONS[interfaceLanguage].readLyrics}
                 </p>
 
                 {/* Vocal Guide Master Switch */}
@@ -2553,11 +2632,11 @@ export default function App() {
                   }`}
                 >
                   <span className="flex items-center gap-2">
-                    <span className={`w-1.5 h-1.5 rounded-full ${isVocalGuideActive ? "bg-indigo-400 animate-pulse" : "bg-zinc-600"}`} />
-                    Lyric Reader Mode
+                    <span className={`w-1.5 h-1.5 rounded-full ${isVocalGuideActive ? "bg-indigo-400 animate-pulse" : "bg-zinc-650"}`} />
+                    {TRANSLATIONS[interfaceLanguage].lyricReader}
                   </span>
                   <span className="text-[10px] uppercase tracking-wider">
-                    {isVocalGuideActive ? "Active" : "Disabled"}
+                    {isVocalGuideActive ? TRANSLATIONS[interfaceLanguage].active : TRANSLATIONS[interfaceLanguage].disabled}
                   </span>
                 </button>
               </div>
@@ -2565,8 +2644,39 @@ export default function App() {
               {/* Voice Choice & Pitch Tuning */}
               <div className="space-y-3 pt-1">
                 <div>
-                  <label htmlFor="voice-select" className="block text-[10px] font-mono text-zinc-400 mb-1.5 uppercase tracking-wider">
-                    Indian Voice Accent
+                  <span className="block text-[10px] font-mono text-zinc-400 mb-1.5 uppercase tracking-wider">
+                    Select Language Accent Accent (Tamil, Telugu, Hindi, Bengali)
+                  </span>
+                  
+                  {/* Accent selection badges (P0) */}
+                  <div className="grid grid-cols-5 gap-1 mb-2.5">
+                    {(["english", "hindi", "tamil", "telugu", "bengali"] as const).map((lang) => {
+                      const displayNames = {
+                        english: "Eng",
+                        hindi: "हिन्दी",
+                        tamil: "தமிழ்",
+                        telugu: "తెలుగు",
+                        bengali: "বাংলা"
+                      };
+                      return (
+                        <button
+                          key={lang}
+                          type="button"
+                          onClick={() => setAccentLanguage(lang)}
+                          className={`py-1 rounded-lg text-[9px] font-mono font-bold border transition-all cursor-pointer text-center ${
+                            accentLanguage === lang
+                              ? "bg-indigo-500/10 border-indigo-400 text-white"
+                              : "bg-zinc-900 border-white/5 text-zinc-500 hover:text-zinc-300"
+                          }`}
+                        >
+                          {displayNames[lang]}
+                        </button>
+                      );
+                    })}
+                  </div>
+
+                  <label htmlFor="voice-select" className="block text-[9px] font-mono text-zinc-500 mb-1 uppercase tracking-wider">
+                    Available System Voices
                   </label>
                   {voices.length > 0 ? (
                     <div className="relative">
@@ -2586,7 +2696,7 @@ export default function App() {
                   ) : (
                     <div className="space-y-2">
                       <div className="text-[10px] font-mono text-amber-500/85 leading-relaxed bg-amber-500/5 border border-amber-500/10 p-2.5 rounded-xl">
-                        No built-in Indian voices registered. Using native system fallback. Try selecting an alternative voice below:
+                        No built-in Indian voices registered. Using system native. Select fallback:
                       </div>
                       <select
                         id="fallback-voice-select"
@@ -2608,7 +2718,16 @@ export default function App() {
                 <div className="flex gap-2">
                   <button
                     type="button"
-                    onClick={() => speakText("Namaste. This is Midnight Signals. Listening to authentic Indian voice guiding signals.")}
+                    onClick={() => {
+                      const phrases = {
+                        hindi: "Namaste. Yeh Midnight Signals hai. Shanti aur dhyan ke sunehre palon ka anand lein.",
+                        tamil: "Vanakkam. Idhu Midnight Signals. Amaidhi matrum dhyanathin inba tharunangalai kettidungal.",
+                        telugu: "Namaskaram. Idhi Midnight Signals. Prasanthatha mariyu dhyanamu yokka swaralani vinnandi.",
+                        bengali: "Nomoshkar. Eta Midnight Signals. Shanti o dhyaner su-modhur sangeet sunein.",
+                        english: "Namaste. This is Midnight Signals. Listening to authentic Indian voice guiding signals."
+                      };
+                      speakText(phrases[accentLanguage]);
+                    }}
                     className="flex-1 bg-zinc-900 hover:bg-zinc-800 border border-white/5 rounded-xl text-xs py-2 px-3 text-zinc-300 hover:text-white transition-all font-mono text-center cursor-pointer flex items-center justify-center gap-2"
                   >
                     <span className="text-2xs">🔊</span> Test Indian Accent

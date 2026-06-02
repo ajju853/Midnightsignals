@@ -18,6 +18,15 @@ export class NatureSynth {
   private desertBreezeGain: GainNode | null = null;
   private morningMistGain: GainNode | null = null;
   private caveEchoesGain: GainNode | null = null;
+  
+  // Regional Indian & Southeast Asian Channels
+  private monsoonRainGain: GainNode | null = null;
+  private templeBellsGain: GainNode | null = null;
+  private peacockCallsGain: GainNode | null = null;
+  private nightMarketsGain: GainNode | null = null;
+  private tropicalRainforestGain: GainNode | null = null;
+  private cicadaChorusGain: GainNode | null = null;
+  private mangroveWavesGain: GainNode | null = null;
 
   // LFO & Constant source nodes for sweeps
   private treesNoiseSource: AudioBufferSourceNode | null = null;
@@ -41,6 +50,22 @@ export class NatureSynth {
   private brookNoiseSource: AudioBufferSourceNode | null = null;
   private brookFilter: BiquadFilterNode | null = null;
 
+  // Regional sweeping noise processes
+  private monsoonRainNoiseSource: AudioBufferSourceNode | null = null;
+  private monsoonRainFilter: BiquadFilterNode | null = null;
+
+  private nightMarketsNoiseSource: AudioBufferSourceNode | null = null;
+  private nightMarketsFilter: BiquadFilterNode | null = null;
+
+  private tropicalRainforestNoiseSource: AudioBufferSourceNode | null = null;
+  private tropicalRainforestFilter: BiquadFilterNode | null = null;
+
+  private cicadaChorusNoiseSource: AudioBufferSourceNode | null = null;
+  private cicadaChorusFilter: BiquadFilterNode | null = null;
+
+  private mangroveWavesNoiseSource: AudioBufferSourceNode | null = null;
+  private mangroveWavesFilter: BiquadFilterNode | null = null;
+
   // Active volume levels
   private volumes: { [key: string]: number } = {
     birds: 0.4,
@@ -53,6 +78,13 @@ export class NatureSynth {
     desertBreeze: 0.3,
     morningMist: 0.25,
     caveEchoes: 0.35,
+    monsoonRain: 0.45,
+    templeBells: 0.3,
+    peacockCalls: 0.35,
+    nightMarkets: 0.25,
+    tropicalRainforest: 0.35,
+    cicadaChorus: 0.2,
+    mangroveWaves: 0.3,
   };
 
   // Active status toggles
@@ -67,6 +99,13 @@ export class NatureSynth {
     desertBreeze: false,
     morningMist: false,
     caveEchoes: false,
+    monsoonRain: false,
+    templeBells: false,
+    peacockCalls: false,
+    nightMarkets: false,
+    tropicalRainforest: false,
+    cicadaChorus: false,
+    mangroveWaves: false,
   };
 
   // Keep track of periodic interval loops
@@ -75,6 +114,9 @@ export class NatureSynth {
   private cricketsLoopId: any = null;
   private caveEchoesLoopId: any = null;
   private brookBubbleLoopId: any = null;
+  private templeBellsLoopId: any = null;
+  private peacockCallsLoopId: any = null;
+  private tropicalRainforestLoopId: any = null;
 
   public isPlaying = false;
 
@@ -138,6 +180,35 @@ export class NatureSynth {
       this.caveEchoesGain.gain.setValueAtTime(this.activeStates.caveEchoes ? this.volumes.caveEchoes : 0.0, this.ctx.currentTime);
       this.caveEchoesGain.connect(this.masterGain);
 
+      // Create new regional Indian & Southeast Asian gain nodes
+      this.monsoonRainGain = this.ctx.createGain();
+      this.monsoonRainGain.gain.setValueAtTime(this.activeStates.monsoonRain ? this.volumes.monsoonRain : 0.0, this.ctx.currentTime);
+      this.monsoonRainGain.connect(this.masterGain);
+
+      this.templeBellsGain = this.ctx.createGain();
+      this.templeBellsGain.gain.setValueAtTime(this.activeStates.templeBells ? this.volumes.templeBells : 0.0, this.ctx.currentTime);
+      this.templeBellsGain.connect(this.masterGain);
+
+      this.peacockCallsGain = this.ctx.createGain();
+      this.peacockCallsGain.gain.setValueAtTime(this.activeStates.peacockCalls ? this.volumes.peacockCalls : 0.0, this.ctx.currentTime);
+      this.peacockCallsGain.connect(this.masterGain);
+
+      this.nightMarketsGain = this.ctx.createGain();
+      this.nightMarketsGain.gain.setValueAtTime(this.activeStates.nightMarkets ? this.volumes.nightMarkets : 0.0, this.ctx.currentTime);
+      this.nightMarketsGain.connect(this.masterGain);
+
+      this.tropicalRainforestGain = this.ctx.createGain();
+      this.tropicalRainforestGain.gain.setValueAtTime(this.activeStates.tropicalRainforest ? this.volumes.tropicalRainforest : 0.0, this.ctx.currentTime);
+      this.tropicalRainforestGain.connect(this.masterGain);
+
+      this.cicadaChorusGain = this.ctx.createGain();
+      this.cicadaChorusGain.gain.setValueAtTime(this.activeStates.cicadaChorus ? this.volumes.cicadaChorus : 0.0, this.ctx.currentTime);
+      this.cicadaChorusGain.connect(this.masterGain);
+
+      this.mangroveWavesGain = this.ctx.createGain();
+      this.mangroveWavesGain.gain.setValueAtTime(this.activeStates.mangroveWaves ? this.volumes.mangroveWaves : 0.0, this.ctx.currentTime);
+      this.mangroveWavesGain.connect(this.masterGain);
+
       // Start continuous atmospheric noise loops
       this.setupTreesGenerator();
       this.setupOceanGenerator();
@@ -146,6 +217,13 @@ export class NatureSynth {
       this.setupBrookGenerator();
       this.setupDesertBreezeGenerator();
       this.setupMorningMistGenerator();
+
+      // Setup continuous regional soundscapes
+      this.setupMonsoonRainGenerator();
+      this.setupNightMarketsGenerator();
+      this.setupTropicalRainforestGenerator();
+      this.setupCicadaChorusGenerator();
+      this.setupMangroveWavesGenerator();
 
     } catch (e) {
       console.error("Nature ambient sound AudioContext initialization failed", e);
@@ -374,6 +452,159 @@ export class NatureSynth {
     this.morningMistNoiseSource.start();
   }
 
+  // --- NEW REGIONAL PROCEDURAL GENERATORS (INDIA & SOUTHEAST ASIA) ---
+
+  private setupMonsoonRainGenerator() {
+    if (!this.ctx || !this.monsoonRainGain) return;
+
+    // Deep heavy tropical rain stream underlay
+    const buffer = this.createNoiseBuffer("brown");
+    this.monsoonRainNoiseSource = this.ctx.createBufferSource();
+    this.monsoonRainNoiseSource.buffer = buffer;
+    this.monsoonRainNoiseSource.loop = true;
+
+    this.monsoonRainFilter = this.ctx.createBiquadFilter();
+    this.monsoonRainFilter.type = "lowpass";
+    this.monsoonRainFilter.frequency.setValueAtTime(350, this.ctx.currentTime);
+
+    const softVolumeGate = this.ctx.createGain();
+    softVolumeGate.gain.setValueAtTime(0.4, this.ctx.currentTime);
+
+    this.monsoonRainNoiseSource.connect(this.monsoonRainFilter);
+    this.monsoonRainFilter.connect(softVolumeGate);
+    softVolumeGate.connect(this.monsoonRainGain);
+    this.monsoonRainNoiseSource.start();
+
+    // Rumbles of thunder periodically simulated inside monsoon filter
+    const simulateMonsoonThunder = () => {
+      if (!this.ctx || !this.isPlaying || !this.activeStates.monsoonRain || !this.monsoonRainFilter) return;
+      const now = this.ctx.currentTime;
+      if (Math.random() > 0.65) {
+        // Deep rumble base frequency modulation
+        this.monsoonRainFilter.frequency.setValueAtTime(140, now);
+        this.monsoonRainFilter.frequency.exponentialRampToValueAtTime(500, now + 0.1);
+        this.monsoonRainFilter.frequency.exponentialRampToValueAtTime(60, now + 3.5);
+        this.onVoiceTriggerCallback("Monsoon Thunder", "⚡", "Distant thunder rolling deep through dark rain clouds");
+      }
+    };
+    setInterval(simulateMonsoonThunder, 8000);
+  }
+
+  private setupNightMarketsGenerator() {
+    if (!this.ctx || !this.nightMarketsGain) return;
+
+    const buffer = this.createNoiseBuffer("pink");
+    this.nightMarketsNoiseSource = this.ctx.createBufferSource();
+    this.nightMarketsNoiseSource.buffer = buffer;
+    this.nightMarketsNoiseSource.loop = true;
+
+    this.nightMarketsFilter = this.ctx.createBiquadFilter();
+    this.nightMarketsFilter.type = "bandpass";
+    this.nightMarketsFilter.frequency.setValueAtTime(650, this.ctx.currentTime);
+    this.nightMarketsFilter.Q.setValueAtTime(1.2, this.ctx.currentTime);
+
+    const gate = this.ctx.createGain();
+    gate.gain.setValueAtTime(0.06, this.ctx.currentTime);
+
+    this.nightMarketsNoiseSource.connect(this.nightMarketsFilter);
+    this.nightMarketsFilter.connect(gate);
+    gate.connect(this.nightMarketsGain);
+    this.nightMarketsNoiseSource.start();
+
+    // Rhythmic night-market chatter and street vendor echoes
+    const modulateMarketAtmosphere = () => {
+      if (!this.ctx || !this.isPlaying || !this.activeStates.nightMarkets || !gate) return;
+      const now = this.ctx.currentTime;
+      const chatterSwell = 0.04 + Math.sin(now * 0.43) * 0.02 + Math.cos(now * 0.72) * 0.012;
+      gate.gain.linearRampToValueAtTime(chatterSwell, now + 0.8);
+    };
+    setInterval(modulateMarketAtmosphere, 1000);
+  }
+
+  private setupTropicalRainforestGenerator() {
+    if (!this.ctx || !this.tropicalRainforestGain) return;
+
+    const buffer = this.createNoiseBuffer("pink");
+    this.tropicalRainforestNoiseSource = this.ctx.createBufferSource();
+    this.tropicalRainforestNoiseSource.buffer = buffer;
+    this.tropicalRainforestNoiseSource.loop = true;
+
+    this.tropicalRainforestFilter = this.ctx.createBiquadFilter();
+    this.tropicalRainforestFilter.type = "lowpass";
+    this.tropicalRainforestFilter.frequency.setValueAtTime(1200, this.ctx.currentTime);
+
+    const gate = this.ctx.createGain();
+    gate.gain.setValueAtTime(0.12, this.ctx.currentTime);
+
+    this.tropicalRainforestNoiseSource.connect(this.tropicalRainforestFilter);
+    this.tropicalRainforestFilter.connect(gate);
+    gate.connect(this.tropicalRainforestGain);
+    this.tropicalRainforestNoiseSource.start();
+  }
+
+  private setupCicadaChorusGenerator() {
+    if (!this.ctx || !this.cicadaChorusGain) return;
+
+    const buffer = this.createNoiseBuffer("white");
+    this.cicadaChorusNoiseSource = this.ctx.createBufferSource();
+    this.cicadaChorusNoiseSource.buffer = buffer;
+    this.cicadaChorusNoiseSource.loop = true;
+
+    this.cicadaChorusFilter = this.ctx.createBiquadFilter();
+    this.cicadaChorusFilter.type = "bandpass";
+    this.cicadaChorusFilter.frequency.setValueAtTime(5200, this.ctx.currentTime);
+    this.cicadaChorusFilter.Q.setValueAtTime(55.0, this.ctx.currentTime); // High-frequency resonant ringing cicada pitch
+
+    const gate = this.ctx.createGain();
+    gate.gain.setValueAtTime(0.005, this.ctx.currentTime);
+
+    this.cicadaChorusNoiseSource.connect(this.cicadaChorusFilter);
+    this.cicadaChorusFilter.connect(gate);
+    gate.connect(this.cicadaChorusGain);
+    this.cicadaChorusNoiseSource.start();
+
+    // Tropical cicada pulsing chorus waves ("breathe in... breathe out...")
+    const modulateCicadas = () => {
+      if (!this.ctx || !this.isPlaying || !this.activeStates.cicadaChorus || !gate) return;
+      const now = this.ctx.currentTime;
+      // Oscillate between 0.001 and 0.022 volume every 2.4s
+      const intensity = 0.01 + Math.sin(now * 2.6) * 0.01;
+      gate.gain.linearRampToValueAtTime(Math.max(0.001, intensity), now + 0.15);
+    };
+    setInterval(modulateCicadas, 200);
+  }
+
+  private setupMangroveWavesGenerator() {
+    if (!this.ctx || !this.mangroveWavesGain) return;
+
+    const buffer = this.createNoiseBuffer("brown");
+    this.mangroveWavesNoiseSource = this.ctx.createBufferSource();
+    this.mangroveWavesNoiseSource.buffer = buffer;
+    this.mangroveWavesNoiseSource.loop = true;
+
+    this.mangroveWavesFilter = this.ctx.createBiquadFilter();
+    this.mangroveWavesFilter.type = "lowpass";
+    this.mangroveWavesFilter.frequency.setValueAtTime(120, this.ctx.currentTime);
+
+    const gate = this.ctx.createGain();
+    gate.gain.setValueAtTime(0.08, this.ctx.currentTime);
+
+    this.mangroveWavesNoiseSource.connect(this.mangroveWavesFilter);
+    this.mangroveWavesFilter.connect(gate);
+    gate.connect(this.mangroveWavesGain);
+    this.mangroveWavesNoiseSource.start();
+
+    // Rhythmic slushing wave mud-root lapping sweeps (4.8s cycle)
+    const modulateMangroveLapping = () => {
+      if (!this.ctx || !this.isPlaying || !this.activeStates.mangroveWaves || !gate || !this.mangroveWavesFilter) return;
+      const now = this.ctx.currentTime;
+      const activeSwell = 0.02 + Math.max(0, Math.sin(now * 1.3)) * 0.22;
+      gate.gain.linearRampToValueAtTime(activeSwell, now + 1.2);
+      this.mangroveWavesFilter.frequency.setValueAtTime(90 + Math.sin(now * 1.3) * 50, now);
+    };
+    setInterval(modulateMangroveLapping, 800);
+  }
+
   // --- ANIMAL SOUND TRIGGERS ---
 
   private startLoopingSchedules() {
@@ -409,6 +640,24 @@ export class NatureSynth {
         }, i * (80 + Math.random() * 120));
       }
     }, 550);
+
+    // Temple bells ringing random scheduler
+    this.templeBellsLoopId = setInterval(() => {
+      if (!this.activeStates.templeBells || !this.isPlaying) return;
+      this.triggerTempleBells();
+    }, 9000);
+
+    // Peacock wild calls scheduler
+    this.peacockCallsLoopId = setInterval(() => {
+      if (!this.activeStates.peacockCalls || !this.isPlaying) return;
+      this.triggerPeacockCall();
+    }, 14000);
+
+    // Southeast Asian rainforest random jungle events scheduler
+    this.tropicalRainforestLoopId = setInterval(() => {
+      if (!this.activeStates.tropicalRainforest || !this.isPlaying) return;
+      this.triggerTropicalRainforestEvent();
+    }, 7500);
   }
 
   private stopLoopingSchedules() {
@@ -416,10 +665,121 @@ export class NatureSynth {
     if (this.owlLoopId) clearInterval(this.owlLoopId);
     if (this.caveEchoesLoopId) clearInterval(this.caveEchoesLoopId);
     if (this.brookBubbleLoopId) clearInterval(this.brookBubbleLoopId);
+    if (this.templeBellsLoopId) clearInterval(this.templeBellsLoopId);
+    if (this.peacockCallsLoopId) clearInterval(this.peacockCallsLoopId);
+    if (this.tropicalRainforestLoopId) clearInterval(this.tropicalRainforestLoopId);
     this.birdLoopId = null;
     this.owlLoopId = null;
     this.caveEchoesLoopId = null;
     this.brookBubbleLoopId = null;
+    this.templeBellsLoopId = null;
+    this.peacockCallsLoopId = null;
+    this.tropicalRainforestLoopId = null;
+  }
+
+  public triggerTempleBells() {
+    if (!this.ctx || !this.templeBellsGain || !this.isPlaying || !this.activeStates.templeBells) return;
+    const now = this.ctx.currentTime;
+    
+    // Pristine physical brass temple bells overtone synthesis
+    const frequencies = [220, 276.5, 330, 440, 554.4, 660, 880];
+    const decayParams = [2.5, 2.0, 1.8, 1.4, 1.2, 0.9, 0.6];
+    
+    frequencies.forEach((freq, idx) => {
+      const osc = this.ctx!.createOscillator();
+      const amp = this.ctx!.createGain();
+      
+      osc.connect(amp);
+      amp.connect(this.templeBellsGain!);
+      
+      osc.type = "sine";
+      osc.frequency.setValueAtTime(freq, now);
+      
+      amp.gain.setValueAtTime(0.001, now);
+      amp.gain.linearRampToValueAtTime(0.08 * (freq > 500 ? 0.35 : 0.9), now + 0.015);
+      amp.gain.exponentialRampToValueAtTime(0.0001, now + decayParams[idx]);
+      
+      osc.start(now);
+      osc.stop(now + decayParams[idx] + 0.1);
+    });
+    
+    this.onVoiceTriggerCallback("Temple Bells", "🔔", "Resounding pristine brass dome bells echoing tranquil energy");
+  }
+
+  public triggerPeacockCall() {
+    if (!this.ctx || !this.peacockCallsGain || !this.isPlaying || !this.activeStates.peacockCalls) return;
+    const now = this.ctx.currentTime;
+    
+    // Peacock high-pitched exotic screech "may-aawww" frequency-shifter
+    const osc = this.ctx.createOscillator();
+    const amp = this.ctx.createGain();
+    
+    osc.connect(amp);
+    amp.connect(this.peacockCallsGain);
+    
+    osc.type = "triangle";
+    osc.frequency.setValueAtTime(450, now);
+    osc.frequency.linearRampToValueAtTime(780, now + 0.15);
+    osc.frequency.exponentialRampToValueAtTime(320, now + 0.65);
+    
+    amp.gain.setValueAtTime(0.001, now);
+    amp.gain.linearRampToValueAtTime(0.09, now + 0.06);
+    amp.gain.exponentialRampToValueAtTime(0.0001, now + 0.75);
+    
+    osc.start(now);
+    osc.stop(now + 0.8);
+    
+    this.onVoiceTriggerCallback("Indian Peacock", "🦚", "Exotic peacock calling out across the dense twilight grove");
+  }
+
+  public triggerTropicalRainforestEvent() {
+    if (!this.ctx || !this.tropicalRainforestGain || !this.isPlaying || !this.activeStates.tropicalRainforest) return;
+    const now = this.ctx.currentTime;
+    
+    // Choose randomly between a Malaysian Cicada chirp or a Tropical Hornbill call
+    const isCicada = Math.random() > 0.5;
+
+    if (isCicada) {
+      // Rapid tree cricket rhythm click
+      const osc = this.ctx.createOscillator();
+      const amp = this.ctx.createGain();
+      
+      osc.connect(amp);
+      amp.connect(this.tropicalRainforestGain);
+      
+      osc.type = "sawtooth";
+      osc.frequency.setValueAtTime(2800, now);
+      
+      amp.gain.setValueAtTime(0.001, now);
+      amp.gain.linearRampToValueAtTime(0.04, now + 0.05);
+      amp.gain.exponentialRampToValueAtTime(0.0001, now + 0.45);
+      
+      osc.start(now);
+      osc.stop(now + 0.5);
+      
+      this.onVoiceTriggerCallback("Rainforest Drongo", "🐦", "Malaysian racket-tailed drongo mimicking insect buzzes");
+    } else {
+      // Tropical bird melodic sliding call
+      const osc = this.ctx.createOscillator();
+      const amp = this.ctx.createGain();
+      
+      osc.connect(amp);
+      amp.connect(this.tropicalRainforestGain);
+      
+      osc.type = "sine";
+      osc.frequency.setValueAtTime(1600, now);
+      osc.frequency.exponentialRampToValueAtTime(2200, now + 0.12);
+      osc.frequency.exponentialRampToValueAtTime(1200, now + 0.28);
+      
+      amp.gain.setValueAtTime(0.001, now);
+      amp.gain.linearRampToValueAtTime(0.06, now + 0.03);
+      amp.gain.exponentialRampToValueAtTime(0.0001, now + 0.3);
+      
+      osc.start(now);
+      osc.stop(now + 0.35);
+      
+      this.onVoiceTriggerCallback("Tropical Hornbill", "🦜", "Singapore Great Hornbill singing across the mangrove tree canopy");
+    }
   }
 
   public triggerProceduralCaveEcho() {
@@ -698,6 +1058,13 @@ export class NatureSynth {
       this.desertBreezeGain?.gain.setValueAtTime(0, now);
       this.morningMistGain?.gain.setValueAtTime(0, now);
       this.caveEchoesGain?.gain.setValueAtTime(0, now);
+      this.monsoonRainGain?.gain.setValueAtTime(0, now);
+      this.templeBellsGain?.gain.setValueAtTime(0, now);
+      this.peacockCallsGain?.gain.setValueAtTime(0, now);
+      this.nightMarketsGain?.gain.setValueAtTime(0, now);
+      this.tropicalRainforestGain?.gain.setValueAtTime(0, now);
+      this.cicadaChorusGain?.gain.setValueAtTime(0, now);
+      this.mangroveWavesGain?.gain.setValueAtTime(0, now);
     }
   }
 
@@ -733,6 +1100,13 @@ export class NatureSynth {
     if (channel === "desertBreeze") return this.desertBreezeGain;
     if (channel === "morningMist") return this.morningMistGain;
     if (channel === "caveEchoes") return this.caveEchoesGain;
+    if (channel === "monsoonRain") return this.monsoonRainGain;
+    if (channel === "templeBells") return this.templeBellsGain;
+    if (channel === "peacockCalls") return this.peacockCallsGain;
+    if (channel === "nightMarkets") return this.nightMarketsGain;
+    if (channel === "tropicalRainforest") return this.tropicalRainforestGain;
+    if (channel === "cicadaChorus") return this.cicadaChorusGain;
+    if (channel === "mangroveWaves") return this.mangroveWavesGain;
     return null;
   }
 
@@ -750,6 +1124,13 @@ export class NatureSynth {
     this.desertBreezeGain?.gain.setValueAtTime(this.activeStates.desertBreeze ? this.volumes.desertBreeze : 0.0, now);
     this.morningMistGain?.gain.setValueAtTime(this.activeStates.morningMist ? this.volumes.morningMist : 0.0, now);
     this.caveEchoesGain?.gain.setValueAtTime(this.activeStates.caveEchoes ? this.volumes.caveEchoes : 0.0, now);
+    this.monsoonRainGain?.gain.setValueAtTime(this.activeStates.monsoonRain ? this.volumes.monsoonRain : 0.0, now);
+    this.templeBellsGain?.gain.setValueAtTime(this.activeStates.templeBells ? this.volumes.templeBells : 0.0, now);
+    this.peacockCallsGain?.gain.setValueAtTime(this.activeStates.peacockCalls ? this.volumes.peacockCalls : 0.0, now);
+    this.nightMarketsGain?.gain.setValueAtTime(this.activeStates.nightMarkets ? this.volumes.nightMarkets : 0.0, now);
+    this.tropicalRainforestGain?.gain.setValueAtTime(this.activeStates.tropicalRainforest ? this.volumes.tropicalRainforest : 0.0, now);
+    this.cicadaChorusGain?.gain.setValueAtTime(this.activeStates.cicadaChorus ? this.volumes.cicadaChorus : 0.0, now);
+    this.mangroveWavesGain?.gain.setValueAtTime(this.activeStates.mangroveWaves ? this.volumes.mangroveWaves : 0.0, now);
   }
 
   public getChannelVolume(channel: string): number {
