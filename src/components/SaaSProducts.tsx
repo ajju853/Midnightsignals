@@ -33,6 +33,23 @@ export interface CookiePreferences {
   advertising: boolean;
 }
 
+export const updateGoogleConsent = (prefs: CookiePreferences) => {
+  if (typeof window !== "undefined" && (window as any).gtag) {
+    (window as any).gtag("consent", "update", {
+      analytics_storage: prefs.analytics ? "granted" : "denied",
+      ad_storage: prefs.advertising ? "granted" : "denied",
+      ad_user_data: prefs.advertising ? "granted" : "denied",
+      ad_personalization: prefs.advertising ? "granted" : "denied"
+    });
+    console.log("Google Consent Mode v2 loaded/updated:", {
+      analytics_storage: prefs.analytics ? "granted" : "denied",
+      ad_storage: prefs.advertising ? "granted" : "denied",
+      ad_user_data: prefs.advertising ? "granted" : "denied",
+      ad_personalization: prefs.advertising ? "granted" : "denied"
+    });
+  }
+};
+
 export function CookieConsent({ onSave }: { onSave: (prefs: CookiePreferences) => void }) {
   const [isVisible, setIsVisible] = useState(false);
   const [showPreferences, setShowPreferences] = useState(false);
@@ -44,16 +61,34 @@ export function CookieConsent({ onSave }: { onSave: (prefs: CookiePreferences) =
 
   useEffect(() => {
     const hasConsented = localStorage.getItem("midnight-signals-consent");
-    if (!hasConsented) {
+    if (hasConsented) {
+      try {
+        const parsedPrefs = JSON.parse(hasConsented) as CookiePreferences;
+        setPrefs(parsedPrefs);
+        updateGoogleConsent(parsedPrefs);
+      } catch (e) {
+        console.error("Error parsing stored cookie preferences:", e);
+      }
+    } else {
       // Small delay for clean entrance
       const timer = setTimeout(() => setIsVisible(true), 1500);
       return () => clearTimeout(timer);
     }
   }, []);
 
+  useEffect(() => {
+    const handleShowConsenter = () => {
+      setIsVisible(true);
+      setShowPreferences(true);
+    };
+    window.addEventListener("show-cookie-consent", handleShowConsenter);
+    return () => window.removeEventListener("show-cookie-consent", handleShowConsenter);
+  }, []);
+
   const handleAcceptAll = () => {
     const allPrefs = { essential: true, analytics: true, advertising: true };
     localStorage.setItem("midnight-signals-consent", JSON.stringify(allPrefs));
+    updateGoogleConsent(allPrefs);
     onSave(allPrefs);
     setIsVisible(false);
   };
@@ -61,12 +96,14 @@ export function CookieConsent({ onSave }: { onSave: (prefs: CookiePreferences) =
   const handleRejectAll = () => {
     const minPrefs = { essential: true, analytics: false, advertising: false };
     localStorage.setItem("midnight-signals-consent", JSON.stringify(minPrefs));
+    updateGoogleConsent(minPrefs);
     onSave(minPrefs);
     setIsVisible(false);
   };
 
   const handleSavePreferences = () => {
     localStorage.setItem("midnight-signals-consent", JSON.stringify(prefs));
+    updateGoogleConsent(prefs);
     onSave(prefs);
     setIsVisible(false);
   };
@@ -741,6 +778,25 @@ export function AdditionalPolicies({
             <p className="text-zinc-450 text-[10px]">
               You can instantly purge all tracker cookie memories from your physical disk by clearing cookies for <code className="text-zinc-300 bg-white/5 px-1 py-0.5 rounded font-mono">midnight-signals.ai.studio</code> directly in your web browser inspector options.
             </p>
+
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center p-3.5 bg-[#00D1FF]/5 rounded-xl border border-[#00D1FF]/15 gap-3 mt-2">
+              <div className="space-y-1">
+                <span className="font-mono text-[9px] font-bold text-[#00D1FF] uppercase flex items-center gap-1.5">
+                  <Sliders className="w-3.5 h-3.5" />
+                  Interactive Consent Console
+                </span>
+                <p className="text-[10px] text-zinc-450">Modify or adjust your Google Consent Mode v2 preferences at any time.</p>
+              </div>
+              <button
+                type="button"
+                onClick={() => {
+                  window.dispatchEvent(new Event("show-cookie-consent"));
+                }}
+                className="px-3 py-1.5 bg-sky-500/10 hover:bg-sky-500/20 text-sky-400 border border-sky-400/30 font-mono text-[9px] uppercase tracking-wider font-bold rounded-lg transition-colors cursor-pointer"
+              >
+                Adjust Consent ⚙️
+              </button>
+            </div>
           </div>
         )}
 
