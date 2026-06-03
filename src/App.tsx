@@ -2334,7 +2334,7 @@ export default function App() {
                           key={presetColor}
                           type="button"
                           onClick={() => handleAccentColorChange(currentVibe, presetColor)}
-                          className="w-3.5 h-3.5 rounded-full border border-white/10 transition-transform active:scale-95 cursor-pointer"
+                          className="min-h-[44px] min-w-[44px] rounded-full transition-transform active:scale-95 cursor-pointer flex items-center justify-center"
                           style={{ backgroundColor: presetColor }}
                           title={`Preset ${presetColor}`}
                         />
@@ -2839,6 +2839,7 @@ export default function App() {
                       </div>
                       <select
                         id="fallback-voice-select"
+                        aria-label="Fallback Voice Selector"
                         value={selectedVoiceName}
                         onChange={(e) => setSelectedVoiceName(e.target.value)}
                         className="w-full bg-zinc-900 border border-white/11 text-xs text-zinc-350 px-3 py-2 rounded-xl focus:outline-none focus:border-indigo-500 transition-all font-mono"
@@ -3475,7 +3476,7 @@ export default function App() {
             {/* SPECTRAL WAVEFORM METERS */}
             <div className="bg-zinc-950/60 p-5 rounded-3xl border border-white/5 backdrop-blur-lg flex flex-col justify-between">
               <div>
-                <dt className="text-[10px] uppercase tracking-widest text-zinc-500 mb-4 font-mono">React Waveform</dt>
+                <h4 className="text-[10px] uppercase tracking-widest text-zinc-400 mb-4 font-mono">React Waveform</h4>
                 
                 <div className="visualizer flex items-end justify-between h-[80px] w-full px-2 gap-1.5">
                   {visualizerHeights.map((h, i) => (
@@ -4188,7 +4189,7 @@ export default function App() {
                   }
                 }}
                 className="text-zinc-400 hover:text-white transition-colors cursor-pointer p-1"
-                style={{ minHeight: "44px", minWidth: "36px", display: "flex", alignItems: "center", justifyContent: "center" }}
+                style={{ minHeight: "44px", minWidth: "44px", display: "flex", alignItems: "center", justifyContent: "center" }}
                 title={masterVolume > 0 ? "Mute audio stream" : "Unmute audio stream"}
               >
                 {masterVolume > 0 ? (

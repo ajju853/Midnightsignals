@@ -1817,9 +1817,9 @@ export default function NatureSoundboard({ interfaceLanguage = "en" }: { interfa
 
       {/* Procedurally Triggered Sound Log notifications */}
       <div className="bg-zinc-950 p-4 rounded-2xl border border-white/5 flex flex-col gap-2">
-        <dt className="text-3xs font-mono uppercase tracking-widest text-zinc-500 shrink-0">
+        <h4 className="text-3xs font-mono uppercase tracking-widest text-zinc-400 shrink-0">
           Radio Transmission Journal
-        </dt>
+        </h4>
 
         <div className="max-h-[90px] overflow-y-auto space-y-1.5 scrollbar-thin">
           {soundLogs.length === 0 ? (
