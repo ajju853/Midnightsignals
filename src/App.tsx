@@ -1827,6 +1827,17 @@ export default function App() {
               
               <button
                 type="button"
+                onClick={() => handleCopyLink()}
+                className={`py-1 px-2.5 rounded-lg border uppercase text-[8.5px] font-mono font-semibold transition-all shadow-md active:scale-95 cursor-pointer ${
+                  copySuccess
+                    ? "border-emerald-500/30 bg-emerald-500/10 text-emerald-400"
+                    : "border-white/10 bg-zinc-900/60 text-zinc-350 hover:bg-zinc-800 hover:text-white"
+                }`}
+              >
+                {copySuccess ? "✓ Copied!" : "🔗 Share"}
+              </button>
+              <button
+                type="button"
                 onClick={() => speakText("Synchronizing offline backup files to Cloud Run. Secure encryption active.")}
                 className="py-1 px-2.5 rounded-lg border border-white/10 bg-zinc-900/60 text-zinc-350 hover:bg-zinc-800 text-[8.5px] uppercase font-mono font-semibold transition-all shadow-md active:scale-95 cursor-pointer"
               >
@@ -4083,6 +4094,17 @@ export default function App() {
                 }`}
               >
                 📟 Signal
+              </button>
+              <button
+                type="button"
+                onClick={() => handleCopyLink()}
+                className={`min-h-[44px] py-1 px-2.5 rounded-xl border uppercase text-[8.5px] font-mono font-bold select-none cursor-pointer duration-300 transition-all ${
+                  copySuccess
+                    ? "border-emerald-500 bg-emerald-500/10 text-emerald-400"
+                    : "border-white/10 bg-white/5 text-zinc-400 hover:text-white"
+                }`}
+              >
+                {copySuccess ? "✓ Done" : "🔗 Share"}
               </button>
             </div>
           </div>
