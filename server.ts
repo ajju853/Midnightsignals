@@ -457,6 +457,16 @@ app.get("/api/mix/load/:id", (req, res) => {
   res.json(mix);
 });
 
+// List saved mixes
+app.get("/api/mix/list", (req, res) => {
+  const limit = Math.min(parseInt(req.query.limit as string) || 50, 100);
+  const mixes = Array.from(mixStore.values())
+    .sort((a, b) => b.createdAt - a.createdAt)
+    .slice(0, limit)
+    .map(({ id, name, voice, birds, vibe, createdAt }) => ({ id, name, voice: voice?.name || "", birds: birds?.selected?.length || 0, vibe, createdAt }));
+  res.json({ mixes, total: mixStore.size });
+});
+
 async function startServer() {
   // Automatically generate and write sitemap.xml on startup
   try {
@@ -585,6 +595,12 @@ async function startServer() {
         if (!activePage && currentPath === "/create/mix") {
           title = "Mix Creator Wizard | Build & Share Lofi Mixes | Midnight Signals";
           metaDescription = "Create a complete lofi mix in 5 steps: lyrics, narrator voice, bird species, soundscape, and review. Share your creation with a single link.";
+          isMatched = true;
+        }
+
+        if (!activePage && currentPath === "/gallery") {
+          title = "Mix Gallery | Browse Shared Lofi Mixes | Midnight Signals";
+          metaDescription = "Browse the gallery of user-created lofi mixes. Discover custom soundscapes, bird songs, and narrated lyrics shared by the Midnight Signals community.";
           isMatched = true;
         }
 

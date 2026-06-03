@@ -49,6 +49,7 @@ const VoiceSelect = lazy(() => import("./components/VoiceSelect"));
 const BirdSelect = lazy(() => import("./components/BirdSelect"));
 const SoundscapeSelect = lazy(() => import("./components/SoundscapeSelect"));
 const CreateMixWizard = lazy(() => import("./components/CreateMixWizard"));
+const Gallery = lazy(() => import("./components/Gallery"));
 const EmbeddableInfographic = lazy(() => import("./components/EmbeddableInfographic"));
 const CookieConsent = lazy(() => import("./components/SaaSProducts").then(m => ({ default: m.CookieConsent })));
 const ContactHub = lazy(() => import("./components/SaaSProducts").then(m => ({ default: m.ContactHub })));
@@ -1924,6 +1925,14 @@ export default function App() {
     return (
       <Suspense fallback={null}>
         <CreateMixWizard onNavigate={createPageNav} />
+      </Suspense>
+    );
+  }
+
+  if (currentPath === "/gallery") {
+    return (
+      <Suspense fallback={null}>
+        <Gallery onNavigate={createPageNav} />
       </Suspense>
     );
   }
@@ -4116,6 +4125,19 @@ export default function App() {
             className="hover:text-indigo-400 text-indigo-400/70 font-bold transition-colors cursor-pointer outline-none flex items-center gap-1"
           >
             📖 Research Journal
+          </a>
+          <span className="text-zinc-800 select-none">•</span>
+          <a
+            href="/gallery"
+            onClick={(e) => {
+              e.preventDefault();
+              setCurrentPath("/gallery");
+              window.history.pushState({}, "", "/gallery");
+              window.scrollTo({ top: 0, behavior: "smooth" });
+            }}
+            className="hover:text-indigo-400 text-indigo-400/70 font-bold transition-colors cursor-pointer outline-none flex items-center gap-1"
+          >
+            🖼️ Mix Gallery
           </a>
         </div>
 

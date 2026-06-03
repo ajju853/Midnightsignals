@@ -68,6 +68,15 @@ export default {
       }
     }
 
+    if (path === "/api/mix/list" && method === "GET") {
+      const limit = Math.min(parseInt(url.searchParams.get("limit") || "50", 10), 100);
+      const mixes = Array.from(mixStore.values())
+        .sort((a, b) => b.createdAt - a.createdAt)
+        .slice(0, limit)
+        .map(({ id, name, voice, birds, vibe, createdAt }) => ({ id, name, voice: voice?.name || "", birds: birds?.selected?.length || 0, vibe, createdAt }));
+      return jsonResponse({ mixes, total: mixStore.size });
+    }
+
     if (path.startsWith("/api/mix/load/") && method === "GET") {
       const id = path.replace("/api/mix/load/", "");
       const mix = mixStore.get(id);
