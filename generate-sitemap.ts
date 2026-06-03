@@ -1,6 +1,7 @@
 import * as fs from "fs";
 import * as path from "path";
 import { SEO_PAGES } from "./src/seoData";
+import { BIRD_PRESETS } from "./src/lib/birdPresets";
 
 const combos = [
   "/ocean-waves-and-rain",
@@ -59,6 +60,66 @@ for (const page of SEO_PAGES) {
   xml += `    <lastmod>${seoDataModDate}</lastmod>\n`;
   xml += `    <changefreq>weekly</changefreq>\n`;
   xml += `    <priority>0.8</priority>\n`;
+  xml += `  </url>\n`;
+}
+
+// 3b. Programmatic Bird Pages
+for (const bird of BIRD_PRESETS) {
+  xml += `  <url>\n`;
+  xml += `    <loc>${baseUrl}/birds/${bird.id}</loc>\n`;
+  xml += `    <lastmod>${seoDataModDate}</lastmod>\n`;
+  xml += `    <changefreq>weekly</changefreq>\n`;
+  xml += `    <priority>0.7</priority>\n`;
+  xml += `  </url>\n`;
+}
+
+// 3c. Programmatic Lofi Sound/Mood combinations
+const sounds = ["rain", "ocean", "birds", "crickets", "thunderstorm", "vinyl", "coffeeshop"];
+const moods = ["study", "sleep", "focus", "relax", "meditation", "chill"];
+
+for (const sound of sounds) {
+  // Sound main page
+  xml += `  <url>\n`;
+  xml += `    <loc>${baseUrl}/lofi/${sound}</loc>\n`;
+  xml += `    <lastmod>${seoDataModDate}</lastmod>\n`;
+  xml += `    <changefreq>weekly</changefreq>\n`;
+  xml += `    <priority>0.7</priority>\n`;
+  xml += `  </url>\n`;
+
+  // Sound + Mood combinations
+  for (const mood of moods) {
+    xml += `  <url>\n`;
+    xml += `    <loc>${baseUrl}/lofi/${sound}/${mood}</loc>\n`;
+    xml += `    <lastmod>${seoDataModDate}</lastmod>\n`;
+    xml += `    <changefreq>weekly</changefreq>\n`;
+    xml += `    <priority>0.7</priority>\n`;
+    xml += `  </url>\n`;
+  }
+}
+
+// 3d. Localized Target Pages
+const localizedPaths = [
+  // German
+  "/de/lernen-mit-lofi",
+  "/de/regengerausche-schlafen",
+  "/de/vogelstimmen",
+  "/de/indische-naturgerausche",
+  // French
+  "/fr/pluie-pour-dormir",
+  "/fr/oiseaux-chantent",
+  "/fr/lofi-etudier",
+  // Swiss
+  "/ch/alpengerausche",
+  "/ch/kuhglocken",
+  "/ch/natur-ambient"
+];
+
+for (const path of localizedPaths) {
+  xml += `  <url>\n`;
+  xml += `    <loc>${baseUrl}${path}</loc>\n`;
+  xml += `    <lastmod>${seoDataModDate}</lastmod>\n`;
+  xml += `    <changefreq>weekly</changefreq>\n`;
+  xml += `    <priority>0.7</priority>\n`;
   xml += `  </url>\n`;
 }
 

@@ -228,7 +228,7 @@ export default function NatureSoundboard({ interfaceLanguage = "en" }: { interfa
     const handleLaunchSEOPreset = (e: Event) => {
       const customEvent = e as CustomEvent;
       if (customEvent.detail) {
-        const { activeChannels: presetActive, channelVolumes: presetVols } = customEvent.detail;
+        const { activeChannels: presetActive, channelVolumes: presetVols, favBirdId } = customEvent.detail;
         
         setActiveChannels(presetActive);
         setChannelVolumes(presetVols);
@@ -237,6 +237,11 @@ export default function NatureSoundboard({ interfaceLanguage = "en" }: { interfa
           synthInstance.toggleChannel(ch, presetActive[ch]);
           synthInstance.setVolume(ch, presetVols[ch]);
         });
+
+        if (favBirdId) {
+          setFavBirdType(favBirdId);
+          synthInstance.triggerProceduralBird(favBirdId);
+        }
         
         // Start playing
         synthInstance.start();

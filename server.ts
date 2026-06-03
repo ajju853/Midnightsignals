@@ -4,7 +4,7 @@ import fs from "fs";
 import { createServer as createViteServer } from "vite";
 import { GoogleGenAI, Type } from "@google/genai";
 import "dotenv/config";
-import { SEO_PAGES, generateFAQSchema } from "./src/seoData";
+import { SEO_PAGES, generateFAQSchema, getDynamicPageData } from "./src/seoData";
 
 const app = express();
 const PORT = 3000;
@@ -376,7 +376,7 @@ async function startServer() {
         let metaDescription = "Create custom lofi radio stations with ocean waves, bird songs, rain ambience, AI lyrics and sleep-friendly soundscapes. Free online ambient sound generator.";
         let keywords = ["Midnight Signals", "lo-fi music", "AI poetry", "lyric transmission", "chill starlight synthesizer", "relax sound hub", "ambient noise player"];
         
-        let activePage = SEO_PAGES.find((p) => p.path === currentPath);
+        let activePage = SEO_PAGES.find((p) => p.path === currentPath) || getDynamicPageData(currentPath);
         let isMatched = !!activePage;
 
         if (!activePage && currentPath === "/science-of-lofi-focus-infographic") {
@@ -446,7 +446,7 @@ async function startServer() {
           res.status(404);
         }
 
-        const canonicalUrl = `${protocol}://${host}${currentPath}`;
+        const canonicalUrl = `${protocol}://${host}${activePage ? activePage.path : currentPath}`;
 
         // Dynamic element substitutions
         let modifiedHtml = html.replace(/<title>.*?<\/title>/i, `<title>${title}</title>`);

@@ -1,3 +1,5 @@
+import { BIRD_PRESETS } from "./lib/birdPresets";
+
 export interface SEOPageData {
   path: string;
   title: string;
@@ -38,6 +40,7 @@ export interface SEOPageData {
     customArtist: string;
     bpm: number;
     synthWaveform: "sine" | "square" | "sawtooth" | "triangle";
+    favBirdId?: string;
   };
 }
 
@@ -793,5 +796,334 @@ export function generateFAQSchema(page: SEOPageData) {
       }
     }))
   };
+}
+
+export function getDynamicPageData(path: string): SEOPageData | null {
+  const currentPath = path === "/" ? "" : path;
+  if (!currentPath) return null;
+
+  // 1. Check bird species pages: /birds/:birdId
+  if (currentPath.startsWith("/birds/")) {
+    const birdId = currentPath.substring("/birds/".length).toLowerCase().replace(/-call|-sound/g, "").replace(/[^a-z0-9]/g, "");
+    
+    // Find matching bird preset
+    const matchedBird = BIRD_PRESETS.find((b) => {
+      const cleanId = b.id.toLowerCase().replace(/[^a-z0-9]/g, "");
+      const cleanName = b.name.toLowerCase().replace(/[^a-z0-9]/g, "");
+      return cleanId === birdId || cleanName === birdId || cleanId.includes(birdId) || birdId.includes(cleanId);
+    });
+
+    if (matchedBird) {
+      const birdName = matchedBird.name;
+      const category = matchedBird.category;
+      const desc = matchedBird.description;
+      const emoji = matchedBird.emoji;
+      
+      // Determine vibe and color based on category
+      const vibe = category === "indian" ? "dreamy" : category === "tropical" ? "hopeful" : "dreamy";
+      const accentColor = category === "indian" ? "from-amber-500 to-orange-400" : "from-emerald-500 to-teal-400";
+      
+      return {
+        path: `/birds/${matchedBird.id}`,
+        title: `${birdName} ${emoji} Call & Nature Sounds for Sleep & Focus | Midnight Signals`,
+        metaDescription: `Listen to soothing ${birdName} calls and forest ambience. Mix waves, crickets, wind, and lofi chord progressions with our custom browser soundboard.`,
+        keywords: [
+          `${birdName} call`,
+          `${birdName} sound`,
+          `${birdName} sleep sounds`,
+          "bird sound generator",
+          "forest sounds for studying",
+          "nature soundboard online"
+        ],
+        headline: `${birdName} Bird Call & Relaxing Forest Ambience`,
+        subheading: `An interactive browser-synthesized acoustic profile of the ${birdName} designed to relieve anxiety and boost focus.`,
+        accentColor,
+        vibe,
+        introText: `Welcome to the dynamic ${birdName} soundscape player on Midnight Signals. The ${birdName} (${emoji}) is native to the ${category} aviary family and is renowned for its ${desc.toLowerCase()}. Environmental acoustics indicate that active birdsongs reduce cognitive fatigue, block out ambient city hums, and promote delta sleep. Below, customize our soundboard sliders to blend ${birdName} songs with ocean surf, forest wind, or soft lofi chords.`,
+        sections: [
+          {
+            title: `Acoustic Engineering of ${birdName} Soundwaves`,
+            paragraphs: [
+              `Our synthesis engine models the natural frequency of the ${birdName} utilizing a ${matchedBird.waveType} wave oscillator. Operating at a base frequency of ${matchedBird.baseFreq}Hz with a ${matchedBird.sweepType} sweep type, it replicates the natural acoustic signature of this species.`,
+              `Unlike static MP3 recordings that loop predictably, our Web Audio generator triggers procedural call sweeps with randomized interval offsets (averaging every ${matchedBird.interval} seconds). This prevents your brain's subconscious from noticing repetitive audio cycles, ensuring high-quality, uninterrupted noise therapy.`
+            ]
+          },
+          {
+            title: "How to Optimize this Preset for Work or Sleep",
+            paragraphs: [
+              `Click the 'Launch Curated Preset Station' button to load the custom bird mixer. We suggest setting the main volume slider to 30-40% to mimic a natural forest.`,
+              `You can toggle other nature channels on the dashboard, including nocturnal owl hoots, forest breeze, summer crickets, and coastal tides, or add warm lo-fi synthesizer pads underneath the birdsong for a relaxing musical overlay.`
+            ]
+          }
+        ],
+        faqs: [
+          {
+            question: `How is the ${birdName} call generated in the browser?`,
+            answer: `The system uses real-time Web Audio API oscillators to generate a ${matchedBird.waveType} wave centered at ${matchedBird.baseFreq}Hz. It applies a procedural ${matchedBird.sweepType} envelope with a duration of ${matchedBird.duration}s to simulate the bird's vocalization.`
+          },
+          {
+            question: "Can I use these sounds for sleep and study?",
+            answer: "Yes, organic soundscapes like birdsong act as soft fascinations that replenish directed attention and mask disruptive background noises, making them perfect for concentration or deep sleep."
+          }
+        ],
+        presetConfig: {
+          activeChannels: {
+            birds: true,
+            owl: false,
+            trees: true,
+            ocean: false,
+            crickets: category === "lofi" || category === "tropical"
+          },
+          channelVolumes: {
+            birds: 0.7,
+            owl: 0.0,
+            trees: 0.4,
+            ocean: 0.0,
+            crickets: 0.35
+          },
+          customLyrics: `In the branches high and green,\n${birdName} sings a song serene,\nStarlight fades, the morning breaks,\nQuiet joy within us wakes...`,
+          customTitle: `${birdName} Woodland Preset`,
+          customArtist: `${category.toUpperCase()} AVIARY RADIO`,
+          bpm: 72,
+          synthWaveform: matchedBird.waveType,
+          favBirdId: matchedBird.id
+        }
+      };
+    }
+  }
+
+  // 2. Check lofi sound and mood combination pages: /lofi/:sound/:mood or /lofi/:sound
+  if (currentPath.startsWith("/lofi/")) {
+    const parts = currentPath.substring("/lofi/".length).split("/");
+    const soundId = parts[0].toLowerCase();
+    const moodId = parts[1] ? parts[1].toLowerCase() : "chill";
+
+    const soundTitles: Record<string, string> = {
+      rain: "Rainy Cozy Static",
+      ocean: "Coastal Wave Surf",
+      birds: "Forest Songbirds",
+      crickets: "Night Crickets",
+      thunderstorm: "Heavy Thunderstorm",
+      vinyl: "Nostalgic Vinyl Crackle",
+      coffeeshop: "Cozy Coffee Shop Ambience"
+    };
+
+    const moodNames: Record<string, string> = {
+      study: "Focused Study & Coding",
+      sleep: "Deep Delta Sleep",
+      focus: "High-Cognitive Focus",
+      relax: "Late-Night Relaxation",
+      meditation: "Mindful Meditation & Yoga",
+      chill: "Lo-Fi Lounge Chill",
+      workout: "Atmospheric Workout Beats"
+    };
+
+    if (soundTitles[soundId]) {
+      const soundTitle = soundTitles[soundId];
+      const moodName = moodNames[moodId] || moodNames.chill;
+      
+      const vibe = moodId === "sleep" ? "dreamy" : moodId === "relax" ? "melancholy" : moodId === "focus" || moodId === "study" ? "hopeful" : "neon";
+      const accentColor = moodId === "sleep" ? "from-blue-600 to-indigo-500" : moodId === "study" ? "from-purple-500 to-pink-400" : "from-teal-500 to-emerald-400";
+
+      return {
+        path: `/lofi/${soundId}/${moodId}`,
+        title: `${soundTitle} Lo-Fi for ${moodName} | Midnight Signals`,
+        metaDescription: `Play generative lo-fi chillhop beats mixed with real ${soundId} sounds, custom tuned for ${moodName.toLowerCase()}. Create your perfect focus soundboard.`,
+        keywords: [
+          `${soundId} lofi`,
+          `lofi for ${moodId}`,
+          `ambient ${soundId} beats`,
+          "custom sleep sound mixer",
+          "lofi radio generator"
+        ],
+        headline: `${soundTitle} Lo-Fi for ${moodName}`,
+        subheading: `An interactive generative lo-fi radio station combining atmospheric ${soundId} frequencies with cozy starlight synths.`,
+        accentColor,
+        vibe,
+        introText: `Welcome to the custom ${soundId} lo-fi transmission channel optimized for ${moodName.toLowerCase()}. Blending low-frequency nature textures with rhythmic lo-fi beats (70-80 BPM) creates a soothing noise block. This blocks ambient spikes, reduces directed attention fatigue, and helps keep your brain in a flow state. Use our soundboard below to customize your mix.`,
+        sections: [
+          {
+            title: `The Science of ${soundTitle} and Lo-Fi Beats`,
+            paragraphs: [
+              `Acoustic studies show that listening to consistent backgrounds like ${soundId} combined with major-seventh and minor-ninth musical chords relaxes the autonomic nervous system. The repetitive lo-fi percussion acts as an external pacing guide, aligning neural oscillators to focus frequencies.`,
+              `Midnight Signals generates these sounds directly in your local device browser. Our procedural audio generator combines tape saturation filters, warm keyboard patterns, and real-time noise blocks to create a dynamic, non-looping audio background.`
+            ]
+          }
+        ],
+        faqs: [
+          {
+            question: `How do I configure this ${soundId} lofi preset for optimal concentration?`,
+            answer: `Click 'Launch Curated Preset Station' below to auto-load. Tweak the ${soundId} volume slider to around 40% and keep the master volume at a moderate level (45-50dB) to avoid auditory fatigue during long sessions.`
+          }
+        ],
+        presetConfig: {
+          activeChannels: {
+            birds: soundId === "birds",
+            owl: soundId === "birds" && (moodId === "sleep" || moodId === "relax"),
+            trees: soundId === "rain" || soundId === "thunderstorm",
+            ocean: soundId === "ocean",
+            crickets: soundId === "crickets" || moodId === "sleep"
+          },
+          channelVolumes: {
+            birds: soundId === "birds" ? 0.75 : 0.0,
+            owl: soundId === "birds" ? 0.3 : 0.0,
+            trees: (soundId === "rain" || soundId === "thunderstorm") ? 0.65 : 0.0,
+            ocean: soundId === "ocean" ? 0.8 : 0.0,
+            crickets: (soundId === "crickets" || moodId === "sleep") ? 0.45 : 0.0
+          },
+          customLyrics: `Cozy lights and pouring rain,\n${soundTitle} clears the brain,\nChasing loops of starry height,\n${moodName} through the night...`,
+          customTitle: `${soundTitle} ${moodId.toUpperCase()}`,
+          customArtist: `Midnight Lofi Station`,
+          bpm: moodId === "sleep" ? 60 : moodId === "workout" ? 95 : 74,
+          synthWaveform: moodId === "sleep" ? "sine" : "triangle"
+        }
+      };
+    }
+  }
+
+  // 3. Localized pathways
+  const localePrefixes = ["/de/", "/fr/", "/ch/"];
+  const matchedPrefix = localePrefixes.find((pfx) => currentPath.startsWith(pfx));
+  
+  if (matchedPrefix) {
+    const lang = matchedPrefix.replace(/\//g, "");
+    const term = currentPath.substring(matchedPrefix.length);
+
+    // Dynamic titles based on language
+    let title = "";
+    let desc = "";
+    let headline = "";
+    let subheading = "";
+    let intro = "";
+    let activeChannels = { birds: true, owl: false, trees: true, ocean: false, crickets: true };
+    let channelVolumes = { birds: 0.5, owl: 0.0, trees: 0.4, ocean: 0.0, crickets: 0.3 };
+    let customTitle = "Midnight Localized Station";
+    let customArtist = "Midnight Signals Local";
+
+    if (lang === "de") {
+      if (term === "lernen-mit-lofi") {
+        title = "Lernen mit Lofi Musik | Midnight Signals";
+        desc = "Konzentriertes Lernen mit sanfter Lofi-Musik und Naturgeräuschen. Erstellen Sie Ihre eigene Sound-Mischung für maximalen Fokus.";
+        headline = "Lernen mit Lofi Musik & Fokus-Soundscapes";
+        subheading = "Steigern Sie Ihre Konzentration und Gedächtnisleistung mit prozeduralen Entspannungsklängen.";
+        intro = "Willkommen beim speziellen Lofi-Lernkanal von Midnight Signals. Wissenschaftliche Studien belegen, dass Hintergrundmusik im Frequenzbereich von 70-80 BPM in Kombination mit Naturtönen die Aufmerksamkeit schärft und geistige Ermüdung verringert.";
+        customTitle = "Deutsches Lofi Lernen";
+      } else if (term === "regengerausche-schlafen") {
+        title = "Regengeräusche zum Schlafen | Natur-Mischer | Midnight Signals";
+        desc = "Hören Sie entspannende Regengeräusche zum Einschlafen. Passen Sie Wind-, Meeres- und Lofi-Klänge im interaktiven Mixer an.";
+        headline = "Beruhigende Regengeräusche zum Einschlafen";
+        subheading = "Entspannen Sie Ihren Körper mit synthetischen Regenwellen und sanften Melodien für tiefen Schlaf.";
+        intro = "Regengeräusche wirken wie rosa Rauschen auf das Gehirn, überdecken störende Nebengeräusche und verlangsamen die Herzfrequenz.";
+        activeChannels = { birds: false, owl: false, trees: true, ocean: true, crickets: true };
+        channelVolumes = { birds: 0.0, owl: 0.0, trees: 0.7, ocean: 0.4, crickets: 0.3 };
+        customTitle = "Regen Schlafmischung";
+      } else if (term === "vogelstimmen") {
+        title = "Vogelstimmen Entspannung | Natur-Soundboard | Midnight Signals";
+        desc = "Hören Sie wunderschöne Vogelstimmen zur Entspannung und zum Stressabbau. Passen Sie die Lautstärke verschiedener Vogelgesänge an.";
+        headline = "Wunderschöne Vogelstimmen zur Entspannung";
+        subheading = "Naturklänge und Vogelgezwitscher direkt in Ihrem Browser synthetisiert.";
+        intro = "Das Zwitschern der Vögel signalisiert unserem Unterbewusstsein Sicherheit und Ruhe. Erleben Sie unsere lebensechte Simulation.";
+        customTitle = "Vogelstimmen Wald";
+      } else if (term === "indische-naturgerausche") {
+        title = "Indische Naturgeräusche | Meditation & Fokus | Midnight Signals";
+        desc = "Erleben Sie indische Naturklänge wie Monsunregen, Tempelglocken und Pfauenschreie zur Meditation.";
+        headline = "Indische Naturgeräusche & Meditationsklänge";
+        subheading = "Traditionelle indische Tempelglocken, Monsunregen und Singvögel für tiefe Achtsamkeit.";
+        intro = "Verbinden Sie sich mit den rhythmischen Klängen indischer Landschaften, perfekt für Meditation, Yoga oder konzentriertes Arbeiten.";
+        activeChannels = { birds: true, owl: true, trees: true, ocean: false, crickets: true };
+        channelVolumes = { birds: 0.6, owl: 0.3, trees: 0.5, ocean: 0.0, crickets: 0.3 };
+        customTitle = "Indischer Monsun & Tempel";
+      }
+    } else if (lang === "fr") {
+      if (term === "pluie-pour-dormir") {
+        title = "Pluie pour dormir | Mélangeur de sons de la nature | Midnight Signals";
+        desc = "Écoutez le son relaxant de la pluie pour vous endormir. Créez votre propre ambiance de sommeil avec de la musique lofi.";
+        headline = "Son de la Pluie pour Dormir Profondément";
+        subheading = "Un générateur de bruit rose naturel pour calmer votre esprit et vous aider à vous endormir.";
+        intro = "Le son de la pluie est un régulateur cardiaque naturel qui masque les bruits soudains de l'environnement.";
+        activeChannels = { birds: false, owl: false, trees: true, ocean: false, crickets: true };
+        channelVolumes = { birds: 0.0, owl: 0.0, trees: 0.75, ocean: 0.0, crickets: 0.3 };
+        customTitle = "Pluie de Nuit";
+      } else if (term === "oiseaux-chantent") {
+        title = "Chant d'oiseaux pour se détendre | Midnight Signals";
+        desc = "Détendez-vous avec des chants d'oiseaux synthétisés en temps réel. Parfait pour réduire l'anxiété et le stress quotidien.";
+        headline = "Chants d'Oiseaux pour la Détente & l'Étude";
+        subheading = "Écoutez des mélodies d'oiseaux de la forêt pour régénérer votre concentration.";
+        intro = "Les mélodies des oiseaux apaisent le système nerveux et stimulent la créativité.";
+        customTitle = "Oiseaux de la Forêt";
+      } else if (term === "lofi-etudier") {
+        title = "Musique Lofi pour étudier | Midnight Signals";
+        desc = "Musique lofi relaxante pour étudier, coder et rester concentré. Générateur de rythmes chillhop infinis.";
+        headline = "Générateur de Musique Lofi pour Étudier";
+        subheading = "Des beats chillhop de 70 BPM pour synchroniser votre cerveau avec un état de concentration pure.";
+        intro = "La musique Lo-fi agit comme un stimulant d'attention douce. Notre synthétiseur crée des mélodies uniques en continu.";
+        customTitle = "Session d'Étude Lofi";
+      }
+    } else if (lang === "ch") {
+      if (term === "alpengerausche") {
+        title = "Alpengerausche Schweiz | Midnight Signals";
+        desc = "Entspannende Schweizer Alpengeräusche mit Bergwind und Vogelstimmen. Ideal zum Schlafen und Fokussieren.";
+        headline = "Schweizer Alpengeräusche & Bergwind";
+        subheading = "Beruhigende Frequenzen alpiner Höhen für Konzentration und tiefen Schlaf.";
+        intro = "Hören Sie die friedlichen Klänge der Schweizer Alpen. Synthetischer Wind in den Kiefern gepaart mit beruhigenden Drones.";
+        customTitle = "Schweizer Alpenwind";
+      } else if (term === "kuhglocken") {
+        title = "Kuhglocken Entspannung | Midnight Signals";
+        desc = "Hören Sie beruhigende Kuhglocken auf einer Alpwiese. Mixen Sie es mit Wind und Vögeln für perfekte Entspannung.";
+        headline = "Kuhglocken & Friedliche Alpwiesen Klänge";
+        subheading = "Das sanfte Läuten von Kuhglocken kombiniert mit frischem Waldwind.";
+        intro = "Das Läuten von Kuhglocken ruft Gefühle von Weite und Natur hervor, was nachweislich Stress abbaut.";
+        customTitle = "Kuhglocken Wiese";
+      } else if (term === "natur-ambient") {
+        title = "Natur Ambient Schweiz | Midnight Signals";
+        desc = "Hören Sie Schweizer Natur-Ambientklänge. Kombinieren Sie Waldrauschen, Bäche und Lofi-Klänge.";
+        headline = "Schweizer Natur Ambient Soundboard";
+        subheading = "Beruhigende Schweizer Gebirgsbäche und Waldbrise.";
+        intro = "Entfliehen Sie dem Lärm der Stadt mit einer natürlichen Barriere aus sanft fließendem Wasser und Wind.";
+        customTitle = "Schweizer Bergwald";
+      }
+    }
+
+    if (title) {
+      return {
+        path: currentPath,
+        title,
+        metaDescription: desc,
+        keywords: ["lofi", "nature sounds", "relax", "sleep", "study"],
+        headline,
+        subheading,
+        accentColor: "from-indigo-600 to-sky-500",
+        vibe: "dreamy",
+        introText: intro,
+        sections: [
+          {
+            title: lang === "de" ? "Wissenschaft und Nutzen" : "Science et Avantages",
+            paragraphs: [
+              lang === "de" 
+                ? "Naturgeräusche reduzieren die Aktivität des sympathischen Nervensystems und beschleunigen die Regeneration nach Stress."
+                : "Les sons de la nature diminuent l'activité du système nerveux sympathique et favorisent la récupération après le stress."
+            ]
+          }
+        ],
+        faqs: [
+          {
+            question: lang === "de" ? "Ist diese Seite kostenlos?" : "Ce site est-il gratuit?",
+            answer: lang === "de" ? "Ja, alle Audio-Synthesizer und Naturklänge sind 100% kostenlos und ohne Werbung nutzbar." : "Oui, tous les synthétiseurs audio et sons de la nature sont utilisables 100% gratuitement et sans publicité."
+          }
+        ],
+        presetConfig: {
+          activeChannels,
+          channelVolumes,
+          customLyrics: "Relaxing localized frequencies playing...",
+          customTitle,
+          customArtist,
+          bpm: 70,
+          synthWaveform: "triangle"
+        }
+      };
+    }
+  }
+
+  return null;
 }
 

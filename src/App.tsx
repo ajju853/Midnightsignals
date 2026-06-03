@@ -34,7 +34,7 @@ import { MidnightSynth } from "./lib/synthEngine";
 import SignalCanvas from "./components/SignalCanvas";
 import NatureSoundboard from "./components/NatureSoundboard";
 import { calmLofiPresets, LofiPreset } from "./calmLyricsPresets";
-import { SEO_PAGES, SEOPageData, generateFAQSchema } from "./seoData";
+import { SEO_PAGES, SEOPageData, generateFAQSchema, getDynamicPageData } from "./seoData";
 import ScienceOfLofiInfographic from "./components/ScienceOfLofiInfographic";
 import EmbeddableInfographic from "./components/EmbeddableInfographic";
 import { BookOpen, MapPin, ExternalLink, Flame, Compass, Heart, Share2, Clipboard, Plus } from "lucide-react";
@@ -230,7 +230,10 @@ export default function App() {
     const viewport = "width=device-width, initial-scale=1.0, maximum-scale=5.0";
 
     // Support custom active page or path matching
-    const activePage = SEO_PAGES.find((p) => p.path === path);
+    let activePage = SEO_PAGES.find((p) => p.path === path);
+    if (!activePage) {
+      activePage = getDynamicPageData(path);
+    }
     if (!activePage && path === "/science-of-lofi-focus-infographic") {
       themeColor = "#120a21";
     }
@@ -280,6 +283,9 @@ export default function App() {
 
       // Support custom matched infographic path
       let activePage = SEO_PAGES.find((p) => p.path === currentPath);
+      if (!activePage) {
+        activePage = getDynamicPageData(currentPath);
+      }
       if (!activePage && currentPath === "/science-of-lofi-focus-infographic") {
         title = "The Science of Lo-Fi Soundscapes & Cognitive Focus | Scientific Infographic";
         description = "Learn how lofi rhythms, pink noise, and organic auditory features induce deep focus, attention restoration, and alleviate stress. Interactive science infographic.";
@@ -326,7 +332,8 @@ export default function App() {
         document.head.appendChild(canonicalLink);
       }
       const baseUrl = "https://midnight-signals.cloud";
-      canonicalLink.setAttribute("href", `${baseUrl}${currentPath || ""}`);
+      const targetPath = activePage ? activePage.path : (currentPath || "");
+      canonicalLink.setAttribute("href", `${baseUrl}${targetPath}`);
     }
   }, [currentPath]);
 
@@ -814,7 +821,8 @@ export default function App() {
       const launchEvent = new CustomEvent("launch-seo-preset", {
         detail: {
           activeChannels: preset.activeChannels,
-          channelVolumes: preset.channelVolumes
+          channelVolumes: preset.channelVolumes,
+          favBirdId: preset.favBirdId
         }
       });
       window.dispatchEvent(launchEvent);
@@ -1434,7 +1442,7 @@ export default function App() {
   const activeTheme = themeCustomizations[currentVibe];
 
   // Dynamic programmatic SEO page parser
-  let matchedSEOPage = SEO_PAGES.find((p) => p.path === currentPath);
+  let matchedSEOPage = SEO_PAGES.find((p) => p.path === currentPath) || getDynamicPageData(currentPath);
   
   if (currentPath === "/science-of-lofi-focus-infographic") {
     matchedSEOPage = {
