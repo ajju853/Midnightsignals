@@ -45,6 +45,9 @@ const AdsterraBanner = React.lazy(() => import("./components/AdsterraBanner"));
 const BlogIndex = lazy(() => import("./components/BlogIndex"));
 const BlogLayout = lazy(() => import("./components/BlogLayout"));
 const CreateLyrics = lazy(() => import("./components/CreateLyrics"));
+const VoiceSelect = lazy(() => import("./components/VoiceSelect"));
+const BirdSelect = lazy(() => import("./components/BirdSelect"));
+const SoundscapeSelect = lazy(() => import("./components/SoundscapeSelect"));
 const EmbeddableInfographic = lazy(() => import("./components/EmbeddableInfographic"));
 const CookieConsent = lazy(() => import("./components/SaaSProducts").then(m => ({ default: m.CookieConsent })));
 const ContactHub = lazy(() => import("./components/SaaSProducts").then(m => ({ default: m.ContactHub })));
@@ -752,6 +755,61 @@ export default function App() {
         } catch {}
         return;
       }
+
+      // Handle ?voice= from /create/voice
+      const voiceParam = searchParams.get("voice");
+      if (voiceParam) {
+        try {
+          const config = { name: voiceParam, speed: parseFloat(searchParams.get("speed") || "1.0"), pitch: parseFloat(searchParams.get("pitch") || "1.0") };
+          localStorage.setItem("midnight_voice_config", JSON.stringify(config));
+          setSelectedVoiceName(voiceParam);
+        } catch {}
+        window.history.replaceState({}, "", "/");
+        setCurrentPath("");
+        return;
+      }
+
+      // Handle ?birds= from /create/birds
+      const birdsParam = searchParams.get("birds");
+      if (birdsParam) {
+        try {
+          const ids = birdsParam.split(",");
+          const vols = (searchParams.get("birdVols") || "").split(",").map(Number);
+          const config = ids.map((id, i) => ({ id, volume: vols[i] || 60 }));
+          localStorage.setItem("midnight_birds_config", JSON.stringify(config));
+          const chs: Record<string, boolean> = { birds: true, owl: false, trees: false, ocean: false, crickets: false };
+          const channelVols: Record<string, number> = { birds: (vols[0] || 60) / 100, owl: 0.5, trees: 0.5, ocean: 0.5, crickets: 0.5 };
+          setTimeout(() => {
+            window.dispatchEvent(new CustomEvent("launch-seo-preset", { detail: { activeChannels: chs, channelVolumes: channelVols } }));
+          }, 400);
+        } catch {}
+        window.history.replaceState({}, "", "/");
+        setCurrentPath("");
+        return;
+      }
+
+      // Handle ?soundscape= from /create/soundscape
+      const soundscapeParam = searchParams.get("soundscape");
+      if (soundscapeParam) {
+        try {
+          setCurrentVibe(soundscapeParam.replace(/-/g, "") as VibeType);
+          const bpm = parseInt(searchParams.get("bpm") || "75", 10);
+          setActiveBpm(bpm);
+          const binaural = searchParams.get("binaural") === "1";
+          setIsBinauralActive(binaural);
+          const layerVolsRaw = searchParams.get("layerVols");
+          if (layerVolsRaw) {
+            const layers = JSON.parse(atob(layerVolsRaw));
+            if (layers.rain) setRainVolume(layers.rain.vol / 100);
+            if (layers.wind) setOceanVolume(layers.wind.vol / 100);
+            if (layers.brook) setVinylVolume(layers.brook.vol / 100);
+          }
+        } catch {}
+        window.history.replaceState({}, "", "/");
+        setCurrentPath("");
+        return;
+      }
+
       if (searchParams.get("share") === "true") {
         const queryVibe = searchParams.get("vibe") as VibeType;
         const queryRain = searchParams.get("rain");
@@ -1824,15 +1882,39 @@ export default function App() {
     );
   }
 
+  const createPageNav = (path: string) => {
+    setCurrentPath(path === "/" ? "" : path);
+    window.history.pushState({}, "", path);
+  };
+
   if (currentPath === "/create/lyrics") {
     return (
       <Suspense fallback={null}>
-        <CreateLyrics
-          onNavigate={(path: string) => {
-            setCurrentPath(path === "/" ? "" : path);
-            window.history.pushState({}, "", path);
-          }}
-        />
+        <CreateLyrics onNavigate={createPageNav} />
+      </Suspense>
+    );
+  }
+
+  if (currentPath === "/create/voice") {
+    return (
+      <Suspense fallback={null}>
+        <VoiceSelect onNavigate={createPageNav} />
+      </Suspense>
+    );
+  }
+
+  if (currentPath === "/create/birds") {
+    return (
+      <Suspense fallback={null}>
+        <BirdSelect onNavigate={createPageNav} />
+      </Suspense>
+    );
+  }
+
+  if (currentPath === "/create/soundscape") {
+    return (
+      <Suspense fallback={null}>
+        <SoundscapeSelect onNavigate={createPageNav} />
       </Suspense>
     );
   }
@@ -3948,6 +4030,58 @@ export default function App() {
           <button type="button" onClick={() => { setActiveLegalTab("pro"); setActivePolicyTab("pro"); }} className="hover:text-[#00D1FF] text-xs font-bold text-[#00D1FF]/90 transition-colors cursor-pointer outline-none flex items-center gap-1">
             ✨ Cosmic Features (Free)
           </button>
+          <span className="text-zinc-800 select-none">•</span>
+          <a
+            href="/create/lyrics"
+            onClick={(e) => {
+              e.preventDefault();
+              setCurrentPath("/create/lyrics");
+              window.history.pushState({}, "", "/create/lyrics");
+              window.scrollTo({ top: 0, behavior: "smooth" });
+            }}
+            className="hover:text-indigo-400 text-indigo-400/70 font-bold transition-colors cursor-pointer outline-none"
+          >
+            ✍️ Write a Song
+          </a>
+          <span className="text-zinc-800 select-none">•</span>
+          <a
+            href="/create/voice"
+            onClick={(e) => {
+              e.preventDefault();
+              setCurrentPath("/create/voice");
+              window.history.pushState({}, "", "/create/voice");
+              window.scrollTo({ top: 0, behavior: "smooth" });
+            }}
+            className="hover:text-indigo-400 text-indigo-400/70 font-bold transition-colors cursor-pointer outline-none"
+          >
+            🎙️ Pick Voice
+          </a>
+          <span className="text-zinc-800 select-none">•</span>
+          <a
+            href="/create/birds"
+            onClick={(e) => {
+              e.preventDefault();
+              setCurrentPath("/create/birds");
+              window.history.pushState({}, "", "/create/birds");
+              window.scrollTo({ top: 0, behavior: "smooth" });
+            }}
+            className="hover:text-indigo-400 text-indigo-400/70 font-bold transition-colors cursor-pointer outline-none"
+          >
+            🐦 Pick Birds
+          </a>
+          <span className="text-zinc-800 select-none">•</span>
+          <a
+            href="/create/soundscape"
+            onClick={(e) => {
+              e.preventDefault();
+              setCurrentPath("/create/soundscape");
+              window.history.pushState({}, "", "/create/soundscape");
+              window.scrollTo({ top: 0, behavior: "smooth" });
+            }}
+            className="hover:text-indigo-400 text-indigo-400/70 font-bold transition-colors cursor-pointer outline-none"
+          >
+            🌿 Soundscape
+          </a>
           <span className="text-zinc-800 select-none">•</span>
           <a
             href="/blog"

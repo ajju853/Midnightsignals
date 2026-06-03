@@ -564,6 +564,24 @@ async function startServer() {
           isMatched = true;
         }
 
+        if (!activePage && currentPath === "/create/voice") {
+          title = "Select Your Narrator Voice | Midnight Signals";
+          metaDescription = "Choose a narrator voice for your lofi lyrics. Adjust speed, pitch, and preview Indian-accent TTS voices before using them in your mix.";
+          isMatched = true;
+        }
+
+        if (!activePage && currentPath === "/create/birds") {
+          title = "Select Birds for Your Soundscape | Midnight Signals";
+          metaDescription = "Browse 500+ bird species presets with procedural bird song synthesis. Pick your favorites and add them to your lofi mix.";
+          isMatched = true;
+        }
+
+        if (!activePage && currentPath === "/create/soundscape") {
+          title = "Design Your Soundscape | Midnight Signals";
+          metaDescription = "Mix nature layers, lofi style, BPM, and binaural beats to create your perfect ambient study or relaxation soundscape.";
+          isMatched = true;
+        }
+
         if (!activePage && currentPath.startsWith("/mix/")) {
           title = "Listen to a Saved Lofi Mix | Midnight Signals";
           metaDescription = "A custom lofi mix shared from Midnight Signals. Listen to the saved soundscape, voice, and lyrics.";
