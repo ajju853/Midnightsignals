@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState, Suspense } from "react";
 import {
   Play,
   Pause,
@@ -41,6 +41,9 @@ import { BLOG_POSTS, getBlogPost, BlogPost } from "./blogData";
 import BlogIndex from "./components/BlogIndex";
 import BlogLayout from "./components/BlogLayout";
 import { BookOpen, MapPin, ExternalLink, Flame, Compass, Heart, Share2, Clipboard, Plus } from "lucide-react";
+
+// Lazy-loaded ad components for performance
+const AdsterraBanner = React.lazy(() => import("./components/AdsterraBanner"));
 
 // SaaS Premium, Contact, Compliance and Exporter systems
 import {
@@ -261,6 +264,17 @@ export default function App() {
     };
     window.addEventListener("popstate", handlePopState);
     return () => window.removeEventListener("popstate", handlePopState);
+  }, []);
+
+  // Adstera popunder (hidden iframe)
+  useEffect(() => {
+    if (!document.querySelector('iframe[data-adkey="adstera-popunder"]')) {
+      const f = document.createElement("iframe");
+      f.src = "https://www.effectivecpmnetwork.com/nemr0erp?key=1c00b92905b4f8434974fc6f0ea59673";
+      f.setAttribute("data-adkey", "adstera-popunder");
+      f.style.cssText = "display:none";
+      document.body.appendChild(f);
+    }
   }, []);
 
   // Update mobile-first meta tags (viewport and theme-color) dynamically
@@ -1722,6 +1736,17 @@ export default function App() {
           <div className="absolute inset-0 bg-[#050505]/75 backdrop-blur-[2px] transition-all duration-[800ms]" />
         </div>
       )}
+
+      {/* Sticky sidebar ad (desktop) */}
+      <div className="hidden lg:block fixed left-0 top-1/2 -translate-y-1/2 z-40 w-[160px]">
+        <Suspense fallback={null}>
+          <AdsterraBanner
+            type="atoptions"
+            atOptions={{ key: "211b37b1c02c6b796f50458e746b3593", format: "iframe", height: 600, width: 160, params: {} }}
+            code=""
+          />
+        </Suspense>
+      </div>
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 py-8 md:px-8 md:py-10 flex flex-col min-h-screen justify-between gap-8 pb-32">
 
@@ -3447,6 +3472,16 @@ export default function App() {
               {activeCenterTab === "nature" && (
                 <div className="animate-fadeIn">
                   <NatureSoundboard interfaceLanguage={interfaceLanguage} />
+                  {/* Ad below mixer */}
+                  <div className="mt-4">
+                    <Suspense fallback={null}>
+                      <AdsterraBanner
+                        type="atoptions"
+                        atOptions={{ key: "34f3f904aed75209c877b8fa70adf9c3", format: "iframe", height: 50, width: 320, params: {} }}
+                        code=""
+                      />
+                    </Suspense>
+                  </div>
                 </div>
               )}
 
@@ -3773,6 +3808,17 @@ export default function App() {
           </a>
         </div>
 
+        {/* Footer leaderboard ad */}
+        <div className="max-w-4xl mx-auto flex justify-center">
+          <Suspense fallback={null}>
+            <AdsterraBanner
+              type="atoptions"
+              atOptions={{ key: "1275325c6a1afc2d110b7323766f6c13", format: "iframe", height: 90, width: 728, params: {} }}
+              code=""
+            />
+          </Suspense>
+        </div>
+
         {/* COMPREHENSIVE REGULATORY MODAL DRAWER FOR MONETIZATION & SEO COMPLIANCE */}
         {activeLegalTab && (
           <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/90 backdrop-blur-md animate-fadeIn">
@@ -3980,6 +4026,24 @@ export default function App() {
             </div>
           </div>
         )}
+
+        {/* Hidden container for additional ad scripts */}
+        <div id="container-24c1ea1bf7e8617e0a830cbe54159ff3" className="hidden" />
+        <Suspense fallback={null}>
+          <AdsterraBanner code="https://pl29627219.effectivecpmnetwork.com/24c1ea1bf7e8617e0a830cbe54159ff3/invoke.js" />
+          <AdsterraBanner code="https://pl29627220.effectivecpmnetwork.com/34/70/47/34704744b85077b343e15313b7141bea.js" />
+          <AdsterraBanner code="https://pl29627222.effectivecpmnetwork.com/e8/56/d0/e856d0991e54ab38fca42a0003c2d1df.js" />
+          <AdsterraBanner
+            type="atoptions"
+            atOptions={{ key: "fbf1f69cbed71f9c65dd7f9650b6fc17", format: "iframe", height: 60, width: 468, params: {} }}
+            code=""
+          />
+          <AdsterraBanner
+            type="atoptions"
+            atOptions={{ key: "7a493155c7ae0fa0e772e03772602f92", format: "iframe", height: 300, width: 160, params: {} }}
+            code=""
+          />
+        </Suspense>
 
         {/* COOKIE PRIVACY CONSENT BANNER */}
         <CookieConsent onSave={(prefs) => console.log("Cookies preferences loaded:", prefs)} />
