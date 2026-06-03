@@ -49,20 +49,19 @@ export const updateGoogleConsent = (prefs: CookiePreferences) => {
     });
   }
   // Dynamically load ad networks when advertising consent is granted
-  const scriptSrc = (src: string) => document.querySelector(`script[src="${src}"]`);
-
   if (prefs.advertising) {
-    // -- Adstera invoke --
-    ["24c1ea1bf7e8617e0a830cbe54159ff3", "34704744b85077b343e15313b7141bea", "e856d0991e54ab38fca42a0003c2d1df"].forEach(id => {
-      const src = id.length > 20
-        ? `https://pl29627219.effectivecpmnetwork.com/${id}/invoke.js`
-        : `https://pl29627220.effectivecpmnetwork.com/${id.slice(0,2)}/${id.slice(2,4)}/${id.slice(4)}/${id}.js`;
-      if (!scriptSrc(src)) {
-        if (id.startsWith("24c1") && !document.getElementById("container-24c1ea1bf7e8617e0a830cbe54159ff3")) {
-          const c = document.createElement("div"); c.id = "container-24c1ea1bf7e8617e0a830cbe54159ff3"; c.style.cssText = "display:none"; document.body.appendChild(c);
-        }
-        const s = document.createElement("script"); s.src = src; s.async = true; document.body.appendChild(s);
+    // -- Adstera scripts --
+    const adsteraScripts = [
+      { src: "https://pl29627219.effectivecpmnetwork.com/24c1ea1bf7e8617e0a830cbe54159ff3/invoke.js", container: "container-24c1ea1bf7e8617e0a830cbe54159ff3" },
+      { src: "https://pl29627220.effectivecpmnetwork.com/34/70/47/34704744b85077b343e15313b7141bea.js" },
+      { src: "https://pl29627222.effectivecpmnetwork.com/e8/56/d0/e856d0991e54ab38fca42a0003c2d1df.js" },
+    ];
+    adsteraScripts.forEach(({ src, container }) => {
+      if (document.querySelector(`script[src="${src}"]`)) return;
+      if (container && !document.getElementById(container)) {
+        const c = document.createElement("div"); c.id = container; document.body.appendChild(c);
       }
+      const s = document.createElement("script"); s.src = src; s.async = true; document.body.appendChild(s);
     });
     // -- HighPerformanceFormat (sequential to avoid atOptions race) --
     const hpfAds = [
