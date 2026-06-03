@@ -48,20 +48,47 @@ export const updateGoogleConsent = (prefs: CookiePreferences) => {
       ad_personalization: prefs.advertising ? "granted" : "denied"
     });
   }
-  // Dynamically load Infolinks when advertising consent is granted
-  if (typeof window !== "undefined" && (window as any).infolinks_pid) {
-    const existing = document.querySelector('script[src*="infolinks_main.js"]');
-    if (prefs.advertising && !existing) {
+  // Dynamically load ad networks when advertising consent is granted
+  const adNetworks = [
+    {
+      id: "infolinks",
+      check: () => typeof (window as any).infolinks_pid !== "undefined",
+      scriptSrc: "//resources.infolinks.com/js/infolinks_main.js",
+      containerId: null
+    },
+    {
+      id: "adstera",
+      check: () => true,
+      scriptSrc: "https://pl29627219.effectivecpmnetwork.com/24c1ea1bf7e8617e0a830cbe54159ff3/invoke.js",
+      containerId: "container-24c1ea1bf7e8617e0a830cbe54159ff3"
+    }
+  ];
+
+  adNetworks.forEach(net => {
+    if (!net.check()) return;
+    const scriptEl = document.querySelector(`script[src*="${net.id === "infolinks" ? "infolinks_main" : net.scriptSrc.split("/").pop()?.split("?")[0]}"]`);
+    if (prefs.advertising && !scriptEl) {
+      // Inject container div for ad networks that need one
+      if (net.containerId && !document.getElementById(net.containerId)) {
+        const container = document.createElement("div");
+        container.id = net.containerId;
+        container.style.display = "none"; // hidden by default, ad network makes it visible
+        document.body.appendChild(container);
+      }
       const script = document.createElement("script");
-      script.src = "//resources.infolinks.com/js/infolinks_main.js";
+      script.src = net.scriptSrc;
       script.async = true;
       document.body.appendChild(script);
-      console.log("Infolinks ads loaded (advertising consent granted).");
-    } else if (!prefs.advertising && existing) {
-      existing.remove();
-      console.log("Infolinks ads removed (advertising consent denied).");
+      console.log(`${net.id} ads loaded (advertising consent granted).`);
+    } else if (!prefs.advertising && scriptEl) {
+      scriptEl.remove();
+      if (net.containerId) {
+        const container = document.getElementById(net.containerId);
+        if (container) container.remove();
+      }
+      console.log(`${net.id} ads removed (advertising consent denied).`);
     }
-  }
+  });
 };
 
 export function CookieConsent({ onSave }: { onSave: (prefs: CookiePreferences) => void }) {
