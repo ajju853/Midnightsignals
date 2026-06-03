@@ -56,6 +56,12 @@ app.get("/google14833afe332cbfc4.html", (req, res) => {
   res.send("google-site-verification: google14833afe332cbfc4.html");
 });
 
+// Serve Bing Site Verification file explicitly
+app.get("/BingSiteAuth.xml", (req, res) => {
+  res.setHeader("Content-Type", "application/xml");
+  res.sendFile(path.join(process.cwd(), "public", "BingSiteAuth.xml"));
+});
+
 // Helper to generate and automatically update sitemap.xml on disk
 export function generateAndSaveSitemap() {
   const combos = [
