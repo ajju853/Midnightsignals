@@ -30,6 +30,10 @@ export class NatureSynth {
   private hongKongKitesGain: GainNode | null = null;
   private victoriaHarbourGain: GainNode | null = null;
 
+  // Belgian Ardennes Channels
+  private ardennesWindGain: GainNode | null = null;
+  private ardennesBrookGain: GainNode | null = null;
+
   // LFO & Constant source nodes for sweeps
   private treesNoiseSource: AudioBufferSourceNode | null = null;
   private treesFilter: BiquadFilterNode | null = null;
@@ -71,6 +75,13 @@ export class NatureSynth {
   private victoriaHarbourNoiseSource: AudioBufferSourceNode | null = null;
   private victoriaHarbourFilter: BiquadFilterNode | null = null;
 
+  // Belgian sweeping noise processes
+  private ardennesWindNoiseSource: AudioBufferSourceNode | null = null;
+  private ardennesWindFilter: BiquadFilterNode | null = null;
+
+  private ardennesBrookNoiseSource: AudioBufferSourceNode | null = null;
+  private ardennesBrookFilter: BiquadFilterNode | null = null;
+
   // Active volume levels
   private volumes: { [key: string]: number } = {
     birds: 0.4,
@@ -92,6 +103,8 @@ export class NatureSynth {
     mangroveWaves: 0.3,
     hongKongKites: 0.45,
     victoriaHarbour: 0.4,
+    ardennesWind: 0.35,
+    ardennesBrook: 0.4,
   };
 
   // Active status toggles
@@ -115,6 +128,8 @@ export class NatureSynth {
     mangroveWaves: false,
     hongKongKites: false,
     victoriaHarbour: false,
+    ardennesWind: false,
+    ardennesBrook: false,
   };
 
   // Keep track of periodic interval loops
@@ -128,6 +143,7 @@ export class NatureSynth {
   private tropicalRainforestLoopId: any = null;
   private hongKongKitesLoopId: any = null;
   private victoriaHarbourLoopId: any = null;
+  private ardennesBrookBubbleLoopId: any = null;
 
   public isPlaying = false;
 
@@ -228,6 +244,14 @@ export class NatureSynth {
       this.victoriaHarbourGain.gain.setValueAtTime(this.activeStates.victoriaHarbour ? this.volumes.victoriaHarbour : 0.0, this.ctx.currentTime);
       this.victoriaHarbourGain.connect(this.masterGain);
 
+      this.ardennesWindGain = this.ctx.createGain();
+      this.ardennesWindGain.gain.setValueAtTime(this.activeStates.ardennesWind ? this.volumes.ardennesWind : 0.0, this.ctx.currentTime);
+      this.ardennesWindGain.connect(this.masterGain);
+
+      this.ardennesBrookGain = this.ctx.createGain();
+      this.ardennesBrookGain.gain.setValueAtTime(this.activeStates.ardennesBrook ? this.volumes.ardennesBrook : 0.0, this.ctx.currentTime);
+      this.ardennesBrookGain.connect(this.masterGain);
+
       // Start continuous atmospheric noise loops
       this.setupTreesGenerator();
       this.setupOceanGenerator();
@@ -244,6 +268,8 @@ export class NatureSynth {
       this.setupCicadaChorusGenerator();
       this.setupMangroveWavesGenerator();
       this.setupVictoriaHarbourGenerator();
+      this.setupArdennesWindGenerator();
+      this.setupArdennesBrookGenerator();
 
     } catch (e) {
       console.error("Nature ambient sound AudioContext initialization failed", e);
@@ -690,6 +716,17 @@ export class NatureSynth {
       if (!this.activeStates.victoriaHarbour || !this.isPlaying) return;
       this.triggerStarFerryHorn();
     }, 15000);
+
+    // Ardennes brook bubbling scheduler
+    this.ardennesBrookBubbleLoopId = setInterval(() => {
+      if (!this.activeStates.ardennesBrook || !this.isPlaying) return;
+      const count = Math.floor(Math.random() * 2) + 1;
+      for (let i = 0; i < count; i++) {
+        setTimeout(() => {
+          this.triggerProceduralArdennesBrookBubble();
+        }, i * (90 + Math.random() * 110));
+      }
+    }, 600);
   }
 
   private stopLoopingSchedules() {
@@ -702,6 +739,7 @@ export class NatureSynth {
     if (this.tropicalRainforestLoopId) clearInterval(this.tropicalRainforestLoopId);
     if (this.hongKongKitesLoopId) clearInterval(this.hongKongKitesLoopId);
     if (this.victoriaHarbourLoopId) clearInterval(this.victoriaHarbourLoopId);
+    if (this.ardennesBrookBubbleLoopId) clearInterval(this.ardennesBrookBubbleLoopId);
     this.birdLoopId = null;
     this.owlLoopId = null;
     this.caveEchoesLoopId = null;
@@ -711,6 +749,7 @@ export class NatureSynth {
     this.tropicalRainforestLoopId = null;
     this.hongKongKitesLoopId = null;
     this.victoriaHarbourLoopId = null;
+    this.ardennesBrookBubbleLoopId = null;
   }
 
   public triggerTempleBells() {
@@ -886,6 +925,31 @@ export class NatureSynth {
 
     osc.start(now);
     osc.stop(now + 0.08);
+  }
+
+  public triggerProceduralArdennesBrookBubble() {
+    if (!this.ctx || !this.ardennesBrookGain || !this.isPlaying || !this.activeStates.ardennesBrook) return;
+
+    const now = this.ctx.currentTime;
+    const osc = this.ctx.createOscillator();
+    const amp = this.ctx.createGain();
+
+    osc.connect(amp);
+    amp.connect(this.ardennesBrookGain);
+
+    osc.type = "sine";
+
+    // High frequency crisp bubbles popping over rocky slate beds
+    const baseFreq = 400 + Math.random() * 700;
+    osc.frequency.setValueAtTime(baseFreq, now);
+    osc.frequency.exponentialRampToValueAtTime(baseFreq * 2.3, now + 0.05);
+
+    amp.gain.setValueAtTime(0.001, now);
+    amp.gain.linearRampToValueAtTime(0.05, now + 0.012);
+    amp.gain.exponentialRampToValueAtTime(0.001, now + 0.045);
+
+    osc.start(now);
+    osc.stop(now + 0.07);
   }
 
   // Sweet high-pitched synthesized bird whistles
@@ -1103,6 +1167,8 @@ export class NatureSynth {
       this.mangroveWavesGain?.gain.setValueAtTime(0, now);
       this.hongKongKitesGain?.gain.setValueAtTime(0, now);
       this.victoriaHarbourGain?.gain.setValueAtTime(0, now);
+      this.ardennesWindGain?.gain.setValueAtTime(0, now);
+      this.ardennesBrookGain?.gain.setValueAtTime(0, now);
     }
   }
 
@@ -1147,6 +1213,8 @@ export class NatureSynth {
     if (channel === "mangroveWaves") return this.mangroveWavesGain;
     if (channel === "hongKongKites") return this.hongKongKitesGain;
     if (channel === "victoriaHarbour") return this.victoriaHarbourGain;
+    if (channel === "ardennesWind") return this.ardennesWindGain;
+    if (channel === "ardennesBrook") return this.ardennesBrookGain;
     return null;
   }
 
@@ -1173,6 +1241,8 @@ export class NatureSynth {
     this.mangroveWavesGain?.gain.setValueAtTime(this.activeStates.mangroveWaves ? this.volumes.mangroveWaves : 0.0, now);
     this.hongKongKitesGain?.gain.setValueAtTime(this.activeStates.hongKongKites ? this.volumes.hongKongKites : 0.0, now);
     this.victoriaHarbourGain?.gain.setValueAtTime(this.activeStates.victoriaHarbour ? this.volumes.victoriaHarbour : 0.0, now);
+    this.ardennesWindGain?.gain.setValueAtTime(this.activeStates.ardennesWind ? this.volumes.ardennesWind : 0.0, now);
+    this.ardennesBrookGain?.gain.setValueAtTime(this.activeStates.ardennesBrook ? this.volumes.ardennesBrook : 0.0, now);
   }
 
   public getChannelVolume(channel: string): number {
@@ -1212,6 +1282,49 @@ export class NatureSynth {
       this.victoriaHarbourFilter.frequency.setValueAtTime(80 + Math.sin(now * 1.2) * 40, now);
     };
     setInterval(modulateHarbourWaves, 1000);
+  }
+
+  private setupArdennesWindGenerator() {
+    if (!this.ctx || !this.ardennesWindGain) return;
+
+    const buffer = this.createNoiseBuffer("pink");
+    this.ardennesWindNoiseSource = this.ctx.createBufferSource();
+    this.ardennesWindNoiseSource.buffer = buffer;
+    this.ardennesWindNoiseSource.loop = true;
+
+    this.ardennesWindFilter = this.ctx.createBiquadFilter();
+    this.ardennesWindFilter.type = "bandpass";
+    this.ardennesWindFilter.frequency.setValueAtTime(450, this.ctx.currentTime);
+    this.ardennesWindFilter.Q.setValueAtTime(1.1, this.ctx.currentTime);
+
+    this.ardennesWindNoiseSource.connect(this.ardennesWindFilter);
+    this.ardennesWindFilter.connect(this.ardennesWindGain);
+    this.ardennesWindNoiseSource.start();
+
+    const modulateArdennesWind = () => {
+      if (!this.ctx || !this.isPlaying || !this.ardennesWindFilter || !this.activeStates.ardennesWind) return;
+      const now = this.ctx.currentTime;
+      const breezeFreq = Math.sin(now * 0.35) * 180 + 430;
+      this.ardennesWindFilter.frequency.exponentialRampToValueAtTime(Math.max(220, breezeFreq), now + 1.1);
+    };
+    setInterval(modulateArdennesWind, 1000);
+  }
+
+  private setupArdennesBrookGenerator() {
+    if (!this.ctx || !this.ardennesBrookGain) return;
+
+    const buffer = this.createNoiseBuffer("pink");
+    this.ardennesBrookNoiseSource = this.ctx.createBufferSource();
+    this.ardennesBrookNoiseSource.buffer = buffer;
+    this.ardennesBrookNoiseSource.loop = true;
+
+    this.ardennesBrookFilter = this.ctx.createBiquadFilter();
+    this.ardennesBrookFilter.type = "lowpass";
+    this.ardennesBrookFilter.frequency.setValueAtTime(550, this.ctx.currentTime);
+
+    this.ardennesBrookNoiseSource.connect(this.ardennesBrookFilter);
+    this.ardennesBrookFilter.connect(this.ardennesBrookGain);
+    this.ardennesBrookNoiseSource.start();
   }
 
   public triggerHongKongKiteCall() {

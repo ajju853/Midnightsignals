@@ -2,6 +2,7 @@ import * as fs from "fs";
 import * as path from "path";
 import { SEO_PAGES } from "./src/seoData";
 import { BIRD_PRESETS } from "./src/lib/birdPresets";
+import { BLOG_POSTS } from "./src/blogData";
 
 const combos = [
   "/ocean-waves-and-rain",
@@ -119,7 +120,10 @@ const localizedPaths = [
   // Swiss
   "/ch/alpengerausche",
   "/ch/kuhglocken",
-  "/ch/natur-ambient"
+  "/ch/natur-ambient",
+  // Hindi (India Expansion)
+  "/hi/barsat-ki-awaz-sona",
+  "/hi/dhyan-mandir-ghanti"
 ];
 
 for (const path of localizedPaths) {
@@ -142,6 +146,26 @@ for (const comboPath of combos) {
   xml += `  </url>\n`;
   sitemapUrls.push(`${baseUrl}${comboPath}`);
 }
+
+// 5. Blog Article Pages
+const blogDataModDate = getFileModDate("src/blogData.ts");
+for (const post of BLOG_POSTS) {
+  xml += `  <url>\n`;
+  xml += `    <loc>${baseUrl}/blog/${post.slug}</loc>\n`;
+  xml += `    <lastmod>${blogDataModDate}</lastmod>\n`;
+  xml += `    <changefreq>weekly</changefreq>\n`;
+  xml += `    <priority>0.8</priority>\n`;
+  xml += `  </url>\n`;
+  sitemapUrls.push(`${baseUrl}/blog/${post.slug}`);
+}
+// Blog index page
+xml += `  <url>\n`;
+xml += `    <loc>${baseUrl}/blog</loc>\n`;
+xml += `    <lastmod>${blogDataModDate}</lastmod>\n`;
+xml += `    <changefreq>daily</changefreq>\n`;
+xml += `    <priority>0.85</priority>\n`;
+xml += `  </url>\n`;
+sitemapUrls.push(`${baseUrl}/blog`);
 
 xml += `</urlset>`;
 

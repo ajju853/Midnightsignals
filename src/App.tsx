@@ -37,6 +37,9 @@ import { calmLofiPresets, LofiPreset } from "./calmLyricsPresets";
 import { SEO_PAGES, SEOPageData, generateFAQSchema, getDynamicPageData } from "./seoData";
 import ScienceOfLofiInfographic from "./components/ScienceOfLofiInfographic";
 import EmbeddableInfographic from "./components/EmbeddableInfographic";
+import { BLOG_POSTS, getBlogPost, BlogPost } from "./blogData";
+import BlogIndex from "./components/BlogIndex";
+import BlogLayout from "./components/BlogLayout";
 import { BookOpen, MapPin, ExternalLink, Flame, Compass, Heart, Share2, Clipboard, Plus } from "lucide-react";
 
 // SaaS Premium, Contact, Compliance and Exporter systems
@@ -289,6 +292,20 @@ export default function App() {
       if (!activePage && currentPath === "/science-of-lofi-focus-infographic") {
         title = "Science of Lo-Fi & Focus | Scientific Infographic";
         description = "Learn how lofi rhythms, pink noise, and organic auditory features induce deep focus, attention restoration, and alleviate stress. Interactive science infographic.";
+      }
+
+      // Blog page metadata
+      if (!activePage && currentPath === "/blog") {
+        title = "Midnight Journal | Research & Guides on Ambient Sound Science";
+        description = "Explore in-depth articles on neuro-acoustics, rain sounds for sleep, birdsong therapy, lofi focus science, and procedural nature sound generation.";
+      }
+      if (!activePage && currentPath.startsWith("/blog/")) {
+        const blogSlug = currentPath.replace("/blog/", "");
+        const blogPost = getBlogPost(blogSlug);
+        if (blogPost) {
+          title = blogPost.title;
+          description = blogPost.metaDescription;
+        }
       }
 
       if (activePage) {
@@ -1908,7 +1925,68 @@ export default function App() {
 
 
         {/* MAIN STRUCTURAL RESPONSIVE GRID OR DYNAMIC SEO LANDING VIEW */}
-        {currentPath && !matchedSEOPage ? (
+        {/* Blog Index Page */}
+        {currentPath === "/blog" ? (
+          <BlogIndex
+            onNavigate={(path: string) => {
+              setCurrentPath(path);
+              window.history.pushState({}, "", path);
+              window.scrollTo({ top: 0, behavior: "smooth" });
+            }}
+          />
+        ) : currentPath.startsWith("/blog/") && getBlogPost(currentPath.replace("/blog/", "")) ? (
+          <BlogLayout
+            post={getBlogPost(currentPath.replace("/blog/", ""))!}
+            onNavigate={(path: string) => {
+              setCurrentPath(path);
+              window.history.pushState({}, "", path);
+              window.scrollTo({ top: 0, behavior: "smooth" });
+            }}
+            onLaunchPreset={(blogPost: BlogPost) => {
+              // Apply blog preset config to main synth
+              setActiveBpm(blogPost.presetConfig.bpm);
+              setSynthWaveform(blogPost.presetConfig.synthWaveform);
+              if (blogPost.presetConfig.customTitle) setActiveSongTitle(blogPost.presetConfig.customTitle);
+              if (blogPost.presetConfig.customArtist) setActiveArtistName(blogPost.presetConfig.customArtist);
+
+              // Parse custom lyrics if provided
+              if (blogPost.presetConfig.customLyrics) {
+                const parsedLines = blogPost.presetConfig.customLyrics.split("\n").map((l: string) => l.trim()).filter((l: string) => l.length > 0);
+                if (parsedLines.length > 0) {
+                  const startTime = 5.0;
+                  const endTime = 200.0;
+                  const step = (endTime - startTime) / Math.max(1, parsedLines.length - 1 || 1);
+                  const customLines: LyricLine[] = parsedLines.map((text: string, idx: number) => ({
+                    id: 6000 + idx,
+                    text,
+                    time: parseFloat((startTime + idx * step).toFixed(1)),
+                    duration: parseFloat(Math.max(2.5, step - 0.5).toFixed(1)),
+                    section: idx === 0 ? "Intro" : idx < parsedLines.length / 3 ? "Verse" : idx < (parsedLines.length * 2) / 3 ? "Chorus" : "Outro"
+                  }));
+                  setActiveLyrics(customLines);
+                }
+              }
+
+              // Dispatch launch-seo-preset event to NatureSoundboard
+              setTimeout(() => {
+                const launchEvent = new CustomEvent("launch-seo-preset", {
+                  detail: {
+                    activeChannels: blogPost.presetConfig.activeChannels,
+                    channelVolumes: blogPost.presetConfig.channelVolumes,
+                    favBirdId: blogPost.presetConfig.favBirdId
+                  }
+                });
+                window.dispatchEvent(launchEvent);
+              }, 200);
+
+              // Navigate back to home to show the soundboard
+              setCurrentPath("");
+              window.history.pushState({}, "", "/");
+              window.scrollTo({ top: 0, behavior: "smooth" });
+              speakText(`Loaded preset: ${blogPost.presetConfig.customTitle || "Blog Preset"}. Audio synthesis activated.`);
+            }}
+          />
+        ) : currentPath && !matchedSEOPage ? (
           <div className="relative z-20 max-w-2xl mx-auto py-16 px-6 font-sans animate-fadeIn text-center bg-zinc-950/80 p-8 md:p-12 rounded-3xl border border-rose-500/10 backdrop-blur-xl shadow-2xl flex flex-col items-center justify-center gap-6">
             <div className="relative">
               <div className="absolute inset-0 bg-rose-500/20 blur-xl rounded-full scale-110 animate-pulse" />
@@ -3634,6 +3712,19 @@ export default function App() {
           <button type="button" onClick={() => { setActiveLegalTab("pro"); setActivePolicyTab("pro"); }} className="hover:text-[#00D1FF] text-xs font-bold text-[#00D1FF]/90 transition-colors cursor-pointer outline-none flex items-center gap-1">
             ✨ Cosmic Features (Free)
           </button>
+          <span className="text-zinc-800 select-none">•</span>
+          <a
+            href="/blog"
+            onClick={(e) => {
+              e.preventDefault();
+              setCurrentPath("/blog");
+              window.history.pushState({}, "", "/blog");
+              window.scrollTo({ top: 0, behavior: "smooth" });
+            }}
+            className="hover:text-indigo-400 text-indigo-400/70 font-bold transition-colors cursor-pointer outline-none flex items-center gap-1"
+          >
+            📖 Research Journal
+          </a>
         </div>
 
         {/* COMPREHENSIVE REGULATORY MODAL DRAWER FOR MONETIZATION & SEO COMPLIANCE */}

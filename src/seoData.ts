@@ -27,6 +27,7 @@ export interface SEOPageData {
       trees: boolean;
       ocean: boolean;
       crickets: boolean;
+      [key: string]: boolean | undefined;
     };
     channelVolumes: {
       birds: number;
@@ -34,6 +35,7 @@ export interface SEOPageData {
       trees: number;
       ocean: number;
       crickets: number;
+      [key: string]: number | undefined;
     };
     customLyrics: string;
     customTitle: string;
@@ -779,6 +781,201 @@ export const SEO_PAGES: SEOPageData[] = [
       bpm: 74,
       synthWaveform: "sawtooth"
     }
+  },
+  {
+    path: "/india/monsoon-rain-sounds",
+    title: "Monsoon Rain Sounds for Sleep | Indian Rain Mixer",
+    metaDescription: "Listen to relaxing Indian monsoon rain sounds, temple bells, and lofi study beats. Create your custom soothing storm soundboard online.",
+    keywords: ["monsoon rain sounds", "indian rain mixer", "rain for study sleep", "monsoon storm sounds", "soothing rain soundboard"],
+    headline: "Indian Monsoon Rain Sounds & Relaxing Lofi Mixer",
+    subheading: "A procedural tropical storm soundboard designed for deep study, sleep, and anxiety relief.",
+    accentColor: "from-orange-500 to-amber-400",
+    vibe: "dreamy",
+    introText: "Welcome to the custom Indian monsoon rain station of Midnight Signals. The monsoon holds a profound place in Indian ecology and cultural history, representing rejuvenation and life. Listening to the heavy, continuous rhythm of tropical rain acts as a natural pink-noise mask, soothing active thoughts and helping you sink into sleep or deep focus. Adjust our interactive soundboard sliders below to mix monsoon rain with brass temple bells, peacock cries, or mellow lofi chords.",
+    sections: [
+      {
+        title: "The Neuro-Acoustic Power of Monsoon Rain",
+        paragraphs: [
+          "Acoustic research demonstrates that heavy tropical rainfall behaves as a natural pink noise generator. Unlike white noise, which contains equal energy across all frequency bands, pink noise decreases in energy at higher frequencies. This spectral balance mimics the natural auditory sensitivity of the human ear, making it exceptionally comfortable for prolonged listening sessions.",
+          "When you listen to our synthesized Indian monsoon rain, the sound waves create an acoustic blanket. This raises the ambient auditory threshold of your environment, preventing sudden peaks—such as traffic hums, slamming doors, or neighborhood chatter—from registering in your conscious mind. By masking these disturbances, the monsoon stream supports uninterrupted deep sleep cycles and sustained cognitive focus during study hours."
+        ]
+      },
+      {
+        title: "Cultural Resonance of the Indian Monsoon",
+        paragraphs: [
+          "In India, the monsoon is not merely a weather pattern; it is a season of poetry, celebration, and spiritual renewal. Known as the 'Varsha Ritu' in Sanskrit literature, the arrival of rain clouds signals relief from intense summer heat, bringing a soothing cool breeze across the plains and green forests.",
+          "Our interactive synthesizer lets you capture this organic atmosphere. By blending the deep rumble of monsoon thunder, the resonance of brass bells, and the calls of the Malabar Whistling Thrush, you can recreate the peaceful feeling of watching a monsoon storm roll in over rural valleys, establishing a sanctuary of calm wherever you are."
+        ]
+      }
+    ],
+    faqs: [
+      {
+        question: "Why is monsoon rain so relaxing for sleep?",
+        answer: "Monsoon rain behaves as a pink noise source, carrying natural masking frequencies. It reduces the difference between ambient quiet and sudden noises, preventing brain startle responses and helping you ease into delta-wave sleep."
+      },
+      {
+        question: "Can I mix Indian birds with this rain?",
+        answer: "Yes, you can toggle the bird layer on our deck and select species like the Malabar Whistling Thrush, Asian Koel, or Indian Paradise Flycatcher from our songbirds catalog."
+      }
+    ],
+    presetConfig: {
+      activeChannels: {
+        birds: true,
+        trees: true,
+        monsoonRain: true,
+        templeBells: true,
+        peacockCalls: true,
+        owl: false,
+        ocean: false,
+        crickets: false
+      },
+      channelVolumes: {
+        birds: 0.5,
+        trees: 0.4,
+        monsoonRain: 0.75,
+        templeBells: 0.35,
+        peacockCalls: 0.25,
+        owl: 0,
+        ocean: 0,
+        crickets: 0
+      },
+      customLyrics: "Heavy clouds across the sky,\nIndian monsoon sailing by,\nRain drops falling on the street,\nWarm chords and a lofi beat...",
+      customTitle: "Indian Monsoon Study",
+      customArtist: "Vedic Ambient Station",
+      bpm: 70,
+      synthWaveform: "sine",
+      favBirdId: "malabarwhistlingthrush"
+    }
+  },
+  {
+    path: "/india/temple-bells-meditation",
+    title: "Temple Bells for Meditation | Indian Spiritual Mixer",
+    metaDescription: "Relax with Vedic temple brass bells, early morning songbirds, and soft monsoon rain. Custom spiritual soundboard for meditation & yoga.",
+    keywords: ["temple bells meditation", "indian meditation sounds", "vedic chimes online", "brass temple bells", "soothing spiritual sounds"],
+    headline: "Vedic Temple Bells & Meditation Frequencies",
+    subheading: "An authentic brass chime and bird calls mixer to induce mindfulness and clarity.",
+    accentColor: "from-yellow-600 to-amber-500",
+    vibe: "dreamy",
+    introText: "Welcome to the Indian Temple Bells and meditation room of Midnight Signals. Traditional brass bells (known as Ghanta in Sanskrit) are used in Vedic rituals to clear the surrounding space of negative energies and sharpen mental clarity. The pure, metallic overtones of brass dome bells align your focus and promote active mindfulness. Mix these sacred chimes with early morning songbirds, soft monsoon rain, and custom lofi keyboards below.",
+    sections: [
+      {
+        title: "The Acoustic Science of Bell Resonance",
+        paragraphs: [
+          "Temple bells are structurally engineered to create a prolonged, reverberating echo that activates both hemispheres of the brain. When struck, the bell generates a combination of primary tones and micro-overtones that resonate between 200Hz and 1000Hz, depending on the thickness of the brass and bronze alloys.",
+          "This clean resonance acts as a sensory anchor. As the chime decays, it creates a calming effect that encourages your brainwaves to shift from active Beta states into relaxed Alpha waves (8-12Hz). This mental shift makes temple bells an ideal accompaniment for mindfulness exercises, deep breathing, or letting go of daily worries."
+        ]
+      },
+      {
+        title: "Integrating Temple Sounds into Yoga and Meditation",
+        paragraphs: [
+          "Creating a dedicated acoustic environment is crucial for consistent yoga and meditation practices. Sudden noises can break your concentration and raise physical tension. By building a continuous background of soft monsoon rain and periodic brass bells, you establish an acoustic barrier that keeps you centered.",
+          "Our interactive platform lets you customize your spiritual backdrop. You can adjust the frequency of the bell strikes, bring up early morning songbird whistles, or lower the background rain to design your perfect meditation cave."
+        ]
+      }
+    ],
+    faqs: [
+      {
+        question: "How do temple bells help in meditation?",
+        answer: "The prolonged, harmonic resonance of struck brass bells acts as a cognitive focal point. Its acoustic structure dampens chaotic mental dialogue and supports a transition to relaxed alpha brainwave states."
+      },
+      {
+        question: "What parameters are used to synthesize the bells?",
+        answer: "Our synthesis engine uses seven parallel sine wave oscillators tuned to traditional harmonic overtones, applying exponential gain decay ramps to simulate physical brass bells."
+      }
+    ],
+    presetConfig: {
+      activeChannels: {
+        birds: true,
+        templeBells: true,
+        morningMist: true,
+        peacockCalls: true,
+        monsoonRain: true,
+        owl: false,
+        trees: false,
+        ocean: false,
+        crickets: false
+      },
+      channelVolumes: {
+        birds: 0.6,
+        templeBells: 0.8,
+        morningMist: 0.5,
+        peacockCalls: 0.2,
+        monsoonRain: 0.25,
+        owl: 0,
+        trees: 0,
+        ocean: 0,
+        crickets: 0
+      },
+      customLyrics: "Resonant bells ring out so clear,\nQuiet thoughts are drawing near,\nVedic chimes in morning air,\nFinding peace and presence there...",
+      customTitle: "Vedic Morning Meditate",
+      customArtist: "Temple Chimes Radio",
+      bpm: 60,
+      synthWaveform: "sine",
+      favBirdId: "shama"
+    }
+  },
+  {
+    path: "/belgium/ardennes-forest-sounds",
+    title: "Ardennes Forest Sounds | Belgian Conifer Wind Mixer",
+    metaDescription: "Listen to relaxing Ardennes forest wind, mountain brook bubbles, and Belgian birds. Synthesized natural ambient sounds for sleep and study.",
+    keywords: ["ardennes forest sounds", "belgian nature mixer", "conifer pine wind sound", "mountain brook sounds", "ardennes bird calls"],
+    headline: "Belgian Ardennes Forest Sounds & Conifer Wind",
+    subheading: "A custom forest ambient mixer with mountain slate streams, pine wind, and local birds.",
+    accentColor: "from-emerald-500 to-teal-600",
+    vibe: "hopeful",
+    introText: "Welcome to the Belgian Ardennes forest soundscape of Midnight Signals. The Ardennes is a region of extensive forests, rolling hills, and mountain streams, located primarily in Belgium. The unique acoustics of conifer trees rustling in the wind combined with bubbling slate streams create a soothing natural white noise. Tweak our custom dashboard below to blend Ardennes wind and brooks with local birds like the Black Woodpecker, Crested Tit, or soft ambient synths.",
+    sections: [
+      {
+        title: "Acoustics of Conifer Forests & Pine Wind",
+        paragraphs: [
+          "The needle-like leaves of conifers (such as pines and spruces) create a distinct acoustic experience compared to broad-leafed trees. As wind passes through pine needles, it triggers a physical phenomenon known as 'vortex shedding,' creating micro-turbulence that produces a soft, high-frequency whispering sound.",
+          "Our synthesis engine models this conifer wind by filtering pink noise through a bandpass filter centered around 450Hz. A slow, rhythmic LFO sweeps the frequency between 250Hz and 650Hz, mimicking the gentle sways of Ardennes pine branches in a morning breeze, creating a comforting natural soundscape."
+        ]
+      },
+      {
+        title: "Rhythmic Water Flow of Ardennes Slate Brooks",
+        paragraphs: [
+          "The streams of the Belgian Ardennes flow over ancient slate rock formations, producing a crisp, bubbling sound. Unlike deep, roaring rivers, these small brooks generate high-pitched, clear water sounds as air bubbles trapped under water pop on the rocky surface.",
+          "To recreate this stream, we mix a continuous lowpass noise filter at 550Hz with a procedural bubble scheduler. The scheduler triggers rapid, high-frequency sine sweeps (from 400Hz to 1100Hz) at random intervals, capturing the realistic, refreshing sound of a flowing mountain stream."
+        ]
+      }
+    ],
+    faqs: [
+      {
+        question: "What makes the Ardennes forest soundscape unique?",
+        answer: "The Ardennes features a combination of whispering conifer pine wind, crisp slate mountain streams, and local birds like the Black Woodpecker and Crested Tit, producing a detailed forest environment."
+      },
+      {
+        question: "Can I hear Belgian birds on this page?",
+        answer: "Yes, you can toggle the bird layer on the soundboard and select species like the Black Woodpecker, Crested Tit, or Firecrest from our songbirds catalog."
+      }
+    ],
+    presetConfig: {
+      activeChannels: {
+        birds: true,
+        trees: true,
+        ardennesWind: true,
+        ardennesBrook: true,
+        owl: false,
+        ocean: false,
+        crickets: false
+      },
+      channelVolumes: {
+        birds: 0.7,
+        trees: 0.3,
+        ardennesWind: 0.75,
+        ardennesBrook: 0.65,
+        owl: 0,
+        ocean: 0,
+        crickets: 0
+      },
+      customLyrics: "Pine needles whispering so soft,\nHigh in Ardennes branches aloft,\nSlate streams bubbling on the ground,\nCozy peace is finally found...",
+      customTitle: "Ardennes Conifer Wind",
+      customArtist: "Belgian Forest Station",
+      bpm: 68,
+      synthWaveform: "triangle",
+      favBirdId: "blackwoodpecker"
+    }
   }
 ];
 
@@ -982,7 +1179,7 @@ export function getDynamicPageData(path: string): SEOPageData | null {
   }
 
   // 3. Localized pathways
-  const localePrefixes = ["/de/", "/fr/", "/ch/"];
+  const localePrefixes = ["/de/", "/fr/", "/ch/", "/hi/"];
   const matchedPrefix = localePrefixes.find((pfx) => currentPath.startsWith(pfx));
   
   if (matchedPrefix) {
@@ -995,8 +1192,8 @@ export function getDynamicPageData(path: string): SEOPageData | null {
     let headline = "";
     let subheading = "";
     let intro = "";
-    let activeChannels = { birds: true, owl: false, trees: true, ocean: false, crickets: true };
-    let channelVolumes = { birds: 0.5, owl: 0.0, trees: 0.4, ocean: 0.0, crickets: 0.3 };
+    let activeChannels: { birds: boolean; owl: boolean; trees: boolean; ocean: boolean; crickets: boolean; [key: string]: boolean | undefined } = { birds: true, owl: false, trees: true, ocean: false, crickets: true };
+    let channelVolumes: { birds: number; owl: number; trees: number; ocean: number; crickets: number; [key: string]: number | undefined } = { birds: 0.5, owl: 0.0, trees: 0.4, ocean: 0.0, crickets: 0.3 };
     let customTitle = "Midnight Localized Station";
     let customArtist = "Midnight Signals Local";
 
@@ -1082,6 +1279,26 @@ export function getDynamicPageData(path: string): SEOPageData | null {
         intro = "Entfliehen Sie dem Lärm der Stadt mit einer natürlichen Barriere aus sanft fließendem Wasser und Wind.";
         customTitle = "Schweizer Bergwald";
       }
+    } else if (lang === "hi") {
+      if (term === "barsat-ki-awaz-sona") {
+        title = "सोने के लिए बरसात की आवाज़ | प्राकृतिक मिक्सर | Midnight Signals";
+        desc = "सोने के लिए आरामदायक मानसून की आवाज़ें सुनें। वर्षा, हवा और लोफी संगीत के अपने कस्टम मिश्रण का आनंद लें।";
+        headline = "सोने के लिए मानसून की वर्षा की आवाज़ें";
+        subheading = "आपके शरीर को गहरी नींद में ले जाने के लिए आरामदायक बारिश की आवाज़ें।";
+        intro = "बारिश की आवाज़ मस्तिष्क पर सुखद प्रभाव डालती है, अवांछित शोर को छुपाती है और हृदय गति को धीमा करती है।";
+        activeChannels = { birds: false, owl: false, trees: true, ocean: false, crickets: true, monsoonRain: true };
+        channelVolumes = { birds: 0.0, owl: 0.0, trees: 0.5, ocean: 0.0, crickets: 0.3, monsoonRain: 0.75 };
+        customTitle = "मानसून बारिश मिश्रण";
+      } else if (term === "dhyan-mandir-ghanti") {
+        title = "ध्यान मंदिर की घंटी | वैदिक ध्यान संगीत | Midnight Signals";
+        desc = "ध्यान और योग के लिए वैदिक मंदिर की पीतल की घंटियों और पक्षियों की आवाज़ों के साथ विश्राम करें।";
+        headline = "वैदिक मंदिर की घंटियाँ और ध्यान संगीत";
+        subheading = "ध्यान और मन की शांति के लिए पारंपरिक पीतल की घंटियाँ और मानसून की फुहार।";
+        intro = "मंदिर की घंटियों की गूँज नकारात्मक ऊर्जा को दूर करती है और ध्यान लगाने में सहायता करती है।";
+        activeChannels = { birds: true, owl: false, trees: false, ocean: false, crickets: true, templeBells: true, morningMist: true };
+        channelVolumes = { birds: 0.6, owl: 0, trees: 0, ocean: 0, crickets: 0.2, templeBells: 0.8, morningMist: 0.5 };
+        customTitle = "वैदिक सुबह ध्यान";
+      }
     }
 
     if (title) {
@@ -1097,9 +1314,11 @@ export function getDynamicPageData(path: string): SEOPageData | null {
         introText: intro,
         sections: [
           {
-            title: lang === "de" ? "Wissenschaft und Nutzen" : "Science et Avantages",
+            title: lang === "hi" ? "विज्ञान और लाभ" : lang === "de" ? "Wissenschaft und Nutzen" : "Science et Avantages",
             paragraphs: [
-              lang === "de" 
+              lang === "hi"
+                ? "प्राकृतिक ध्वनियाँ तनाव को कम करती हैं, ध्यान केंद्रित करने में मदद करती हैं और संज्ञानात्मक थकान को दूर करती हैं।"
+                : lang === "de"
                 ? "Naturgeräusche reduzieren die Aktivität des sympathischen Nervensystems und beschleunigen die Regeneration nach Stress."
                 : "Les sons de la nature diminuent l'activité du système nerveux sympathique et favorisent la récupération après le stress."
             ]
@@ -1107,8 +1326,8 @@ export function getDynamicPageData(path: string): SEOPageData | null {
         ],
         faqs: [
           {
-            question: lang === "de" ? "Ist diese Seite kostenlos?" : "Ce site est-il gratuit?",
-            answer: lang === "de" ? "Ja, alle Audio-Synthesizer und Naturklänge sind 100% kostenlos und ohne Werbung nutzbar." : "Oui, tous les synthétiseurs audio et sons de la nature sont utilisables 100% gratuitement et sans publicité."
+            question: lang === "hi" ? "क्या यह साइट मुफ़्त है?" : lang === "de" ? "Ist diese Seite kostenlos?" : "Ce site est-il gratuit?",
+            answer: lang === "hi" ? "हाँ, सभी ऑडियो सिंथेसाइज़र और प्राकृतिक ध्वनियाँ 100% मुफ़्त हैं और विज्ञापन-मुक्त उपयोग की जा सकती हैं।" : lang === "de" ? "Ja, alle Audio-Synthesizer und Naturklänge sind 100% kostenlos und ohne Werbung nutzbar." : "Oui, tous les synthétiseurs audio et sons de la nature sont utilisables 100% gratuitement et sans publicité."
           }
         ],
         presetConfig: {

@@ -85,6 +85,24 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://midnightsignals.ajimp340.workers.dev/india/monsoon-rain-sounds</loc>
+    <lastmod>2026-06-03</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://midnightsignals.ajimp340.workers.dev/india/temple-bells-meditation</loc>
+    <lastmod>2026-06-03</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://midnightsignals.ajimp340.workers.dev/belgium/ardennes-forest-sounds</loc>
+    <lastmod>2026-06-03</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://midnightsignals.ajimp340.workers.dev/birds/malabarwhistlingthrush</loc>
     <lastmod>2026-06-03</lastmod>
     <changefreq>weekly</changefreq>
@@ -583,6 +601,42 @@
     <priority>0.7</priority>
   </url>
   <url>
+    <loc>https://midnightsignals.ajimp340.workers.dev/birds/brahminystarling</loc>
+    <lastmod>2026-06-03</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://midnightsignals.ajimp340.workers.dev/birds/malabarlark</loc>
+    <lastmod>2026-06-03</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://midnightsignals.ajimp340.workers.dev/birds/himalayanmonal</loc>
+    <lastmod>2026-06-03</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://midnightsignals.ajimp340.workers.dev/birds/blackwoodpecker</loc>
+    <lastmod>2026-06-03</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://midnightsignals.ajimp340.workers.dev/birds/crestedtit</loc>
+    <lastmod>2026-06-03</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://midnightsignals.ajimp340.workers.dev/birds/firecrest</loc>
+    <lastmod>2026-06-03</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://midnightsignals.ajimp340.workers.dev/lofi/rain</loc>
     <lastmod>2026-06-03</lastmod>
     <changefreq>weekly</changefreq>
@@ -937,6 +991,18 @@
     <priority>0.7</priority>
   </url>
   <url>
+    <loc>https://midnightsignals.ajimp340.workers.dev/hi/barsat-ki-awaz-sona</loc>
+    <lastmod>2026-06-03</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://midnightsignals.ajimp340.workers.dev/hi/dhyan-mandir-ghanti</loc>
+    <lastmod>2026-06-03</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://midnightsignals.ajimp340.workers.dev/ocean-waves-and-rain</loc>
     <lastmod>2026-06-03</lastmod>
     <changefreq>weekly</changefreq>
@@ -971,5 +1037,41 @@
     <lastmod>2026-06-03</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://midnightsignals.ajimp340.workers.dev/blog/10-hours-rain-sounds-sleep</loc>
+    <lastmod>2026-06-03</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://midnightsignals.ajimp340.workers.dev/blog/nightingale-bird-sound-sleep</loc>
+    <lastmod>2026-06-03</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://midnightsignals.ajimp340.workers.dev/blog/lofi-music-brain-waves-study</loc>
+    <lastmod>2026-06-03</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://midnightsignals.ajimp340.workers.dev/blog/temple-bells-meditation-spiritual-history</loc>
+    <lastmod>2026-06-03</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://midnightsignals.ajimp340.workers.dev/blog/ardennes-forest-soundscape-guide</loc>
+    <lastmod>2026-06-03</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://midnightsignals.ajimp340.workers.dev/blog</loc>
+    <lastmod>2026-06-03</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.85</priority>
   </url>
 </urlset>

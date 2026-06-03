@@ -44,6 +44,7 @@ const SOUNDBOARD_TRANSLATIONS = {
     ambientVedic: "🇮🇳 Indian Vedic Scenery",
     canopySea: "🇸🇬/🇲🇾 SE Asian Canopy",
     hongKongVibe: "🇭🇰 Hong Kong Nature Scenery",
+    belgianArdennes: "🇧🇪 Belgian Ardennes Forest",
     coreTitle: "🌲 Basic Woods Layers",
     advancedTitle: "💨 Advanced Weather Layers",
     emptyForest: "No active elements. Change 'Show inactive' to mix custom layers..."
@@ -66,6 +67,7 @@ const SOUNDBOARD_TRANSLATIONS = {
     ambientVedic: "🇮🇳 Indische vedische Klänge",
     canopySea: "🇸🇬/🇲🇾 Südostasiatische Kronen",
     hongKongVibe: "🇭🇰 Hongkong Naturgeräusche",
+    belgianArdennes: "🇧🇪 Belgischer Ardennenwald",
     coreTitle: "🌲 Basis-Waldmusik",
     advancedTitle: "💨 Fortgeschrittene Wetterschichten",
     emptyForest: "Keine aktiven Elemente. Schalten Sie 'Inaktive anzeigen' ein..."
@@ -88,6 +90,7 @@ const SOUNDBOARD_TRANSLATIONS = {
     ambientVedic: "🇮🇳 भारतीय वैदिक दृश्य",
     canopySea: "🇸🇬/🇲🇾 एसई एशियाई चंदवा",
     hongKongVibe: "🇭🇰 हांगकांग प्राकृतिक दृश्य",
+    belgianArdennes: "🇧🇪 बेल्जियम अर्डेनेस वन",
     coreTitle: "🌲 बुनियादी वन परतें",
     advancedTitle: "💨 उन्नत मौसम परतें",
     emptyForest: "कोई सक्रिय तत्व नहीं। कस्टम मिश्रण करने के लिए 'निष्क्रिय दिखाएं' चालू करें..."
@@ -120,6 +123,8 @@ export default function NatureSoundboard({ interfaceLanguage = "en" }: { interfa
     mangroveWaves: false,
     hongKongKites: false,
     victoriaHarbour: false,
+    ardennesWind: false,
+    ardennesBrook: false,
   });
 
   // Synchronize Nature active states to global ambient layers
@@ -153,6 +158,8 @@ export default function NatureSoundboard({ interfaceLanguage = "en" }: { interfa
     mangroveWaves: 0.4,
     hongKongKites: 0.45,
     victoriaHarbour: 0.4,
+    ardennesWind: 0.35,
+    ardennesBrook: 0.4,
   });
 
   // Chosen bird sound preset for clicking the Bird Icon play buttons
@@ -171,6 +178,7 @@ export default function NatureSoundboard({ interfaceLanguage = "en" }: { interfa
   const [isIndianExpanded, setIsIndianExpanded] = useState<boolean>(true); // open to showcase India 500+ retention
   const [isSeaExpanded, setIsSeaExpanded] = useState<boolean>(true);       // open to showcase Southeast Asian preset
   const [isHongKongExpanded, setIsHongKongExpanded] = useState<boolean>(true); // open to showcase Hong Kong preset
+  const [isBelgianExpanded, setIsBelgianExpanded] = useState<boolean>(true);   // open to highlight Belgian preset
   const [activeDraggingChannel, setActiveDraggingChannel] = useState<string | null>(null);
 
   // Floating notifications logging live procedurally triggered sounds
@@ -1431,17 +1439,24 @@ export default function NatureSoundboard({ interfaceLanguage = "en" }: { interfa
               { id: "victoriaHarbour", label: interfaceLanguage === "hi" ? "विक्टोरिया हार्बर लहरें" : interfaceLanguage === "de" ? "Ruhiger Victoria Harbour" : "Victoria Harbour Swells", accent: "accent-purple-400 [&::-webkit-slider-thumb]:bg-purple-400 [&::-moz-range-thumb]:bg-purple-400 [&::-webkit-slider-thumb]:shadow-[0_0_12px_#c084fc] [&::-moz-range-thumb]:shadow-[0_0_12px_#c084fc]", icon: "🚢" }
             ];
 
+            const belgianSliders = [
+              { id: "ardennesWind", label: interfaceLanguage === "hi" ? "अर्डेनेस देवदार की हवा" : interfaceLanguage === "de" ? "Ardennen-Nadelwaldwind" : "Ardennes pine wind", accent: "accent-emerald-600 [&::-webkit-slider-thumb]:bg-emerald-600 [&::-moz-range-thumb]:bg-emerald-600 [&::-webkit-slider-thumb]:shadow-[0_0_12px_#059669] [&::-moz-range-thumb]:shadow-[0_0_12px_#059669]", icon: "🌲" },
+              { id: "ardennesBrook", label: interfaceLanguage === "hi" ? "अर्डेनेस पर्वतीय धारा" : interfaceLanguage === "de" ? "Ardennen-Bergbach" : "Ardennes mountain brook", accent: "accent-cyan-500 [&::-webkit-slider-thumb]:bg-cyan-500 [&::-moz-range-thumb]:bg-cyan-500 [&::-webkit-slider-thumb]:shadow-[0_0_12px_#06b6d4] [&::-moz-range-thumb]:shadow-[0_0_12px_#06b6d4]", icon: "💧" }
+            ];
+
             const renderedCoreElements = coreSliders.map(renderSlider).filter(Boolean);
             const renderedAdvancedElements = advancedSliders.map(renderSlider).filter(Boolean);
             const renderedIndianElements = indianSliders.map(renderSlider).filter(Boolean);
             const renderedSeaElements = seaSliders.map(renderSlider).filter(Boolean);
             const renderedHongKongElements = hongKongSliders.map(renderSlider).filter(Boolean);
+            const renderedBelgianElements = belgianSliders.map(renderSlider).filter(Boolean);
 
             const hasCoreContent = renderedCoreElements.length > 0;
             const hasAdvancedContent = renderedAdvancedElements.length > 0;
             const hasIndianContent = renderedIndianElements.length > 0;
             const hasSeaContent = renderedSeaElements.length > 0;
             const hasHongKongContent = renderedHongKongElements.length > 0;
+            const hasBelgianContent = renderedBelgianElements.length > 0;
 
             return (
               <div className="flex flex-col gap-2.5">
@@ -1543,6 +1558,41 @@ export default function NatureSoundboard({ interfaceLanguage = "en" }: { interfa
                   >
                     {hasHongKongContent ? (
                       renderedHongKongElements
+                    ) : (
+                      <div className="py-2.5 text-center font-mono text-[9px] text-zinc-600 uppercase tracking-widest bg-zinc-950/40 rounded-xl border border-white/[0.02]">
+                        {SOUNDBOARD_TRANSLATIONS[interfaceLanguage].emptyForest}
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                {/* Belgian Ardennes Nature Presets (P2) */}
+                <div className="border-t border-emerald-500/20 pt-3 mt-1">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setIsBelgianExpanded(!isBelgianExpanded);
+                      if (typeof navigator !== "undefined" && navigator.vibrate) {
+                        try { navigator.vibrate(10); } catch(e) {}
+                      }
+                    }}
+                    className="w-full flex items-center justify-between text-[10px] font-mono font-bold uppercase tracking-widest text-emerald-500 hover:text-emerald-400 transition-colors py-1.5 cursor-pointer"
+                  >
+                    <span className="flex items-center gap-1.5">{SOUNDBOARD_TRANSLATIONS[interfaceLanguage].belgianArdennes} {hasBelgianContent && `(${renderedBelgianElements.length})`}</span>
+                    <span className="text-emerald-500 transition-transform duration-300" style={{ transform: isBelgianExpanded ? "rotate(180deg)" : "rotate(0deg)" }}>
+                      ▼
+                    </span>
+                  </button>
+
+                  <div
+                    className={`transition-all duration-300 ease-in-out overflow-hidden flex flex-col gap-2.5 ${
+                      isBelgianExpanded
+                        ? "max-h-[1000px] opacity-100 mt-2.5"
+                        : "max-h-0 opacity-0 pointer-events-none"
+                    }`}
+                  >
+                    {hasBelgianContent ? (
+                      renderedBelgianElements
                     ) : (
                       <div className="py-2.5 text-center font-mono text-[9px] text-zinc-600 uppercase tracking-widest bg-zinc-950/40 rounded-xl border border-white/[0.02]">
                         {SOUNDBOARD_TRANSLATIONS[interfaceLanguage].emptyForest}

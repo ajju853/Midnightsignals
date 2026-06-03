@@ -20,6 +20,7 @@ export const BIRD_CATEGORIES = [
   { id: "mimics", name: "🎭 Mimics & Complex Vocalists" },
   { id: "flute", name: "🎷 Whistling & Flute-Like" },
   { id: "indian", name: "🇮🇳 Indian Birds (Beautiful Songs)" },
+  { id: "belgian", name: "🇧🇪 Belgian Ardennes Birds" },
   { id: "tropical", name: "🌴 Tropical & Exotic Voices" },
   { id: "notable", name: "🌟 Additional Notable Singers" }
 ];
@@ -1227,5 +1228,95 @@ export const BIRD_PRESETS: BirdPreset[] = [
     duration: 0.18,
     repeatCount: 6,
     interval: 0.25
+  },
+  // Indian Additions
+  {
+    id: "brahminystarling",
+    name: "Brahminy Starling",
+    category: "indian",
+    emoji: "🧡",
+    description: "A sweet, conversational series of whistles, clicks, and mimicry echoes",
+    waveType: "triangle",
+    baseFreq: 2600,
+    freqChange: -900,
+    sweepType: "clicks",
+    duration: 0.22,
+    repeatCount: 5,
+    interval: 0.3,
+    lfoFreq: 14
+  },
+  {
+    id: "malabarlark",
+    name: "Malabar Lark",
+    category: "indian",
+    emoji: "🌾",
+    description: "Joyous, rapid scales of whistling notes cascading over coastal meadows",
+    waveType: "sine",
+    baseFreq: 3100,
+    freqChange: 600,
+    sweepType: "cascade",
+    duration: 0.35,
+    repeatCount: 4,
+    interval: 0.45,
+    lfoFreq: 10
+  },
+  {
+    id: "himalayanmonal",
+    name: "Himalayan Monal",
+    category: "indian",
+    emoji: "🦚",
+    description: "Loud, clear rising whistles echoing across high-altitude pine ridges",
+    waveType: "sine",
+    baseFreq: 1600,
+    freqChange: 1200,
+    sweepType: "up",
+    duration: 0.55,
+    repeatCount: 2,
+    interval: 0.8
+  },
+  // Belgian Additions
+  {
+    id: "blackwoodpecker",
+    name: "Black Woodpecker",
+    category: "belgian",
+    emoji: "🐦",
+    description: "A loud, ringing 'klee-yah' call and deep resonant pecking sounds",
+    waveType: "sawtooth",
+    baseFreq: 1100,
+    freqChange: -400,
+    sweepType: "clicks",
+    duration: 0.4,
+    repeatCount: 5,
+    interval: 0.5
+  },
+  {
+    id: "crestedtit",
+    name: "Crested Tit",
+    category: "belgian",
+    emoji: "🐤",
+    description: "A distinctive, rapid purring trill from conifer pines",
+    waveType: "sine",
+    baseFreq: 4600,
+    freqChange: -800,
+    sweepType: "trill",
+    duration: 0.12,
+    repeatCount: 4,
+    interval: 0.22,
+    lfoFreq: 16
+  },
+  {
+    id: "firecrest",
+    name: "Firecrest",
+    category: "belgian",
+    emoji: "⚡",
+    description: "An ultra-high pitch, accelerating series of sweet piping notes",
+    waveType: "sine",
+    baseFreq: 6400,
+    freqChange: 800,
+    sweepType: "cascade",
+    duration: 0.08,
+    repeatCount: 6,
+    interval: 0.15,
+    lfoFreq: 28
   }
 ];

@@ -5,6 +5,8 @@ import { createServer as createViteServer } from "vite";
 import { GoogleGenAI, Type } from "@google/genai";
 import "dotenv/config";
 import { SEO_PAGES, generateFAQSchema, getDynamicPageData } from "./src/seoData";
+import { BIRD_PRESETS } from "./src/lib/birdPresets";
+import { BLOG_POSTS } from "./src/blogData";
 
 const app = express();
 const PORT = 3000;
@@ -128,6 +130,69 @@ export function generateAndSaveSitemap(customBaseUrl?: string) {
     xml += `    <priority>0.8</priority>\n`;
     xml += `  </url>\n`;
   }
+
+  // 3b. Programmatic Bird Pages
+  for (const bird of BIRD_PRESETS) {
+    xml += `  <url>\n`;
+    xml += `    <loc>${baseUrl}/birds/${bird.id}</loc>\n`;
+    xml += `    <lastmod>${seoDataMod}</lastmod>\n`;
+    xml += `    <changefreq>weekly</changefreq>\n`;
+    xml += `    <priority>0.7</priority>\n`;
+    xml += `  </url>\n`;
+  }
+
+  // 3c. Programmatic Lofi Sound/Mood combinations
+  const sounds = ["rain", "ocean", "birds", "crickets", "thunderstorm", "vinyl", "coffeeshop"];
+  const moods = ["study", "sleep", "focus", "relax", "meditation", "chill"];
+
+  for (const sound of sounds) {
+    // Sound main page
+    xml += `  <url>\n`;
+    xml += `    <loc>${baseUrl}/lofi/${sound}</loc>\n`;
+    xml += `    <lastmod>${seoDataMod}</lastmod>\n`;
+    xml += `    <changefreq>weekly</changefreq>\n`;
+    xml += `    <priority>0.7</priority>\n`;
+    xml += `  </url>\n`;
+
+    // Sound + Mood combinations
+    for (const mood of moods) {
+      xml += `  <url>\n`;
+      xml += `    <loc>${baseUrl}/lofi/${sound}/${mood}</loc>\n`;
+      xml += `    <lastmod>${seoDataMod}</lastmod>\n`;
+      xml += `    <changefreq>weekly</changefreq>\n`;
+      xml += `    <priority>0.7</priority>\n`;
+      xml += `  </url>\n`;
+    }
+  }
+
+  // 3d. Localized Target Pages
+  const localizedPaths = [
+    // German
+    "/de/lernen-mit-lofi",
+    "/de/regengerausche-schlafen",
+    "/de/vogelstimmen",
+    "/de/indische-naturgerausche",
+    // French
+    "/fr/pluie-pour-dormir",
+    "/fr/oiseaux-chantent",
+    "/fr/lofi-etudier",
+    // Swiss
+    "/ch/alpengerausche",
+    "/ch/kuhglocken",
+    "/ch/natur-ambient",
+    // Hindi (India Expansion)
+    "/hi/barsat-ki-awaz-sona",
+    "/hi/dhyan-mandir-ghanti"
+  ];
+
+  for (const path of localizedPaths) {
+    xml += `  <url>\n`;
+    xml += `    <loc>${baseUrl}${path}</loc>\n`;
+    xml += `    <lastmod>${seoDataMod}</lastmod>\n`;
+    xml += `    <changefreq>weekly</changefreq>\n`;
+    xml += `    <priority>0.7</priority>\n`;
+    xml += `  </url>\n`;
+  }
   
   // 4. Custom Combo Presets
   for (const comboPath of combos) {
@@ -138,6 +203,24 @@ export function generateAndSaveSitemap(customBaseUrl?: string) {
     xml += `    <priority>0.7</priority>\n`;
     xml += `  </url>\n`;
   }
+
+  // 5. Blog Article Pages
+  const blogDataMod = getFileModDate("src/blogData.ts");
+  for (const post of BLOG_POSTS) {
+    xml += `  <url>\n`;
+    xml += `    <loc>${baseUrl}/blog/${post.slug}</loc>\n`;
+    xml += `    <lastmod>${blogDataMod}</lastmod>\n`;
+    xml += `    <changefreq>weekly</changefreq>\n`;
+    xml += `    <priority>0.8</priority>\n`;
+    xml += `  </url>\n`;
+  }
+  // Blog index page
+  xml += `  <url>\n`;
+  xml += `    <loc>${baseUrl}/blog</loc>\n`;
+  xml += `    <lastmod>${blogDataMod}</lastmod>\n`;
+  xml += `    <changefreq>daily</changefreq>\n`;
+  xml += `    <priority>0.85</priority>\n`;
+  xml += `  </url>\n`;
   
   xml += `</urlset>`;
 
@@ -448,6 +531,27 @@ async function startServer() {
           }
         }
 
+        // Check blog pages
+        if (!isMatched && (currentPath === "/blog" || currentPath.startsWith("/blog/"))) {
+          isMatched = true;
+          if (currentPath === "/blog") {
+            title = "Midnight Journal | Research & Guides on Ambient Sound Science";
+            metaDescription = "Explore in-depth articles on neuro-acoustics, rain sounds for sleep, birdsong therapy, lofi focus science, and procedural nature sound generation.";
+            keywords = ["ambient sound blog", "lofi science articles", "rain sleep guide", "nature sound research", "neuro-acoustic journal"];
+          } else {
+            // Individual blog post
+            const blogSlug = currentPath.replace("/blog/", "");
+            const blogPost = BLOG_POSTS.find((p: any) => p.slug === blogSlug);
+            if (blogPost) {
+              title = blogPost.title;
+              metaDescription = blogPost.metaDescription;
+              keywords = blogPost.keywords;
+            } else {
+              isMatched = false; // slug not found, let 404 handle it
+            }
+          }
+        }
+
         if (currentPath !== "" && !isMatched) {
           res.status(404);
         }
@@ -489,6 +593,54 @@ async function startServer() {
           const faqSchema = generateFAQSchema(activePage);
           if (faqSchema) {
             jsonLdInjected += `\n    <script type="application/ld+json">${JSON.stringify(faqSchema)}</script>`;
+          }
+        }
+
+        // If this is a blog article, inject BlogPosting schema
+        if (currentPath.startsWith("/blog/")) {
+          const blogSlug = currentPath.replace("/blog/", "");
+          const blogPost = BLOG_POSTS.find((p: any) => p.slug === blogSlug);
+          if (blogPost) {
+            const blogSchema = {
+              "@context": "https://schema.org",
+              "@type": "BlogPosting",
+              "headline": blogPost.headline,
+              "description": blogPost.metaDescription,
+              "datePublished": blogPost.publishedDate,
+              "dateModified": blogPost.updatedDate,
+              "author": {
+                "@type": "Person",
+                "name": blogPost.author.name,
+                "description": blogPost.author.bio
+              },
+              "publisher": {
+                "@type": "Organization",
+                "name": "Midnight Signals"
+              },
+              "mainEntityOfPage": {
+                "@type": "WebPage",
+                "@id": canonicalUrl
+              },
+              "image": blogPost.coverImage
+            };
+            jsonLdInjected += `\n    <script type="application/ld+json">${JSON.stringify(blogSchema)}</script>`;
+
+            // Also inject FAQPage schema if the blog post has FAQs
+            if (blogPost.faqs && blogPost.faqs.length > 0) {
+              const blogFaqSchema = {
+                "@context": "https://schema.org",
+                "@type": "FAQPage",
+                "mainEntity": blogPost.faqs.map((f: any) => ({
+                  "@type": "Question",
+                  "name": f.question,
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": f.answer
+                  }
+                }))
+              };
+              jsonLdInjected += `\n    <script type="application/ld+json">${JSON.stringify(blogFaqSchema)}</script>`;
+            }
           }
         }
 
