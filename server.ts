@@ -63,7 +63,7 @@ app.get("/BingSiteAuth.xml", (req, res) => {
 });
 
 // Helper to generate and automatically update sitemap.xml on disk
-export function generateAndSaveSitemap() {
+export function generateAndSaveSitemap(customBaseUrl?: string) {
   const combos = [
     "/ocean-waves-and-rain",
     "/ocean-waves-and-crickets",
@@ -73,7 +73,7 @@ export function generateAndSaveSitemap() {
     "/neon-lofi-and-ocean-sounds"
   ];
   
-  const baseUrl = "https://midnight-signals.cloud"; // Production domain fallback
+  const baseUrl = customBaseUrl || "https://midnight-signals.cloud"; // Production domain fallback
 
   // Helper to extract actual modified dates of source files
   const getFileModDate = (relativeFilePath: string): string => {
@@ -161,7 +161,16 @@ export function generateAndSaveSitemap() {
 // Serve sitemap.xml for Google/Bing crawler bot indexing
 app.get(["/sitemap.xml", "/api/sitemap.xml"], (req, res) => {
   res.setHeader("Content-Type", "application/xml");
-  const xml = generateAndSaveSitemap();
+  res.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+  res.setHeader("Pragma", "no-cache");
+  res.setHeader("Expires", "0");
+  
+  const protoHeader = req.headers["x-forwarded-proto"];
+  const protocol = Array.isArray(protoHeader) ? protoHeader[0] : protoHeader || req.protocol || "https";
+  const host = req.headers.host || "midnight-signals.cloud";
+  const currentBaseUrl = `${protocol}://${host}`;
+  
+  const xml = generateAndSaveSitemap(currentBaseUrl);
   res.send(xml);
 });
 

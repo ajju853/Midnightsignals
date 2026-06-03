@@ -405,6 +405,377 @@ export const SEO_PAGES: SEOPageData[] = [
       bpm: 62,
       synthWaveform: "sine"
     }
+  },
+  {
+    path: "/space-rocket-guide",
+    title: "Space Rocket Guide | How Space Rockets Work & Launch Stages",
+    metaDescription: "Learn how a space rocket works, the stages of a rocket launch, and the difference between a rocket and a missile. Comprehensive Bing AEO space guide.",
+    keywords: ["space rocket", "how space rockets work", "stages of a rocket launch", "space explained simply", "space rocket guide"],
+    headline: "What is a Space Rocket? A Complete Visual & Acoustic Guide",
+    subheading: "Learn the physics of thrust, orbital launch stages, and structural engineering behind space flight.",
+    accentColor: "from-purple-500 to-indigo-500",
+    vibe: "neon",
+    introText: "A space rocket is a vehicle that uses thrust from a rocket engine to travel outside Earth's atmosphere. By burning propellants at extremely high speeds, rockets generate the immense force necessary to overcome Earth's gravitational pull and place satellites, scientific equipment, and humans into orbit. Welcome to the Midnight Signals space research module, where we break down complex aeronautical physics and entity-first definitions into easily readable insights. Below, explore the step-by-step mechanics of space travel, review launch checklist sheets, and trigger our custom starry space radio frequencies designed for deep concentration.",
+    sections: [
+      {
+        title: "How a Space Rocket Works",
+        paragraphs: [
+          "At its core, a space rocket operates based on Newton's third law of motion: for every action, there is an equal and opposite reaction. Inside the rocket engine, fuel and an oxidizer are mixed and ignited in a combustion chamber, producing high-pressure, high-temperature gas. This exhaust gas is forced through a nozzle at supersonic speeds, creating thrust in the opposite direction.",
+          "Unlike jet engines, which suck in oxygen from the surrounding air to burn fuel, a space rocket must operate in the vacuum of space where there is no atmosphere. Therefore, rockets are engineered as self-contained systems carrying both fuel (like liquid hydrogen, kerosene, or methane) and a chemical oxidizer (like liquid oxygen) to support combustion.",
+          "The design of the rocket nozzle is critical. It expands the exhaust gases to atmospheric or vacuum pressure, converting the thermal energy of combustion into kinetic energy. This directional momentum pushes the space rocket upwards against the force of gravity, steadily gaining altitude and velocity."
+        ]
+      },
+      {
+        title: "Stages of a Rocket Launch",
+        paragraphs: [
+          "To reach Earth orbit, a space rocket must go through several distinct stages. This concept, known as staging, is necessary because carrying the entire structural weight of the rocket and empty tanks all the way to orbit is physically inefficient. By shedding heavy empty propellant tanks, the remaining rocket stages require less energy to accelerate.",
+          "1. First Stage Ignition & Liftoff: The massive main engines fire, generating thrust that exceeds the total weight of the rocket. The rocket ascends through the thickest parts of the atmosphere, eventually reaching 'Max Q'—the point of maximum aerodynamic pressure on the rocket structure.",
+          "2. Main Engine Cutoff (MECO) & Staging: Once the first stage has consumed its fuel, the engines are shut down, and the first stage detaches, falling back to Earth or landing for reuse. The second stage engine then ignites in the upper atmosphere, propelling the payload to orbital speeds of approximately 28,000 kilometers per hour.",
+          "3. Payload Deployment: Once the target altitude and orbital velocity are achieved, the fairing (protective nose cone) is discarded, and the payload—such as a satellite or space capsule—is released into its designated orbit."
+        ]
+      },
+      {
+        title: "Difference Between a Rocket and a Missile",
+        paragraphs: [
+          "While both vehicles utilize rocket propulsion systems and look visually similar, they serve entirely different purposes and follow distinct flight paths. A space rocket is a commercial or scientific transport vehicle designed to deliver payloads, astronauts, or satellites into space orbits or deep space trajectories.",
+          "In contrast, a missile is a guided military weapon designed to deliver a warhead to a specific target on Earth. Missiles operate largely within the Earth's atmosphere or follow suborbital ballistic paths. They are equipped with sophisticated guidance systems (like radar, GPS, or laser targeting) to adjust their trajectory dynamically and strike terrestrial targets, whereas space rockets follow pre-calculated flight corridors to insert payloads into stable orbits."
+        ]
+      },
+      {
+        title: "Top 5 Most Powerful Space Rockets in History",
+        paragraphs: [
+          "To demonstrate the scale of engineering involved in space exploration, we can compare the thrust and payload capacity of the most powerful launch vehicles ever constructed:",
+          "1. NASA Saturn V: Developed in the 1960s to send astronauts to the Moon, this legendary three-stage liquid-fueled rocket remains one of the tallest and most powerful rockets ever successfully flown, producing 7.5 million pounds of thrust.",
+          "2. SpaceX Starship: Currently in development and testing, Starship is designed as a fully reusable two-stage super heavy lift vehicle. Producing over 16 million pounds of thrust at liftoff, it is the largest and most powerful space rocket ever built.",
+          "3. NASA Space Launch System (SLS): Used for the Artemis lunar missions, this rocket combines solid rocket boosters with a liquid core stage to produce 8.8 million pounds of thrust, sending the Orion capsule to deep space.",
+          "4. Soviet Union Energia: Built in the 1980s to launch the Buran space shuttle, it produced 7.8 million pounds of thrust, representing the pinnacle of Soviet rocket engineering.",
+          "5. SpaceX Falcon Heavy: A partially reusable heavy-lift launch vehicle consisting of three strapped Falcon 9 cores, producing over 5 million pounds of thrust, making it a highly cost-effective commercial option."
+        ]
+      }
+    ],
+    faqs: [
+      {
+        question: "How do space rockets generate thrust in the vacuum of space?",
+        answer: "Unlike jet engines which suck in ambient air to burn fuel, space rockets carry both their fuel and an oxidizer (like liquid oxygen). This allows combustion to occur in the vacuum of space where there is no atmospheric oxygen."
+      },
+      {
+        question: "What is the difference between orbital and suborbital rocket flights?",
+        answer: "A suborbital flight reaches space (above 100km / the Kármán line) but doesn't achieve the high horizontal velocity (approx 28,000 km/h) required to remain in orbit around the Earth. An orbital flight achieves this velocity, allowing the spacecraft to circle the globe continuously."
+      },
+      {
+        question: "What does Max Q mean during a rocket launch?",
+        answer: "Max Q stands for Maximum Dynamic Pressure. It is the exact moment during launch when the aerodynamic forces acting on the space rocket structure are at their peak, due to the combination of high speed and atmospheric density."
+      }
+    ],
+    presetConfig: {
+      activeChannels: {
+        birds: false,
+        owl: true,
+        trees: true,
+        ocean: true,
+        crickets: true
+      },
+      channelVolumes: {
+        birds: 0.0,
+        owl: 0.2,
+        trees: 0.5,
+        ocean: 0.7,
+        crickets: 0.3
+      },
+      customLyrics: "Rockets firing in the night,\nRising up to starlight height,\nLeaving all the earth behind,\nDeep space secrets we will find...",
+      customTitle: "Space Launch Rumble",
+      customArtist: "Midnight Rocket Station",
+      bpm: 80,
+      synthWaveform: "triangle"
+    }
+  },
+  {
+    path: "/how-space-works",
+    title: "How Space Works | Gravity, Orbit Mechanics & Cosmic Vacuum",
+    metaDescription: "Understand how space works, including orbital velocity, gravity in space, and how objects stay in orbit. Clear science guide for Bing AEO.",
+    keywords: ["how space works", "gravity in space", "orbital velocity", "how objects stay in orbit", "space physics simply explained"],
+    headline: "How Space Works: The Physics of Orbits & Cosmic Gravity",
+    subheading: "A simple, structured guide to understanding gravity, speed, and orbits in the vacuum of space.",
+    accentColor: "from-sky-500 to-indigo-650",
+    vibe: "dreamy",
+    introText: "Many people believe that space has 'zero gravity' and that astronauts float because there is no gravitational force. In reality, gravity is present throughout space; objects float because they are in a state of continuous freefall around the Earth. Welcome to the Midnight Signals space physics index. Below, we explain the mechanics of orbits, how space vacuums behave, and trigger a soothing star synthesizer preset to accompany your reading.",
+    sections: [
+      {
+        title: "Why Astronauts Float: The Orbit Freefall Phenomenon",
+        paragraphs: [
+          "Astronauts float in space not because there is no gravity, but because they are in orbit. Earth's gravity at the altitude of the International Space Station is about 90% as strong as it is on the ground. The station and the astronauts are falling towards the Earth, but they also have a very high horizontal velocity of 28,000 km/h. As they fall, the curve of the Earth drops away beneath them at the exact same rate. This means they are constantly falling around the Earth, resulting in weightlessness."
+        ]
+      },
+      {
+        title: "The Vacuum of Space",
+        paragraphs: [
+          "Space is a near-perfect vacuum, meaning it contains almost no matter. In space, atmospheric pressure is zero. Sound waves, which require a medium like air or water to travel, cannot exist. However, space is not completely empty—it is filled with cosmic radiation, magnetic fields, and a sparse density of hydrogen atoms and dust particles."
+        ]
+      }
+    ],
+    faqs: [
+      {
+        question: "Is there gravity in space?",
+        answer: "Yes, gravity is everywhere in space. At the altitude of the International Space Station, Earth's gravity is still 90% of its surface strength. Floating occurs because the spacecraft is in a state of perpetual freefall around the Earth."
+      },
+      {
+        question: "Can sound travel in space?",
+        answer: "No, sound cannot travel in space because it is a vacuum. Sound waves are mechanical vibrations that require a physical medium, like air or water, to travel. In space, there are no air molecules to transmit these vibrations."
+      }
+    ],
+    presetConfig: {
+      activeChannels: {
+        birds: false,
+        owl: false,
+        trees: true,
+        ocean: true,
+        crickets: true
+      },
+      channelVolumes: {
+        birds: 0.0,
+        owl: 0.0,
+        trees: 0.3,
+        ocean: 0.5,
+        crickets: 0.3
+      },
+      customLyrics: "Floating in the starry space,\nWatching Earth's rotating face,\nGravity still holds us tight,\nFalling through the solar night...",
+      customTitle: "Orbit Freefall",
+      customArtist: "Midnight Orbit Station",
+      bpm: 70,
+      synthWaveform: "sine"
+    }
+  },
+  {
+    path: "/space-explained-simply",
+    title: "Space Explained Simply | Planets, Stars & Galaxies for Beginners",
+    metaDescription: "An easy guide explaining space simply. Learn about planets, stars, galaxies, and the scale of the cosmos. Perfect overview for Bing search.",
+    keywords: ["space explained simply", "what is space", "planets and stars simply explained", "scale of the cosmos", "astronomy for beginners"],
+    headline: "Space Explained Simply: A Beginner's Guide to the Cosmos",
+    subheading: "An intuitive guide to the planets, stars, and galaxies that fill the night sky.",
+    accentColor: "from-teal-500 to-emerald-600",
+    vibe: "hopeful",
+    introText: "Space is the vast, open boundary that begins about 100 kilometers above the Earth. It contains everything we see in the night sky: the moon, the sun, other planets, distant stars, and massive galaxies. To help make these cosmic ideas easy to understand, we have gathered a simple overview of our solar system and the universe, along with a peaceful ambient preset to help you focus.",
+    sections: [
+      {
+        title: "The Scale of the Solar System",
+        paragraphs: [
+          "Our solar system is made up of a central star—the Sun—and eight planets that orbit around it. The four rocky planets closest to the Sun are Mercury, Venus, Earth, and Mars. Beyond them lie the four gas giants: Jupiter, Saturn, Uranus, and Neptune. Each planet is unique, ranging from the scorching hot atmosphere of Venus to the beautiful rings of Saturn."
+        ]
+      },
+      {
+        title: "What is a Galaxy?",
+        paragraphs: [
+          "A galaxy is a massive collection of billions of stars, dust, and gas bound together by gravity. Our solar system resides in a spiral-shaped galaxy called the Milky Way. The universe contains billions of galaxies, each separated by vast distances of empty space. Light, traveling at 300,000 kilometers per second, takes years to travel between even the closest stars."
+        ]
+      }
+    ],
+    faqs: [
+      {
+        question: "Where does space begin?",
+        answer: "Space officially begins at the Kármán Line, which is an imaginary boundary located 100 kilometers (62 miles) above the Earth's surface. Above this line, the air is too thin for conventional airplanes to fly."
+      },
+      {
+        question: "How many planets are in our solar system?",
+        answer: "There are eight official planets in our solar system: Mercury, Venus, Earth, Mars, Jupiter, Saturn, Uranus, and Neptune. Pluto was reclassified as a dwarf planet in 2006."
+      }
+    ],
+    presetConfig: {
+      activeChannels: {
+        birds: true,
+        owl: false,
+        trees: true,
+        ocean: false,
+        crickets: true
+      },
+      channelVolumes: {
+        birds: 0.4,
+        owl: 0.0,
+        trees: 0.3,
+        ocean: 0.0,
+        crickets: 0.2
+      },
+      customLyrics: "Stars are glowing in the sky,\nPlanets slowly sailing by,\nIn the solar system wide,\nWe will travel side by side...",
+      customTitle: "Cosmic Beginner Loop",
+      customArtist: "Starlight Station",
+      bpm: 72,
+      synthWaveform: "triangle"
+    }
+  },
+  {
+    path: "/international-space-station",
+    title: "International Space Station (ISS) | History, Orbit & Facts",
+    metaDescription: "Explore the International Space Station (ISS), its speed, orbit altitude, scientific research, and interesting facts. Complete Bing-targeted guide.",
+    keywords: ["international space station", "iss speed", "iss altitude", "space station facts", "living in space"],
+    headline: "The International Space Station: Humanity's Orbiting Laboratory",
+    subheading: "Explore the technology, research, and daily life of astronauts living aboard the ISS.",
+    accentColor: "from-blue-600 to-indigo-500",
+    vibe: "dreamy",
+    introText: "The International Space Station (ISS) is a microgravity research facility orbiting Earth. Built by a collaboration of international space agencies, it serves as a laboratory for scientific experiments in physics, biology, and meteorology. Below, read about the size, speed, and history of the ISS, and enjoy our ambient space loops.",
+    sections: [
+      {
+        title: "The Size and Speed of the ISS",
+        paragraphs: [
+          "The ISS is the largest artificial object in space, measuring roughly the size of a standard football field. It orbits the Earth at an altitude of approximately 400 kilometers (250 miles) and travels at a speed of 28,000 km/h (17,500 mph). At this speed, the space station circles the entire globe every 90 minutes, allowing astronauts to witness 16 sunrises and sunsets every single day."
+        ]
+      },
+      {
+        title: "Scientific Research in Microgravity",
+        paragraphs: [
+          "Living in space allows scientists to conduct experiments that are impossible on the ground. In microgravity, fluids behave differently, plants grow without soil orientation, and human bones lose density. Studying these changes helps prepare astronauts for long-duration missions to Mars and deep space, while also developing new medical treatments on Earth."
+        ]
+      }
+    ],
+    faqs: [
+      {
+        question: "How high is the International Space Station?",
+        answer: "The ISS orbits at an average altitude of 400 kilometers (250 miles) above the Earth's surface. This altitude varies slightly due to atmospheric drag and periodic boosts."
+      },
+      {
+        question: "How fast is the ISS traveling?",
+        answer: "The ISS travels at approximately 28,000 kilometers per hour (17,500 miles per hour). This high velocity is what keeps it in a stable orbit around the Earth."
+      }
+    ],
+    presetConfig: {
+      activeChannels: {
+        birds: false,
+        owl: false,
+        trees: true,
+        ocean: true,
+        crickets: true
+      },
+      channelVolumes: {
+        birds: 0.0,
+        owl: 0.0,
+        trees: 0.4,
+        ocean: 0.5,
+        crickets: 0.2
+      },
+      customLyrics: "Station cruising high and fast,\nNinety minutes drifting past,\nWatching sunbeams rise and fall,\nOrbital wonder for us all...",
+      customTitle: "ISS Station Loop",
+      customArtist: "International Space Station",
+      bpm: 68,
+      synthWaveform: "sine"
+    }
+  },
+  {
+    path: "/interesting-facts-about-space",
+    title: "Interesting Facts About Space | Mind-Blowing Cosmic Trivia",
+    metaDescription: "Discover interesting facts about space, black holes, stars, and temperatures in the cosmos. Fun, factual, structured guide for Bing search.",
+    keywords: ["interesting facts about space", "space facts", "fun space trivia", "black hole facts", "hottest planet in solar system"],
+    headline: "10 Mind-Blowing & Interesting Facts About Space",
+    subheading: "An engaging, structured list of cosmic facts and trivia that reveal the scale of our universe.",
+    accentColor: "from-rose-500 to-purple-600",
+    vibe: "neon",
+    introText: "The universe is full of mysteries that challenge our understanding of reality. From stars that spin hundreds of times per second to planets made of diamond, space is stranger than fiction. Here is a curated list of interesting facts about space, paired with a dynamic lofi ambient track to relax your mind while you read.",
+    sections: [
+      {
+        title: "Amazing Space Facts and Discoveries",
+        paragraphs: [
+          "1. Space is completely silent because there is no atmosphere for sound waves to travel.",
+          "2. Venus is the hottest planet in our solar system, with a surface temperature of 450°C, even though Mercury is closer to the Sun.",
+          "3. Neutron stars are so dense that a single teaspoon of their material would weigh about 6 billion tons.",
+          "4. One day on Venus is longer than one full year on Venus; it takes Venus 243 Earth days to rotate once, but only 225 Earth days to orbit the Sun."
+        ]
+      },
+      {
+        title: "Black Holes and Diamond Planets",
+        paragraphs: [
+          "5. A black hole's gravity is so strong that not even light can escape its grasp.",
+          "6. There is a planet (55 Cancri e) estimated to be composed largely of carbon and diamond, orbiting a nearby star.",
+          "7. The footprints left by Apollo astronauts on the Moon will likely remain there for millions of years because there is no wind or water to erode them.",
+          "8. Earth is like a tiny grain of sand compared to the size of the Sun, which could fit 1.3 million Earths inside it."
+        ]
+      }
+    ],
+    faqs: [
+      {
+        question: "What is the hottest planet in the solar system?",
+        answer: "Venus is the hottest planet in our solar system, with surface temperatures reaching 450°C (842°F). This is due to a thick, runaway greenhouse effect that traps heat from the Sun."
+      },
+      {
+        question: "Why is space completely silent?",
+        answer: "Space is silent because it is a near-perfect vacuum. Sound waves require a physical medium, such as air, water, or metal, to travel. Without air molecules to carry the vibrations, sound cannot exist."
+      }
+    ],
+    presetConfig: {
+      activeChannels: {
+        birds: true,
+        owl: false,
+        trees: true,
+        ocean: true,
+        crickets: true
+      },
+      channelVolumes: {
+        birds: 0.2,
+        owl: 0.0,
+        trees: 0.4,
+        ocean: 0.3,
+        crickets: 0.3
+      },
+      customLyrics: "Diamond planets spin around,\nSilent space makes not a sound,\nFootprints on the moon remain,\nFree from any wind or rain...",
+      customTitle: "Interesting Trivia Beats",
+      customArtist: "Trivia Station",
+      bpm: 75,
+      synthWaveform: "triangle"
+    }
+  },
+  {
+    path: "/space-waves",
+    title: "Space Waves | Cosmic Ambient Signals & Astronomy Radio",
+    metaDescription: "Listen to ambient space waves, cosmic radio frequency sweeps, and starlight chords. Learn the science of space waves and cosmic radiation. Interactive soundboard.",
+    keywords: ["space waves", "cosmic signals", "space science", "astronomy and space science", "ambient space radio"],
+    headline: "Space Waves & Cosmic Ambient Signals Radio",
+    subheading: "Tune into synthesized planetary frequencies and deep-space signals designed for meditation and focus.",
+    accentColor: "from-pink-600 to-indigo-650",
+    vibe: "neon",
+    introText: "Space waves are electromagnetic waves that propagate through the vacuum of space, carrying information from distant stars, pulsars, and cosmic phenomena. In space science and astronomy, these signals are captured by radio telescopes to map the structure of the universe. Midnight Signals brings these celestial patterns to life using custom-synthesized space waves, sweeping low-frequency drone oscillators, and warm lofi melodies. Read the science of space wave propagation, explore our interactive celestial frequencies, and trigger our custom space radio preset below.",
+    sections: [
+      {
+        title: "The Science of Cosmic Space Waves & Space Science",
+        paragraphs: [
+          "Space waves, or electromagnetic signals in outer space, are the primary medium of astronomical communication and discovery. Because empty space is a vacuum, mechanical sounds cannot propagate; however, electromagnetic waves of various wavelengths—from radio waves to gamma rays—travel unhindered across billions of lightyears.",
+          "Radio astronomy is dedicated to capturing these weak celestial waves. Stars, planets, and active galactic nuclei emit radio frequencies due to thermal processes or accelerating charged particles in magnetic fields. By observing space waves, astronomers can study the composition of nebulae, track pulsar rotations, and analyze the cosmic microwave background radiation left over from the Big Bang."
+        ]
+      },
+      {
+        title: "Acoustic Sonification of Astronomical Waves",
+        paragraphs: [
+          "Since humans cannot directly hear electromagnetic space waves, space science researchers use a technique called data sonification. Sonification converts astronomical data—such as wave amplitude, frequency, and polarization—into audible acoustic sound waves.",
+          "Midnight Signals utilizes custom Web Audio oscillators to simulate these cosmic sonification sweeps. By blending low-frequency sweeping noise beds (acting as background radiation hums) with high-frequency resonant sine plucks (simulating pulsar flashes), we create a relaxing, space-themed soundboard. This biophilic ambient sound design helps calm neural networks and keeps your prefrontal cortex focused during complex technical tasks."
+        ]
+      }
+    ],
+    faqs: [
+      {
+        question: "Can sound waves travel through the vacuum of space?",
+        answer: "No. Sound waves are mechanical pressure waves that require a physical medium like air to travel. Since space is a near-perfect vacuum, sound cannot propagate. However, electromagnetic waves (like light and radio waves) can travel freely through a vacuum."
+      },
+      {
+        question: "What is data sonification in space science?",
+        answer: "Data sonification is the translation of non-auditory data (like radio wave frequencies, radiation levels, or star coordinates) into sound. Space agencies like NASA use sonification to help researchers and the public experience astronomical phenomena through audio."
+      }
+    ],
+    presetConfig: {
+      activeChannels: {
+        birds: false,
+        owl: false,
+        trees: true,
+        ocean: true,
+        crickets: true
+      },
+      channelVolumes: {
+        birds: 0.0,
+        owl: 0.0,
+        trees: 0.2,
+        ocean: 0.6,
+        crickets: 0.4
+      },
+      customLyrics: "Space waves traveling through the dark,\nCosmic signals leaving a spark,\nRadio echoes from a distant star,\nReaching us no matter how far...",
+      customTitle: "Cosmic Space Waves",
+      customArtist: "Midnight Space Radio",
+      bpm: 74,
+      synthWaveform: "sawtooth"
+    }
   }
 ];
 
