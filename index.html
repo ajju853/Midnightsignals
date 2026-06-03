@@ -64,6 +64,16 @@
       });
     </script>
 
+    <!-- Monetag Service Worker Registration -->
+    <script>
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/sw.js')
+          .catch(function(err) {
+            console.warn('[Monetag] SW registration failed:', err);
+          });
+      }
+    </script>
+
     <!-- Structured Data (JSON-LD) - CORRECTED URLs -->
     <script type="application/ld+json">
       {
