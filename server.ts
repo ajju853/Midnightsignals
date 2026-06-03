@@ -359,12 +359,17 @@ async function startServer() {
 
         const currentPath = req.path === "/" ? "" : req.path;
         
+        const protoHeader = req.headers["x-forwarded-proto"];
+        const protocol = Array.isArray(protoHeader) ? protoHeader[0] : protoHeader || req.protocol || "https";
+        const host = req.headers.host || "midnight-signals.cloud";
+        
         // Match current route to dynamic SEO data
         let title = "Midnight Signals | AI Ambient Radio, Lofi Sleep Sound Mixer & Nature Sound Generator";
         let metaDescription = "Create custom lofi radio stations with ocean waves, bird songs, rain ambience, AI lyrics and sleep-friendly soundscapes. Free online ambient sound generator.";
         let keywords = ["Midnight Signals", "lo-fi music", "AI poetry", "lyric transmission", "chill starlight synthesizer", "relax sound hub", "ambient noise player"];
         
         let activePage = SEO_PAGES.find((p) => p.path === currentPath);
+        let isMatched = !!activePage;
 
         if (!activePage && currentPath === "/science-of-lofi-focus-infographic") {
           activePage = {
@@ -403,9 +408,11 @@ async function startServer() {
         if (!activePage && currentPath === "/embed/science-of-lofi") {
           title = "Science of Lo-Fi Interactive Embed Frame | Midnight Signals";
           metaDescription = "Interactive widget showing lofi acoustic curves, cognitive rest patterns, and brain wave bands.";
+          isMatched = true;
         }
         
         if (activePage) {
+          isMatched = true;
           title = activePage.title;
           metaDescription = activePage.metaDescription;
           keywords = activePage.keywords;
@@ -423,10 +430,15 @@ async function startServer() {
           if (matchedCombo) {
             title = `${matchedCombo.headline} | Custom Lofi Radio Mixer & Nature Sounds`;
             metaDescription = `Play our automatic relaxation preset blending ${matchedCombo.headline.toLowerCase()} with generative synths. Clean browser-synthesized focus audio.`;
+            isMatched = true;
           }
         }
 
-        const canonicalUrl = `https://midnight-signals.cloud${currentPath}`;
+        if (currentPath !== "" && !isMatched) {
+          res.status(404);
+        }
+
+        const canonicalUrl = `${protocol}://${host}${currentPath}`;
 
         // Dynamic element substitutions
         let modifiedHtml = html.replace(/<title>.*?<\/title>/i, `<title>${title}</title>`);
