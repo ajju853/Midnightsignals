@@ -261,7 +261,7 @@ function generateFavicon() {
 
 async function pingIndexNow(urls: string[]) {
   const host = baseUrl ? new URL(baseUrl).hostname : "midnightsignals.ajimp340.workers.dev";
-  const key = "c0a876a3e5c942be818a7a8d5069f0b5";
+  const key = "3c1fb8dc9e5046e3abf45366cdef57d0";
   const keyLocation = `${baseUrl}/${key}.txt`;
   
   console.log(`[IndexNow] Pinging engines for ${urls.length} URLs on host: ${host}...`);

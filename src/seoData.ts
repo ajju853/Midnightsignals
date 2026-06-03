@@ -47,7 +47,7 @@ export interface SEOPageData {
 export const SEO_PAGES: SEOPageData[] = [
   {
     path: "/ocean-sounds-for-sleep",
-    title: "Ocean Sounds for Sleep | Custom Maritime Soundscape Generator",
+    title: "Ocean Sounds for Sleep | Custom Wave Mixer",
     metaDescription: "Listen to natural ocean wave frequencies and coastal breeze. Mix and match rain, crickets, and lofi chords to create your ultimate custom sleep soundboard.",
     keywords: ["ocean sounds for sleep", "custom sleep sound mixer", "ocean sound generator", "rain ocean sound mixer", "sleep ambience creator"],
     headline: "Ocean Sounds for Sleep & Deep Relaxation",
@@ -127,7 +127,7 @@ export const SEO_PAGES: SEOPageData[] = [
   },
   {
     path: "/bird-sounds-generator",
-    title: "Bird Sounds Generator | Authentic Forest & Aviary Acoustic Mixer",
+    title: "Bird Sounds Generator | Forest & Nature Mixer",
     metaDescription: "Generate custom birds soundscapes with nightingales, sparrows, forest owls, wind breeze, and lofi chord loops. Dynamic nature audio for deep focus, study, and sleep.",
     keywords: ["bird sound generator", "custom bird sound mixer", "nature soundboard online", "ocean waves and birds", "forest ambience generator"],
     headline: "Ornithological Bird Sounds Generator",
@@ -195,7 +195,7 @@ export const SEO_PAGES: SEOPageData[] = [
   },
   {
     path: "/lofi-radio-generator",
-    title: "AI Lo-Fi Radio Generator | Infinite Meditative Chill Beats & Retro Synths",
+    title: "AI Lo-Fi Radio Generator | Chill Beats Stream",
     metaDescription: "Generate infinite generative lo-fi chillhop beats and atmospheric synth chord progression sheets. The perfect online background soundtrack for coding, writing, and sleep.",
     keywords: ["lofi radio generator", "ai sleep radio", "ambient radio station online", "dreamy radio generator", "ai lofi lyric generator"],
     headline: "Generative AI Lo-Fi Radio Station",
@@ -255,7 +255,7 @@ export const SEO_PAGES: SEOPageData[] = [
   },
   {
     path: "/ai-lyrics-generator",
-    title: "AI Lyrics Generator | Meditative Poetry & Songwriter Studio Online",
+    title: "AI Lyrics Generator | Songwriter Studio Online",
     metaDescription: "Generate nostalgic, dreamy lo-fi lyrics and emotional poetry. Read live with synchronized voice guides and ambient lofi synthesizer beats.",
     keywords: ["ai lyric generator", "emotional radio poetry", "ai nostalgic lyrics generator", "synthwave poetry generator", "dreamy song lyric maker"],
     headline: "AI Lyrics & Meditative Poetic Generator",
@@ -307,7 +307,7 @@ export const SEO_PAGES: SEOPageData[] = [
   },
   {
     path: "/owl-sounds-for-sleep",
-    title: "Owl Sounds for Sleep | Nocturnal Forest Breeze Soundboard Mixer",
+    title: "Owl Sounds for Sleep | Forest Soundboard Mixer",
     metaDescription: "Listen to relaxing night owl hooting, mountain forest breeze, chirping summer crickets, and restful theta binaural pulses. Premium sleep sound generator.",
     keywords: ["owl sounds for sleeping", "custom bird sound mixer", "forest ambience generator", "sleep ambience creator", "nature soundboard online"],
     headline: "Nocturnal Owl Sounds for Sleep & Rest",
@@ -359,7 +359,7 @@ export const SEO_PAGES: SEOPageData[] = [
   },
   {
     path: "/midnight-thoughts-journal",
-    title: "Midnight Thoughts Journal | Anonymous Writing & Therapeutic Ambient Radio",
+    title: "Midnight Thoughts Journal | Anonymous Writing",
     metaDescription: "Express your midnight thoughts, unsent messages, and feelings in our secure, private writing journal. Listen to relaxing lofi synths and real rain sounds.",
     keywords: ["midnight thoughts journal", "unsent message generator", "anonymous message to the sky", "emotional radio poetry", "nostalgic message generator", "unsent message journal"],
     headline: "Midnight Thoughts & Unsent Messages Journal",
@@ -411,7 +411,7 @@ export const SEO_PAGES: SEOPageData[] = [
   },
   {
     path: "/space-rocket-guide",
-    title: "Space Rocket Guide | How Space Rockets Work & Launch Stages",
+    title: "Space Rocket Guide | How Rockets Work & Launch",
     metaDescription: "Learn how a space rocket works, the stages of a rocket launch, and the difference between a rocket and a missile. Comprehensive Bing AEO space guide.",
     keywords: ["space rocket", "how space rockets work", "stages of a rocket launch", "space explained simply", "space rocket guide"],
     headline: "What is a Space Rocket? A Complete Visual & Acoustic Guide",
@@ -494,7 +494,7 @@ export const SEO_PAGES: SEOPageData[] = [
   },
   {
     path: "/how-space-works",
-    title: "How Space Works | Gravity, Orbit Mechanics & Cosmic Vacuum",
+    title: "How Space Works | Orbit Mechanics & Gravity",
     metaDescription: "Understand how space works, including orbital velocity, gravity in space, and how objects stay in orbit. Clear science guide for Bing AEO.",
     keywords: ["how space works", "gravity in space", "orbital velocity", "how objects stay in orbit", "space physics simply explained"],
     headline: "How Space Works: The Physics of Orbits & Cosmic Gravity",
@@ -550,7 +550,7 @@ export const SEO_PAGES: SEOPageData[] = [
   },
   {
     path: "/space-explained-simply",
-    title: "Space Explained Simply | Planets, Stars & Galaxies for Beginners",
+    title: "Space Explained Simply | Beginner Space Guide",
     metaDescription: "An easy guide explaining space simply. Learn about planets, stars, galaxies, and the scale of the cosmos. Perfect overview for Bing search.",
     keywords: ["space explained simply", "what is space", "planets and stars simply explained", "scale of the cosmos", "astronomy for beginners"],
     headline: "Space Explained Simply: A Beginner's Guide to the Cosmos",
@@ -606,7 +606,7 @@ export const SEO_PAGES: SEOPageData[] = [
   },
   {
     path: "/international-space-station",
-    title: "International Space Station (ISS) | History, Orbit & Facts",
+    title: "International Space Station (ISS) Facts & Orbit",
     metaDescription: "Explore the International Space Station (ISS), its speed, orbit altitude, scientific research, and interesting facts. Complete Bing-targeted guide.",
     keywords: ["international space station", "iss speed", "iss altitude", "space station facts", "living in space"],
     headline: "The International Space Station: Humanity's Orbiting Laboratory",
@@ -662,7 +662,7 @@ export const SEO_PAGES: SEOPageData[] = [
   },
   {
     path: "/interesting-facts-about-space",
-    title: "Interesting Facts About Space | Mind-Blowing Cosmic Trivia",
+    title: "Interesting Facts About Space | Cosmic Trivia",
     metaDescription: "Discover interesting facts about space, black holes, stars, and temperatures in the cosmos. Fun, factual, structured guide for Bing search.",
     keywords: ["interesting facts about space", "space facts", "fun space trivia", "black hole facts", "hottest planet in solar system"],
     headline: "10 Mind-Blowing & Interesting Facts About Space",
@@ -724,7 +724,7 @@ export const SEO_PAGES: SEOPageData[] = [
   },
   {
     path: "/space-waves",
-    title: "Space Waves | Cosmic Ambient Signals & Astronomy Radio",
+    title: "Space Waves | Cosmic Ambient Signals",
     metaDescription: "Listen to ambient space waves, cosmic radio frequency sweeps, and starlight chords. Learn the science of space waves and cosmic radiation. Interactive soundboard.",
     keywords: ["space waves", "cosmic signals", "space science", "astronomy and space science", "ambient space radio"],
     headline: "Space Waves & Cosmic Ambient Signals Radio",
@@ -825,7 +825,7 @@ export function getDynamicPageData(path: string): SEOPageData | null {
       
       return {
         path: `/birds/${matchedBird.id}`,
-        title: `${birdName} ${emoji} Call & Nature Sounds for Sleep & Focus | Midnight Signals`,
+        title: `${birdName} ${emoji} Call & Nature Sounds | Midnight Signals`,
         metaDescription: `Listen to soothing ${birdName} calls and forest ambience. Mix waves, crickets, wind, and lofi chord progressions with our custom browser soundboard.`,
         keywords: [
           `${birdName} call`,
@@ -899,23 +899,23 @@ export function getDynamicPageData(path: string): SEOPageData | null {
     const moodId = parts[1] ? parts[1].toLowerCase() : "chill";
 
     const soundTitles: Record<string, string> = {
-      rain: "Rainy Cozy Static",
-      ocean: "Coastal Wave Surf",
-      birds: "Forest Songbirds",
-      crickets: "Night Crickets",
-      thunderstorm: "Heavy Thunderstorm",
-      vinyl: "Nostalgic Vinyl Crackle",
-      coffeeshop: "Cozy Coffee Shop Ambience"
+      rain: "Rain",
+      ocean: "Ocean",
+      birds: "Birds",
+      crickets: "Crickets",
+      thunderstorm: "Thunder",
+      vinyl: "Vinyl",
+      coffeeshop: "Cafe"
     };
 
     const moodNames: Record<string, string> = {
-      study: "Focused Study & Coding",
-      sleep: "Deep Delta Sleep",
-      focus: "High-Cognitive Focus",
-      relax: "Late-Night Relaxation",
-      meditation: "Mindful Meditation & Yoga",
-      chill: "Lo-Fi Lounge Chill",
-      workout: "Atmospheric Workout Beats"
+      study: "Study",
+      sleep: "Sleep",
+      focus: "Focus",
+      relax: "Relax",
+      meditation: "Meditation",
+      chill: "Chill",
+      workout: "Workout"
     };
 
     if (soundTitles[soundId]) {

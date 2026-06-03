@@ -275,7 +275,7 @@ export default function App() {
   // Update dynamic titles, metas, and structured FAQs dynamically on currentPath change
   useEffect(() => {
     if (typeof document !== "undefined") {
-      let title = "Midnight Signals | AI Ambient Radio, Lofi Sleep Sound Mixer & Nature Sound Generator";
+      let title = "Midnight Signals | Lofi Radio, Sleep Sound & Nature Mixer";
       let description = "Create custom lofi radio stations with ocean waves, bird songs, rain ambience, AI lyrics and sleep-friendly soundscapes. Free online ambient sound generator.";
 
       // Update mobile-first meta tags specifically via custom helper
@@ -287,7 +287,7 @@ export default function App() {
         activePage = getDynamicPageData(currentPath);
       }
       if (!activePage && currentPath === "/science-of-lofi-focus-infographic") {
-        title = "The Science of Lo-Fi Soundscapes & Cognitive Focus | Scientific Infographic";
+        title = "Science of Lo-Fi & Focus | Scientific Infographic";
         description = "Learn how lofi rhythms, pink noise, and organic auditory features induce deep focus, attention restoration, and alleviate stress. Interactive science infographic.";
       }
 
@@ -331,7 +331,7 @@ export default function App() {
         canonicalLink.setAttribute("rel", "canonical");
         document.head.appendChild(canonicalLink);
       }
-      const baseUrl = "https://midnight-signals.cloud";
+      const baseUrl = typeof window !== "undefined" ? window.location.origin : "https://midnightsignals.ajimp340.workers.dev";
       const targetPath = activePage ? activePage.path : (currentPath || "");
       canonicalLink.setAttribute("href", `${baseUrl}${targetPath}`);
     }

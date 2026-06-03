@@ -63,9 +63,9 @@ app.get("/BingSiteAuth.xml", (req, res) => {
 });
 
 // Serve IndexNow verification key file explicitly
-app.get("/c0a876a3e5c942be818a7a8d5069f0b5.txt", (req, res) => {
+app.get("/3c1fb8dc9e5046e3abf45366cdef57d0.txt", (req, res) => {
   res.setHeader("Content-Type", "text/plain");
-  res.sendFile(path.join(process.cwd(), "public", "c0a876a3e5c942be818a7a8d5069f0b5.txt"));
+  res.sendFile(path.join(process.cwd(), "public", "3c1fb8dc9e5046e3abf45366cdef57d0.txt"));
 });
 
 // Helper to generate and automatically update sitemap.xml on disk
@@ -378,7 +378,7 @@ async function startServer() {
         const host = req.headers.host || "midnight-signals.cloud";
         
         // Match current route to dynamic SEO data
-        let title = "Midnight Signals | AI Ambient Radio, Lofi Sleep Sound Mixer & Nature Sound Generator";
+        let title = "Midnight Signals | Lofi Radio, Sleep Sound & Nature Mixer";
         let metaDescription = "Create custom lofi radio stations with ocean waves, bird songs, rain ambience, AI lyrics and sleep-friendly soundscapes. Free online ambient sound generator.";
         let keywords = ["Midnight Signals", "lo-fi music", "AI poetry", "lyric transmission", "chill starlight synthesizer", "relax sound hub", "ambient noise player"];
         
@@ -388,7 +388,7 @@ async function startServer() {
         if (!activePage && currentPath === "/science-of-lofi-focus-infographic") {
           activePage = {
             path: "/science-of-lofi-focus-infographic",
-            title: "The Science of Lo-Fi Soundscapes & Cognitive Focus | Scientific Infographic",
+            title: "Science of Lo-Fi & Focus | Scientific Infographic",
             metaDescription: "Learn how lofi rhythms, pink noise, and organic auditory features induce deep focus, attention restoration, and alleviate stress. Interactive science infographic.",
             keywords: ["science of lofi", "lofi acoustic focus", "attention restoration theory", "binaural beats science", "nature sound therapy"],
             headline: "The Science of Lo-Fi & Focus",
@@ -470,7 +470,7 @@ async function startServer() {
           "isPartOf": {
             "@type": "WebSite",
             "name": "Midnight Signals",
-            "url": "https://midnight-signals.cloud/"
+            "url": `${protocol}://${host}/`
           },
           "publisher": {
             "@type": "Organization",

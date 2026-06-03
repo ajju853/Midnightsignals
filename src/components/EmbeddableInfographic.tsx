@@ -6,7 +6,8 @@ export default function EmbeddableInfographic({ isEmbedded = false }: { isEmbedd
   const [activeFrequency, setActiveFrequency] = useState<"alpha" | "theta" | "binaural">("theta");
   const [dbLevel, setDbLevel] = useState<number>(-12);
 
-  const embedCode = `<iframe src="https://midnight-signals.cloud/embed/science-of-lofi" width="100%" height="780" style="border:none;border-radius:16px;background:#050507;" title="Science of Lofi and Focus Infographic"></iframe>`;
+  const currentOrigin = typeof window !== "undefined" ? window.location.origin : "https://midnightsignals.ajimp340.workers.dev";
+  const embedCode = `<iframe src="${currentOrigin}/embed/science-of-lofi" width="100%" height="780" style="border:none;border-radius:16px;background:#050507;" title="Science of Lofi and Focus Infographic"></iframe>`;
 
   const handleCopy = () => {
     navigator.clipboard.writeText(embedCode);
@@ -235,7 +236,7 @@ export default function EmbeddableInfographic({ isEmbedded = false }: { isEmbedd
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center text-[10px] font-mono text-zinc-500 gap-2 border-t border-white/5 pt-3">
             <span>Perfect responsive rendering inside WordPress, Wix, or custom React frameworks</span>
             <span className="flex items-center gap-1">
-              Maintained by <a href="https://midnight-signals.cloud" className="text-[#00D1FF] hover:underline flex items-center gap-0.5">Midnight Signals <ExternalLink className="w-2.5 h-2.5 text-[#00D1FF]" /></a>
+              Maintained by <a href="/" className="text-[#00D1FF] hover:underline flex items-center gap-0.5">Midnight Signals <ExternalLink className="w-2.5 h-2.5 text-[#00D1FF]" /></a>
             </span>
           </div>
         </div>

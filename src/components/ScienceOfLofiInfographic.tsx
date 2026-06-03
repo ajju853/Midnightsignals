@@ -57,7 +57,8 @@ export default function ScienceOfLofiInfographic({ isEmbedded = false }: { isEmb
 
   const currentWave = waves.find((w) => w.name === selectedWave) || waves[1];
 
-  const embedCode = `<iframe src="https://midnight-signals.cloud/embed/science-of-lofi" width="100%" height="720" style="border:none;border-radius:16px;background:#09090b;" title="The Science of Lofi & Focus Infographic"></iframe>`;
+  const currentOrigin = typeof window !== "undefined" ? window.location.origin : "https://midnightsignals.ajimp340.workers.dev";
+  const embedCode = `<iframe src="${currentOrigin}/embed/science-of-lofi" width="100%" height="720" style="border:none;border-radius:16px;background:#09090b;" title="The Science of Lofi & Focus Infographic"></iframe>`;
 
   const copyToClipboard = () => {
     navigator.clipboard.writeText(embedCode);
@@ -310,7 +311,7 @@ export default function ScienceOfLofiInfographic({ isEmbedded = false }: { isEmb
           <div className="flex items-center justify-between text-[10px] font-mono text-zinc-500 border-t border-white/5 pt-3">
             <span>Dynamic sizing supported automatically</span>
             <span className="flex items-center gap-1">
-              Powered by <a href="https://midnight-signals.cloud" className="text-[#00D1FF] hover:underline flex items-center gap-0.5">Midnight Signals <ExternalLink className="w-2.5 h-2.5 text-[#00D1FF]" /></a>
+              Powered by <a href="/" className="text-[#00D1FF] hover:underline flex items-center gap-0.5">Midnight Signals <ExternalLink className="w-2.5 h-2.5 text-[#00D1FF]" /></a>
             </span>
           </div>
         </div>
