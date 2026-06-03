@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React, { useEffect, useRef, useState, Suspense } from "react";
+import React, { useEffect, useRef, useState, Suspense, lazy } from "react";
 import {
   Play,
   Pause,
@@ -35,29 +35,27 @@ import SignalCanvas from "./components/SignalCanvas";
 import NatureSoundboard from "./components/NatureSoundboard";
 import { calmLofiPresets, LofiPreset } from "./calmLyricsPresets";
 import { SEO_PAGES, SEOPageData, generateFAQSchema, getDynamicPageData } from "./seoData";
-import ScienceOfLofiInfographic from "./components/ScienceOfLofiInfographic";
-import EmbeddableInfographic from "./components/EmbeddableInfographic";
 import { BLOG_POSTS, getBlogPost, BlogPost } from "./blogData";
-import BlogIndex from "./components/BlogIndex";
-import BlogLayout from "./components/BlogLayout";
-import { BookOpen, MapPin, ExternalLink, Flame, Compass, Heart, Share2, Clipboard, Plus } from "lucide-react";
+import { BookOpen, MapPin, ExternalLink, Flame, Compass, Heart, Share2, Clipboard, Plus, Info } from "lucide-react";
 
 // Lazy-loaded ad components for performance
 const AdsterraBanner = React.lazy(() => import("./components/AdsterraBanner"));
 
-// SaaS Premium, Contact, Compliance and Exporter systems
-import {
-  CookieConsent,
-  ContactHub,
-  AccountsSimulator,
-  ClientAccount,
-  PremiumUpgrade,
-  AdditionalPolicies,
-  FounderCard,
-  SignalExporter,
-  SignalGallery,
-  DonationSection
-} from "./components/SaaSProducts";
+// Lazy-loaded page & modal components
+const BlogIndex = lazy(() => import("./components/BlogIndex"));
+const BlogLayout = lazy(() => import("./components/BlogLayout"));
+const EmbeddableInfographic = lazy(() => import("./components/EmbeddableInfographic"));
+const CookieConsent = lazy(() => import("./components/SaaSProducts").then(m => ({ default: m.CookieConsent })));
+const ContactHub = lazy(() => import("./components/SaaSProducts").then(m => ({ default: m.ContactHub })));
+const AccountsSimulator = lazy(() => import("./components/SaaSProducts").then(m => ({ default: m.AccountsSimulator })));
+const PremiumUpgrade = lazy(() => import("./components/SaaSProducts").then(m => ({ default: m.PremiumUpgrade })));
+const AdditionalPolicies = lazy(() => import("./components/SaaSProducts").then(m => ({ default: m.AdditionalPolicies })));
+const FounderCard = lazy(() => import("./components/SaaSProducts").then(m => ({ default: m.FounderCard })));
+const SignalExporter = lazy(() => import("./components/SaaSProducts").then(m => ({ default: m.SignalExporter })));
+const SignalGallery = lazy(() => import("./components/SaaSProducts").then(m => ({ default: m.SignalGallery })));
+const DonationSection = lazy(() => import("./components/SaaSProducts").then(m => ({ default: m.DonationSection })));
+
+import { ClientAccount } from "./components/SaaSProducts";
 
 const TRANSLATIONS = {
   en: {
@@ -1702,7 +1700,9 @@ export default function App() {
   if (currentPath === "/embed/science-of-lofi") {
     return (
       <div id="midnight-lofi-embed-frame" className="w-full min-h-screen bg-zinc-950 p-4 md:p-6 flex items-center justify-center font-sans overflow-x-hidden">
-        <EmbeddableInfographic isEmbedded={true} />
+        <Suspense fallback={null}>
+          <EmbeddableInfographic isEmbedded={true} />
+        </Suspense>
       </div>
     );
   }
@@ -2004,15 +2004,18 @@ export default function App() {
         {/* MAIN STRUCTURAL RESPONSIVE GRID OR DYNAMIC SEO LANDING VIEW */}
         {/* Blog Index Page */}
         {currentPath === "/blog" ? (
-          <BlogIndex
-            onNavigate={(path: string) => {
-              setCurrentPath(path);
-              window.history.pushState({}, "", path);
-              window.scrollTo({ top: 0, behavior: "smooth" });
-            }}
-          />
+          <Suspense fallback={null}>
+            <BlogIndex
+              onNavigate={(path: string) => {
+                setCurrentPath(path);
+                window.history.pushState({}, "", path);
+                window.scrollTo({ top: 0, behavior: "smooth" });
+              }}
+            />
+          </Suspense>
         ) : currentPath.startsWith("/blog/") && getBlogPost(currentPath.replace("/blog/", "")) ? (
-          <BlogLayout
+          <Suspense fallback={null}>
+            <BlogLayout
             post={getBlogPost(currentPath.replace("/blog/", ""))!}
             onNavigate={(path: string) => {
               setCurrentPath(path);
@@ -2061,8 +2064,9 @@ export default function App() {
               window.history.pushState({}, "", "/");
               window.scrollTo({ top: 0, behavior: "smooth" });
               speakText(`Loaded preset: ${blogPost.presetConfig.customTitle || "Blog Preset"}. Audio synthesis activated.`);
-            }}
-          />
+              }}
+            />
+          </Suspense>
         ) : currentPath && !matchedSEOPage ? (
           <div className="relative z-20 max-w-2xl mx-auto py-16 px-6 font-sans animate-fadeIn text-center bg-zinc-950/80 p-8 md:p-12 rounded-3xl border border-rose-500/10 backdrop-blur-xl shadow-2xl flex flex-col items-center justify-center gap-6">
             <div className="relative">
@@ -2220,7 +2224,9 @@ export default function App() {
               {/* Interactive Infographic asset injection */}
               {(currentPath === "/science-of-lofi-focus-infographic" || currentPath === "/lofi-radio-generator") && (
                 <div className="border-t border-white/5 pt-8 max-w-3xl">
-                  <EmbeddableInfographic isEmbedded={false} />
+                  <Suspense fallback={null}>
+                    <EmbeddableInfographic isEmbedded={false} />
+                  </Suspense>
                 </div>
               )}
 
@@ -3614,28 +3620,32 @@ export default function App() {
                   </form>
                   
                   {/* Signal Exporter and downloadable postcard studio for poets */}
-                  <SignalExporter 
-                    currentSignalText={echoHistory.length > 0 ? echoHistory[0].userMessage : ""}
-                    currentResponseText={echoHistory.length > 0 ? echoHistory[0].reply : ""}
-                  />
+                  <Suspense fallback={null}>
+                    <SignalExporter 
+                      currentSignalText={echoHistory.length > 0 ? echoHistory[0].userMessage : ""}
+                      currentResponseText={echoHistory.length > 0 ? echoHistory[0].reply : ""}
+                    />
+                  </Suspense>
 
                   {/* Signal Gallery Feed for trending broadcasts */}
                   <div className="border-t border-white/5 pt-3.5 space-y-1">
-                    <SignalGallery onTuneIn={(text, response, vibe) => {
-                      setUnsentMessageInput(text);
-                      setCurrentVibe(vibe);
-                      
-                      const tunedEcho: EchoItem = {
-                        id: `gal-tune-${Date.now()}`,
-                        userMessage: text,
-                        reply: response,
-                        verse: "Transmitted across public stellar channels.",
-                        vibe: vibe,
+                    <Suspense fallback={null}>
+                      <SignalGallery onTuneIn={(text, response, vibe) => {
+                        setUnsentMessageInput(text);
+                        setCurrentVibe(vibe);
+                        
+                        const tunedEcho: EchoItem = {
+                          id: `gal-tune-${Date.now()}`,
+                          userMessage: text,
+                          reply: response,
+                          verse: "Transmitted across public stellar channels.",
+                          vibe: vibe,
                         timestamp: new Date().toLocaleTimeString()
                       };
                       setEchoHistory(prev => [tunedEcho, ...prev]);
                       speakText(`Tuned in to global signal broadcast: ${response}`);
                     }} />
+                    </Suspense>
                   </div>
                 </div>
               )}
@@ -3934,7 +3944,9 @@ export default function App() {
                       </div>
 
                       {/* Donation section directly linked */}
-                      <DonationSection />
+                      <Suspense fallback={null}>
+                        <DonationSection />
+                      </Suspense>
                     </div>
                   )}
 
@@ -3959,7 +3971,9 @@ export default function App() {
 
                   {/* SEPARATE COOKIE POLICY TABS */}
                   {activeLegalTab === "cookie" && (
-                    <AdditionalPolicies activePolicyTab="cookie-policy" setActivePolicyTab={setActivePolicyTab} />
+                    <Suspense fallback={null}>
+                      <AdditionalPolicies activePolicyTab="cookie-policy" setActivePolicyTab={setActivePolicyTab} />
+                    </Suspense>
                   )}
 
                   {/* TERMS OF LICENSE */}
@@ -3982,17 +3996,22 @@ export default function App() {
 
                   {/* CONTACT US FEED */}
                   {activeLegalTab === "contact" && (
-                    <ContactHub />
+                    <Suspense fallback={null}>
+                      <ContactHub />
+                    </Suspense>
                   )}
 
                   {/* FOUNDER PROFILE PROFILE CARD */}
                   {activeLegalTab === "founder" && (
-                    <FounderCard />
+                    <Suspense fallback={null}>
+                      <FounderCard />
+                    </Suspense>
                   )}
 
                   {/* PRO PREMIUM MEMBERSHIP AND BILLING */}
                   {activeLegalTab === "pro" && (
-                    <PremiumUpgrade 
+                    <Suspense fallback={null}>
+                      <PremiumUpgrade 
                       userTier={activeAccount ? activeAccount.tier : "Unlimited Free"}
                       onUpgrade={(plan) => {
                         const updatedAcc: ClientAccount = {
@@ -4007,11 +4026,14 @@ export default function App() {
                         speakText("Congratulations! Your Midnight Signals Pro Sandbox License is now active!");
                       }}
                     />
+                    </Suspense>
                   )}
 
                   {/* COMPLIANCE PAGES AND DYNAMIC ACCESSIBILITY PANELS */}
                   {["disclaimer", "dmca", "accessibility", "security"].includes(activeLegalTab) && (
-                    <AdditionalPolicies activePolicyTab={activePolicyTab} setActivePolicyTab={setActivePolicyTab} />
+                    <Suspense fallback={null}>
+                      <AdditionalPolicies activePolicyTab={activePolicyTab} setActivePolicyTab={setActivePolicyTab} />
+                    </Suspense>
                   )}
 
                 </div>
@@ -4053,7 +4075,9 @@ export default function App() {
         </Suspense>
 
         {/* COOKIE PRIVACY CONSENT BANNER */}
-        <CookieConsent onSave={(prefs) => console.log("Cookies preferences loaded:", prefs)} />
+        <Suspense fallback={null}>
+          <CookieConsent onSave={(prefs) => console.log("Cookies preferences loaded:", prefs)} />
+        </Suspense>
 
         {/* Mobile Sidebar backdrop */}
         {(showSoundConsole || showEchoTerminal) && (
