@@ -177,7 +177,15 @@ app.get(["/sitemap.xml", "/api/sitemap.xml"], (req, res) => {
 // Serve robots.txt for search indexing configurations
 app.get("/robots.txt", (req, res) => {
   res.setHeader("Content-Type", "text/plain");
-  res.sendFile(path.join(process.cwd(), "public", "robots.txt"));
+  const robotsPath = path.join(process.cwd(), "public", "robots.txt");
+  fs.readFile(robotsPath, "utf8", (err, content) => {
+    if (err) {
+      return res.sendFile(robotsPath);
+    }
+    const host = req.headers.host || "midnight-signals.cloud";
+    const modifiedContent = content.replace(/midnightsignals\.ajimp340\.workers\.dev/g, host);
+    res.send(modifiedContent);
+  });
 });
 
 // Serve site.webmanifest

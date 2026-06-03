@@ -1672,9 +1672,15 @@ export default function App() {
               </span>
               Now Receiving Midnight Signals
             </div>
-            <h1 className="font-serif italic text-4xl md:text-5xl font-black text-white hover:text-indigo-200 transition-colors tracking-tight mt-2.5">
-              {activeSongTitle}
-            </h1>
+            {currentPath ? (
+              <div className="font-serif italic text-4xl md:text-5xl font-black text-white hover:text-indigo-200 transition-colors tracking-tight mt-2.5 select-none">
+                {activeSongTitle}
+              </div>
+            ) : (
+              <h1 className="font-serif italic text-4xl md:text-5xl font-black text-white hover:text-indigo-200 transition-colors tracking-tight mt-2.5">
+                {activeSongTitle}
+              </h1>
+            )}
           </div>
           
           <div className="text-left md:text-right font-mono text-zinc-500 text-xs w-full md:w-auto border-l md:border-l-0 md:border-r border-white/10 pl-4 md:pl-0 md:pr-4 py-1 flex flex-col md:items-end gap-3">
@@ -1981,9 +1987,9 @@ export default function App() {
                 <span className="text-[10px] font-mono tracking-[0.25em] uppercase text-[#00D1FF] block font-black">
                   🌌 MEDITATIVE LATE-NIGHT FREQUENCY
                 </span>
-                <h2 className={`text-3xl md:text-5xl font-serif italic font-black bg-gradient-to-r ${matchedSEOPage.accentColor} bg-clip-text text-transparent leading-tight tracking-tight`}>
+                <h1 className={`text-3xl md:text-5xl font-serif italic font-black bg-gradient-to-r ${matchedSEOPage.accentColor} bg-clip-text text-transparent leading-tight tracking-tight`}>
                   {matchedSEOPage.headline}
-                </h2>
+                </h1>
                 <p className="text-zinc-400 text-xs md:text-sm leading-relaxed tracking-wide max-w-2xl font-light">
                   {matchedSEOPage.subheading}
                 </p>
@@ -2036,9 +2042,9 @@ export default function App() {
 
                 {matchedSEOPage.sections.map((sec, idx) => (
                   <div key={idx} className="space-y-3 pt-2">
-                    <h4 className="text-xs font-semibold text-white tracking-wide uppercase font-mono">
+                    <h2 className="text-xs font-semibold text-white tracking-wide uppercase font-mono">
                       {sec.title}
-                    </h4>
+                    </h2>
                     {sec.paragraphs.map((p, pIdx) => (
                       <p key={pIdx} className="text-zinc-450 font-light font-sans text-[11px]">
                         {p}
@@ -2059,17 +2065,17 @@ export default function App() {
               <div className="space-y-4 border-t border-white/5 pt-8 max-w-3xl">
                 <div className="flex items-center gap-2 mb-2">
                   <Flame className="w-4 h-4 text-emerald-400 animate-pulse" />
-                  <h3 className="text-[10px] font-mono uppercase tracking-widest text-white font-bold">
+                  <h2 className="text-[10px] font-mono uppercase tracking-widest text-white font-bold">
                     Frequently Asked Questions (FAQ)
-                  </h3>
+                  </h2>
                 </div>
 
                 <div className="space-y-3">
                   {matchedSEOPage.faqs.map((faq, idx) => (
                     <div key={idx} className="p-4 rounded-xl bg-zinc-950 border border-white/5 space-y-2 text-left">
-                      <h5 className="font-semibold text-xs text-white uppercase font-mono tracking-wide">
+                      <h3 className="font-semibold text-xs text-white uppercase font-mono tracking-wide">
                         Q: {faq.question}
-                      </h5>
+                      </h3>
                       <p className="text-zinc-400 font-light text-[11px]">
                         A: {faq.answer}
                       </p>
