@@ -37,6 +37,8 @@ const serverModDate = getFileModDate("server.ts");
 let xml = `<?xml version="1.0" encoding="UTF-8"?>\n`;
 xml += `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n`;
 
+const sitemapUrls: string[] = [];
+
 // 1. Homepage
 xml += `  <url>\n`;
 xml += `    <loc>${baseUrl}/</loc>\n`;
@@ -44,6 +46,7 @@ xml += `    <lastmod>${homepageModDate}</lastmod>\n`;
 xml += `    <changefreq>daily</changefreq>\n`;
 xml += `    <priority>1.0</priority>\n`;
 xml += `  </url>\n`;
+sitemapUrls.push(`${baseUrl}/`);
 
 // 2. Interactive Science Infographic Page (Linkable Asset)
 xml += `  <url>\n`;
@@ -52,6 +55,7 @@ xml += `    <lastmod>${infographicModDate}</lastmod>\n`;
 xml += `    <changefreq>weekly</changefreq>\n`;
 xml += `    <priority>0.9</priority>\n`;
 xml += `  </url>\n`;
+sitemapUrls.push(`${baseUrl}/science-of-lofi-focus-infographic`);
 
 // 3. Dynamic Curated SEO Pages
 for (const page of SEO_PAGES) {
@@ -61,6 +65,7 @@ for (const page of SEO_PAGES) {
   xml += `    <changefreq>weekly</changefreq>\n`;
   xml += `    <priority>0.8</priority>\n`;
   xml += `  </url>\n`;
+  sitemapUrls.push(`${baseUrl}${page.path}`);
 }
 
 // 3b. Programmatic Bird Pages
@@ -71,6 +76,7 @@ for (const bird of BIRD_PRESETS) {
   xml += `    <changefreq>weekly</changefreq>\n`;
   xml += `    <priority>0.7</priority>\n`;
   xml += `  </url>\n`;
+  sitemapUrls.push(`${baseUrl}/birds/${bird.id}`);
 }
 
 // 3c. Programmatic Lofi Sound/Mood combinations
@@ -85,6 +91,7 @@ for (const sound of sounds) {
   xml += `    <changefreq>weekly</changefreq>\n`;
   xml += `    <priority>0.7</priority>\n`;
   xml += `  </url>\n`;
+  sitemapUrls.push(`${baseUrl}/lofi/${sound}`);
 
   // Sound + Mood combinations
   for (const mood of moods) {
@@ -94,6 +101,7 @@ for (const sound of sounds) {
     xml += `    <changefreq>weekly</changefreq>\n`;
     xml += `    <priority>0.7</priority>\n`;
     xml += `  </url>\n`;
+    sitemapUrls.push(`${baseUrl}/lofi/${sound}/${mood}`);
   }
 }
 
@@ -121,6 +129,7 @@ for (const path of localizedPaths) {
   xml += `    <changefreq>weekly</changefreq>\n`;
   xml += `    <priority>0.7</priority>\n`;
   xml += `  </url>\n`;
+  sitemapUrls.push(`${baseUrl}${path}`);
 }
 
 // 4. Custom Combo Presets
@@ -131,6 +140,7 @@ for (const comboPath of combos) {
   xml += `    <changefreq>weekly</changefreq>\n`;
   xml += `    <priority>0.7</priority>\n`;
   xml += `  </url>\n`;
+  sitemapUrls.push(`${baseUrl}${comboPath}`);
 }
 
 xml += `</urlset>`;
@@ -150,6 +160,9 @@ try {
 
   // Generate a valid high-contrast 32x32 pixels favicon.ico
   generateFavicon();
+
+  // Async trigger IndexNow ping to automatically index new pages
+  pingIndexNow(sitemapUrls);
 } catch (error) {
   console.error("Error generating sitemap.xml or favicon.ico:", error);
 }
@@ -244,4 +257,35 @@ function generateFavicon() {
   const fileBuffer = Buffer.concat([header, dirEntry, dbHeader, pixelData, andMask]);
   fs.writeFileSync(faviconPath, fileBuffer);
   console.log("Successfully generated high-contrast glowing 32x32 favicon.ico at", faviconPath);
+}
+
+async function pingIndexNow(urls: string[]) {
+  const host = baseUrl ? new URL(baseUrl).hostname : "midnightsignals.ajimp340.workers.dev";
+  const key = "c0a876a3e5c942be818a7a8d5069f0b5";
+  const keyLocation = `${baseUrl}/${key}.txt`;
+  
+  console.log(`[IndexNow] Pinging engines for ${urls.length} URLs on host: ${host}...`);
+  try {
+    const response = await fetch("https://api.indexnow.org/indexnow", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json; charset=utf-8"
+      },
+      body: JSON.stringify({
+        host,
+        key,
+        keyLocation,
+        urlList: urls
+      })
+    });
+    
+    if (response.ok) {
+      console.log("[IndexNow] Successfully notified search engines of sitemap changes.");
+    } else {
+      const text = await response.text();
+      console.warn(`[IndexNow] API returned status ${response.status}: ${text}`);
+    }
+  } catch (err) {
+    console.error("[IndexNow] Failed to ping IndexNow API:", err);
+  }
 }

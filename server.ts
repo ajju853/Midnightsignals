@@ -62,6 +62,12 @@ app.get("/BingSiteAuth.xml", (req, res) => {
   res.sendFile(path.join(process.cwd(), "public", "BingSiteAuth.xml"));
 });
 
+// Serve IndexNow verification key file explicitly
+app.get("/c0a876a3e5c942be818a7a8d5069f0b5.txt", (req, res) => {
+  res.setHeader("Content-Type", "text/plain");
+  res.sendFile(path.join(process.cwd(), "public", "c0a876a3e5c942be818a7a8d5069f0b5.txt"));
+});
+
 // Helper to generate and automatically update sitemap.xml on disk
 export function generateAndSaveSitemap(customBaseUrl?: string) {
   const combos = [
