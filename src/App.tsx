@@ -44,6 +44,7 @@ const AdsterraBanner = React.lazy(() => import("./components/AdsterraBanner"));
 // Lazy-loaded page & modal components
 const BlogIndex = lazy(() => import("./components/BlogIndex"));
 const BlogLayout = lazy(() => import("./components/BlogLayout"));
+const CreateLyrics = lazy(() => import("./components/CreateLyrics"));
 const EmbeddableInfographic = lazy(() => import("./components/EmbeddableInfographic"));
 const CookieConsent = lazy(() => import("./components/SaaSProducts").then(m => ({ default: m.CookieConsent })));
 const ContactHub = lazy(() => import("./components/SaaSProducts").then(m => ({ default: m.ContactHub })));
@@ -680,6 +681,36 @@ export default function App() {
   useEffect(() => {
     if (typeof window !== "undefined") {
       const searchParams = new URL(window.location.href).searchParams;
+      const loadLyricsTitle = searchParams.get("loadLyrics");
+      if (loadLyricsTitle) {
+        try {
+          const saved = localStorage.getItem("midnight_mix_lyrics_draft");
+          if (saved) {
+            const parsed = JSON.parse(saved);
+            if (parsed.title) setActiveSongTitle(parsed.title);
+            const lines: string[] = [];
+            for (const section of ["verse1", "chorus", "verse2", "bridge", "outro"]) {
+              if (parsed[section]?.trim()) lines.push(parsed[section].trim());
+            }
+            if (lines.length > 0) {
+              const startTime = 5.0;
+              const endTime = 200.0;
+              const step = (endTime - startTime) / Math.max(1, lines.length - 1 || 1);
+              const lyricLines = lines.map((text: string, idx: number) => ({
+                id: 7000 + idx,
+                text,
+                time: parseFloat((startTime + idx * step).toFixed(1)),
+                duration: parseFloat(Math.max(2.5, step - 0.5).toFixed(1)),
+                section: idx === 0 ? "Verse" : idx === lines.length - 1 ? "Outro" : "Chorus",
+              }));
+              setActiveLyrics(lyricLines);
+            }
+            window.history.replaceState({}, "", "/");
+            setCurrentPath("");
+          }
+        } catch {}
+        return;
+      }
       if (searchParams.get("share") === "true") {
         const queryVibe = searchParams.get("vibe") as VibeType;
         const queryRain = searchParams.get("rain");
@@ -1704,6 +1735,19 @@ export default function App() {
           <EmbeddableInfographic isEmbedded={true} />
         </Suspense>
       </div>
+    );
+  }
+
+  if (currentPath === "/create/lyrics") {
+    return (
+      <Suspense fallback={null}>
+        <CreateLyrics
+          onNavigate={(path: string) => {
+            setCurrentPath(path === "/" ? "" : path);
+            window.history.pushState({}, "", path);
+          }}
+        />
+      </Suspense>
     );
   }
 

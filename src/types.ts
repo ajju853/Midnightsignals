@@ -39,3 +39,30 @@ export interface EchoItem {
   vibe: VibeType;
   timestamp: string;
 }
+
+// Mix creation schema — saved to localStorage, shareable via URL
+export interface MixLyrics {
+  title: string;
+  verse1: string;
+  chorus: string;
+  verse2: string;
+  bridge: string;
+  outro: string;
+}
+
+export interface MixData {
+  id: string;
+  name: string;
+  lyrics: MixLyrics;
+  voice: { type: string; speed: number; pitch: number };
+  birds: { selected: string[]; volumes: number[]; timing: string };
+  soundscape: {
+    rain: number;
+    ocean: number;
+    wind: number;
+    brook: number;
+    lofi: { style: string; bpm: number };
+    binaural: string;
+  };
+  createdAt: number;
+}

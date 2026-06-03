@@ -513,6 +513,12 @@ async function startServer() {
           metaDescription = "Interactive widget showing lofi acoustic curves, cognitive rest patterns, and brain wave bands.";
           isMatched = true;
         }
+
+        if (!activePage && currentPath === "/create/lyrics") {
+          title = "Create Your Lyric | Write Your Own Lofi Song | Midnight Signals";
+          metaDescription = "Write your own lofi lyrics — title, verses, chorus, bridge and outro. Save drafts and preview in the Midnight Signals mixer.";
+          isMatched = true;
+        }
         
         if (activePage) {
           isMatched = true;
