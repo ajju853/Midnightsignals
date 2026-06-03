@@ -94,10 +94,56 @@ const SOUNDBOARD_TRANSLATIONS = {
     coreTitle: "🌲 बुनियादी वन परतें",
     advancedTitle: "💨 उन्नत मौसम परतें",
     emptyForest: "कोई सक्रिय तत्व नहीं। कस्टम मिश्रण करने के लिए 'निष्क्रिय दिखाएं' चालू करें..."
+  },
+  nl: {
+    sceneryTitle: "Atmosferisch Landschap & Visualisator Modus",
+    presetsTitle: "🏆 Snel Natuur Presets",
+    soundscapeBoard: "Procedurele Soundscapes Bord",
+    searchPlaceholder: "Zoek 500+ vogelpresets...",
+    showZeroPl: "Toon inactieve kanalen",
+    hideZeroPl: "Verberg inactieve kanalen",
+    volume: "Volume",
+    sleepTimer: "Slaaptimer",
+    minut: "MIN",
+    infinite: "ONEINDIGE LOOP",
+    customAlert: "Aangepaste timer toegevoegd",
+    logsTitle: "LIVE PROCEDURELE TELEMETRIE LOGS",
+    soundEnginePaused: "Audio loop engine is gepauzeerd.",
+    soundEnginePlaying: "Procedurele audio engine draait.",
+    ambientVedic: "🇮🇳 Indiase Vedische Scenery",
+    canopySea: "🇸🇬/🇲🇾 ZO-Aziatisch Bladerdak",
+    hongKongVibe: "🇭🇰 Hong Kong Natuur Scenery",
+    belgianArdennes: "🇧🇪 Belgisch Ardennenbos",
+    coreTitle: "🌲 Basis Boslagen",
+    advancedTitle: "💨 Geavanceerde Weerlagen",
+    emptyForest: "Geen actieve elementen. Schakel 'Toon inactieve' in om lagen te mixen..."
+  },
+  fr: {
+    sceneryTitle: "Paysage Atmosphérique & Mode Visualiseur",
+    presetsTitle: "🏆 Préréglages Nature Rapides",
+    soundscapeBoard: "Paysages Sonores Procéduraux",
+    searchPlaceholder: "Rechercher 500+ préréglages d'oiseaux...",
+    showZeroPl: "Afficher les canaux inactifs",
+    hideZeroPl: "Masquer les canaux inactifs",
+    volume: "Volume",
+    sleepTimer: "Minuteur de sommeil",
+    minut: "MIN",
+    infinite: "BOUCLE INFINIE",
+    customAlert: "Minuteur personnalisé ajouté",
+    logsTitle: "LOGS DE TÉLÉMÉTRIE PROCÉDURALE EN DIRECT",
+    soundEnginePaused: "Le moteur de boucle audio est en pause.",
+    soundEnginePlaying: "Le moteur audio procédural fonctionne.",
+    ambientVedic: "🇮🇳 Scène Védique Indienne",
+    canopySea: "🇸🇬/🇲🇾 Canopée d'Asie du Sud-Est",
+    hongKongVibe: "🇭🇰 Scène Naturelle de Hong Kong",
+    belgianArdennes: "🇧🇪 Forêt des Ardennes Belges",
+    coreTitle: "🌲 Couches Forestières de Base",
+    advancedTitle: "💨 Couches Météo Avancées",
+    emptyForest: "Aucun élément actif. Activez 'Afficher inactifs' pour mélanger des couches..."
   }
 };
 
-export default function NatureSoundboard({ interfaceLanguage = "en" }: { interfaceLanguage?: "en" | "de" | "hi" }) {
+export default function NatureSoundboard({ interfaceLanguage = "en" }: { interfaceLanguage?: "en" | "de" | "hi" | "nl" | "fr" }) {
   const [isPlaying, setIsPlaying] = useState(false);
   const [showGuide, setShowGuide] = useState<boolean>(true); // Let it default to open so they can see this beautiful new directory right away!
   const [activeGuideTab, setActiveGuideTab] = useState<string>("mixes");

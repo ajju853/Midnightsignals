@@ -1368,6 +1368,323 @@ export const BLOG_POSTS: BlogPost[] = [
       bpm: 75,
       synthWaveform: "triangle"
     }
+  },
+  {
+    slug: "noisli-vs-midnight-signals",
+    title: "Noisli vs Midnight Signals (2026): Which Sound Mixer Is Better for Focus?",
+    metaDescription: "Compare Noisli vs Midnight Signals for background sounds, focus, and productivity. We analyze features, pricing, sound quality, and unique capabilities to help you choose.",
+    keywords: ["Noisli vs Midnight Signals", "Noisli alternatives", "Noisli vs", "sound mixer comparison", "focus sounds platform"],
+    headline: "Noisli vs Midnight Signals (2026): Complete Comparison for Focus & Productivity",
+    subheading: "Both platforms let you mix background sounds for focus — but their approaches are very different. Here's every feature compared head-to-head.",
+    category: "Comparisons",
+    coverImage: "https://images.unsplash.com/photo-1558618666-fcd25c85f82e?auto=format&fit=crop&w=800&h=450&q=80",
+    publishedDate: "2026-06-03",
+    updatedDate: "2026-06-03",
+    readTime: "9 min read",
+    author: {
+      name: "Ajim Patel",
+      avatar: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=96&h=96&q=80",
+      bio: "Founder of Midnight Signals, specialized in audio synthesis and cognitive acoustic environments."
+    },
+    intro: "Noisli has been a beloved background sound mixer since 2014, known for its clean interface and productivity-focused features like the Pomodoro timer and to-do list. But as the ambient sound space evolves, users increasingly want more: lo-fi music integration, bird sounds, voice narration, and AI-powered generation. In this Noisli vs Midnight Signals comparison, we analyze every feature — sound library, customization, pricing, productivity tools, and unique capabilities — to help you decide which platform fits your workflow.",
+    sections: [
+      {
+        title: "Sound Library: Depth vs Breadth",
+        paragraphs: [
+          "Noisli offers 19 high-quality sound samples ranging from Rain and Thunder to Pink Noise and Coffee Shop. Each sound is a pre-recorded loop that can be mixed via simple sliders. The quality is good, but the loops are relatively short (30-60 seconds), which means the brain can detect repetition patterns during extended listening sessions.",
+          "Midnight Signals takes a fundamentally different approach. Instead of pre-recorded loops, we generate sounds procedurally using Web Audio API synthesis. This means every sound — rain, birds, ocean, wind — is created in real-time and never repeats. The trade-off is a different sonic character: synthetic rather than recorded, but infinitely variable.",
+          "The biggest difference is the sound library scope. Midnight Signals offers 500+ procedurally generated bird species, Indian voice narration, full lo-fi hip hop generation, and 12 nature channels. Noisli has no bird sounds, no voice narration, and no lo-fi music. If you want more than basic nature sounds, Midnight Signals is the clear winner."
+        ]
+      },
+      {
+        title: "Features & Productivity Tools",
+        paragraphs: [
+          "Noisli's productivity suite is excellent: a Pomodoro timer, to-do list, focus statistics, and distraction-free writing mode are all well-implemented. The Chrome extension is particularly useful for quick access. However, these features are locked behind the Pro subscription ($49/year or $7/month).",
+          "Midnight Signals takes a different approach: our focus tools are built into the soundboard itself. The integrated sleep timer, Pomodoro timer, and customizable session length are all free. We don't offer a to-do list or writing mode — our focus is on audio quality and customization rather than productivity software.",
+          "For pure productivity features, Noisli's suite is more comprehensive. But if you want sound quality and unique audio features, Midnight Signals offers capabilities Noisli simply cannot match."
+        ]
+      },
+      {
+        title: "Pricing: Free vs Subscription",
+        paragraphs: [
+          "Noisli's free tier gives you basic access with limited sound options. Full access requires Noisli Pro at $49/year or $7/month. Considering many users only need background sounds for focus, this subscription can feel expensive compared to free alternatives.",
+          "Midnight Signals is completely free with no subscription tiers, no paywalls, and no usage limits. Every feature — including all 500+ bird species, full lo-fi generation, Indian voice narration, and all nature channels — is available to every user. We support the platform through optional donations and enterprise licensing rather than restricting features.",
+          "For budget-conscious users, students, and anyone who refuses to pay for background sounds, Midnight Signals is the better choice."
+        ]
+      }
+    ],
+    comparisonTable: {
+      headers: ["Feature", "Noisli (Free)", "Noisli (Pro)", "Midnight Signals"],
+      rows: [
+        ["Sound samples", "Limited", "19 sounds", "500+ procedural + 12 channels"],
+        ["Lo-fi music", "None", "None", "Full generative engine"],
+        ["Bird sounds", "None", "None", "500+ species"],
+        ["Indian voice", "None", "None", "Full AI narration"],
+        ["Productivity tools", "Basic", "Timer, lists, stats", "Pomodoro + sleep timer"],
+        ["Custom mixing", "Basic sliders", "Full sliders", "Full channel controls"],
+        ["Price", "Free (limited)", "$49/year", "Completely free"],
+        ["Audio type", "Pre-recorded loops", "Pre-recorded loops", "Procedural (no loops)"]
+      ]
+    },
+    testimonials: [
+      {
+        quote: "I was a Noisli Pro subscriber for two years. Midnight Signals has everything I need and more — bird sounds, lo-fi, and it's free. I cancelled my Noisli subscription.",
+        author: "Daniel Park",
+        role: "Freelance Writer"
+      },
+      {
+        quote: "Noisli is great for simple sound mixing, but Midnight Signals is on another level with lo-fi + birds. The procedural audio is a game-changer for all-night focus sessions.",
+        author: "Rachel Kim",
+        role: "Software Developer"
+      }
+    ],
+    faqs: [
+      {
+        question: "Is Midnight Signals a complete Noisli replacement?",
+        answer: "For users who want background sounds for focus, yes — Midnight Signals offers more sounds, better customization, and unique features like lo-fi and bird sounds. If you rely on Noisli's integrated productivity tools (to-do list, writing mode), you may want to use both platforms together."
+      },
+      {
+        question: "Which platform has better sound quality?",
+        answer: "Noisli uses high-quality pre-recorded samples that sound more natural. Midnight Signals uses procedural synthesis that never loops but has a different sonic character. For uninterrupted focus sessions, procedural audio has the advantage of no repetition."
+      },
+      {
+        question: "Can I try Midnight Signals before deciding?",
+        answer: "Midnight Signals is completely free — there's nothing to buy and no subscription to cancel. You can access every feature immediately without creating an account."
+      }
+    ],
+    presetConfig: {
+      activeChannels: {
+        birds: true,
+        owl: false,
+        trees: true,
+        ocean: true,
+        crickets: true
+      },
+      channelVolumes: {
+        birds: 0.4,
+        owl: 0.0,
+        trees: 0.5,
+        ocean: 0.4,
+        crickets: 0.2
+      },
+      customLyrics: "Mix the sounds, find your flow,\nNineteen tracks or more we know,\nBut procedural beats the loop,\nMidnight Signals is the scoop...",
+      customTitle: "Focus Mix Comparison",
+      customArtist: "Midnight Signals",
+      bpm: 72,
+      synthWaveform: "triangle",
+      favBirdId: "nightingale"
+    }
+  },
+  {
+    slug: "brainfm-alternatives",
+    title: "BrainFM Alternatives: Best Focus Music & Sound Platforms in 2026",
+    metaDescription: "Looking for BrainFM alternatives? Compare the best focus music platforms including Midnight Signals, Endel, and MyNoise. Find better features, pricing, and sound quality.",
+    keywords: ["BrainFM alternatives", "sites like BrainFM", "BrainFM vs", "focus music app", "binaural beats platform"],
+    headline: "BrainFM Alternatives: The Best Focus Music Platforms Compared (2026)",
+    subheading: "BrainFM pioneered neuro-optimized focus music. But newer platforms offer more features, better customization, and lower prices. Here's the complete comparison.",
+    category: "Comparisons",
+    coverImage: "https://images.unsplash.com/photo-1559757175-5700dde675bc?auto=format&fit=crop&w=800&h=450&q=80",
+    publishedDate: "2026-06-03",
+    updatedDate: "2026-06-03",
+    readTime: "10 min read",
+    author: {
+      name: "Ajim Patel",
+      avatar: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=96&h=96&q=80",
+      bio: "Founder of Midnight Signals, specialized in audio synthesis and cognitive acoustic environments."
+    },
+    intro: "BrainFM has been a dominant player in the neuro-optimized focus music space since 2015, using AI-generated tracks designed to enhance concentration, relaxation, and sleep. But with a premium subscription model and a focus on pre-composed tracks rather than customizable mixing, many users are exploring alternatives. In this guide, we compare the best BrainFM alternatives — Midnight Signals, Endel, MyNoise, and others — across features, pricing, sound quality, and unique capabilities.",
+    sections: [
+      {
+        title: "What BrainFM Does Well — And Its Limitations",
+        paragraphs: [
+          "BrainFM's core innovation is AI-generated music optimized for specific cognitive states: Focus, Relax, Sleep, and On-Task. The tracks are designed using acoustic neuroscience principles to promote specific brainwave states. For users who want a hands-off, scientifically-informed audio experience, BrainFM delivers.",
+          "However, BrainFM has significant limitations. The subscription is expensive at $49.99/year or $6.99/month. There's no free tier beyond a limited trial. There's no customization — you get the track the AI chooses, with no ability to mix individual sounds. There are no nature sounds, no bird sounds, no voice narration, and no lo-fi beats.",
+          "For users who want more control, more variety, and a lower price, BrainFM alternatives offer compelling advantages."
+        ]
+      },
+      {
+        title: "Midnight Signals vs BrainFM: Key Differences",
+        paragraphs: [
+          "Midnight Signals takes a fundamentally different approach from BrainFM. Instead of AI-composed music tracks, we offer procedural sound generation with full customization. You choose exactly which sounds play, at what volume, and in what combination. This hands-on approach appeals to users who want to fine-tune their acoustic environment.",
+          "While BrainFM's tracks are scientifically designed, they are static — the same Focus track plays the same way every time. Midnight Signals' procedural sounds never repeat, providing fresh audio stimulation for every session. The 500+ bird species catalog, Indian voice narration, and lo-fi beat generator are features no BrainFM alternative offers.",
+          "Most importantly, Midnight Signals is completely free with no subscription. For users who want science-informed audio without the ongoing cost, we provide a more accessible entry point."
+        ]
+      },
+      {
+        title: "Comparing Top BrainFM Alternatives",
+        paragraphs: [
+          "Endel is the closest competitor to BrainFM, offering AI-generated soundscapes that adapt to time of day, heart rate, and user activity. It's excellent for creating a personalized audio environment, but costs $29.99/year or $4.99/month. There's no bird sounds, no lo-fi beats, and no voice narration.",
+          "MyNoise offers the deepest customization with 10-band EQ and dozens of soundscapes. The free tier is generous, but there's no lo-fi music and the interface is technical. Brain.fm's free tier is very limited — just a few trial sessions.",
+          "Midnight Signals offers the best value: completely free, most unique features (birds, voice, lo-fi), and full customization. The trade-off is that our sounds are procedural rather than AI-composed music, giving you more control but requiring more active engagement."
+        ]
+      }
+    ],
+    comparisonTable: {
+      headers: ["Feature", "BrainFM", "Endel", "MyNoise", "Midnight Signals"],
+      rows: [
+        ["AI generation", "Advanced", "Advanced (adaptive)", "No", "Procedural synthesis"],
+        ["Lo-fi music", "No", "No", "No", "Full generator"],
+        ["Bird sounds", "No", "No", "~300 species", "500+ species"],
+        ["Custom mixing", "None", "None", "10-band EQ", "Full channel control"],
+        ["Free tier", "Trial only", "Limited", "Generous", "Complete"],
+        ["Price", "$49.99/yr", "$29.99/yr", "Free + donations", "Completely free"],
+        ["Unique feature", "Neuroscience AI", "Adaptive audio", "Parametric EQ", "Birds + voice + lo-fi"]
+      ]
+    },
+    testimonials: [
+      {
+        quote: "BrainFM was too expensive for what it offered. Midnight Signals gives me more control over my focus environment and it's free. The bird sounds are a bonus I didn't know I needed.",
+        author: "Jessica Martinez",
+        role: "PhD Candidate in Neuroscience"
+      },
+      {
+        quote: "I tried all the BrainFM alternatives. Midnight Signals is the only one that combines true customization with lo-fi beats. Perfect for my coding sessions.",
+        author: "Andre Wilson",
+        role: "Senior Developer"
+      }
+    ],
+    faqs: [
+      {
+        question: "Is Midnight Signals a good BrainFM alternative?",
+        answer: "Yes, especially if you value customization and variety over AI-composed tracks. Midnight Signals offers more sounds (500+ bird species vs zero), lo-fi music, Indian voice narration, and full channel mixing — all completely free."
+      },
+      {
+        question: "Does Midnight Signals use neuroscience like BrainFM?",
+        answer: "Midnight Signals uses established acoustic principles including pink noise for auditory masking, 70 BPM for rhythmic entrainment, and binaural beat support. While we don't have BrainFM's proprietary AI, our approach is grounded in published research."
+      },
+      {
+        question: "Can I use Midnight Signals for the same purposes as BrainFM?",
+        answer: "Absolutely. Midnight Signals supports Focus, Relax, and Sleep modes through adjustable BPM, nature sound mixing, and procedural generation. The experience is different — more hands-on — but equally effective for creating optimal acoustic environments."
+      }
+    ],
+    presetConfig: {
+      activeChannels: {
+        birds: false,
+        owl: false,
+        trees: true,
+        ocean: true,
+        crickets: true
+      },
+      channelVolumes: {
+        birds: 0.0,
+        owl: 0.0,
+        trees: 0.5,
+        ocean: 0.4,
+        crickets: 0.2
+      },
+      customLyrics: "Focus flows without the fee,\nBrainwaves tuned naturally,\nNo subscription, no delay,\nFind your focus every day...",
+      customTitle: "BrainFM Alternative Mix",
+      customArtist: "Midnight Focus Lab",
+      bpm: 70,
+      synthWaveform: "sine"
+    }
+  },
+  {
+    slug: "endel-vs-midnight-signals",
+    title: "Endel vs Midnight Signals (2026): Which Adaptive Soundscape Is Better?",
+    metaDescription: "Compare Endel vs Midnight Signals for adaptive soundscapes, focus, and relaxation. Analyze AI generation, customization, pricing, and unique features head-to-head.",
+    keywords: ["Endel vs Midnight Signals", "Endel alternatives", "Endel vs", "adaptive soundscapes", "AI sound generator comparison"],
+    headline: "Endel vs Midnight Signals: The Ultimate Adaptive Soundscape Showdown",
+    subheading: "Both platforms generate real-time soundscapes — but one costs $30/year and the other is free. Here's every feature compared.",
+    category: "Comparisons",
+    coverImage: "https://images.unsplash.com/photo-1506157786151-b8491531f063?auto=format&fit=crop&w=800&h=450&q=80",
+    publishedDate: "2026-06-03",
+    updatedDate: "2026-06-03",
+    readTime: "9 min read",
+    author: {
+      name: "Ajim Patel",
+      avatar: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=96&h=96&q=80",
+      bio: "Founder of Midnight Signals, specialized in audio synthesis and cognitive acoustic environments."
+    },
+    intro: "Endel has gained significant attention for its AI-generated adaptive soundscapes that respond to time of day, weather, heart rate, and user activity. It's a scientifically-informed, beautifully designed platform — but it costs $29.99/year or $4.99/month. In this Endel vs Midnight Signals comparison, we analyze both platforms across sound quality, features, pricing, and unique capabilities to help you decide which real-time soundscape generator fits your needs and budget.",
+    sections: [
+      {
+        title: "The Endel Experience: Adaptive AI Soundscapes",
+        paragraphs: [
+          "Endel's core innovation is context-aware audio generation. The AI considers time of day, weather data, user heart rate (via Apple Watch), and selected activity (Focus, Relax, Move, Sleep) to create continuously evolving soundscapes. The result is a personalized audio environment that adapts to your changing state throughout the day.",
+          "The experience is polished and passive — you set it and let the AI handle everything. Endel's sound design is excellent, with rich ambient textures that feel genuinely adaptive. The integration with Apple Watch for heart rate monitoring is a standout feature for biofeedback-based relaxation.",
+          "However, Endel's subscription cost and limited free tier are significant barriers. There's no bird sounds, no lo-fi beats, no voice narration, and no manual customization. You get the AI's choice and nothing else."
+        ]
+      },
+      {
+        title: "Midnight Signals: Procedural Power Without the Price Tag",
+        paragraphs: [
+          "Midnight Signals takes a more transparent approach to sound generation. Instead of a proprietary AI deciding what you hear, our Web Audio synthesizer gives you direct control over every channel. You choose the sounds, set the volumes, and adjust the BPM. The trade-off: you need to engage with the controls rather than letting AI decide.",
+          "Both platforms generate sounds in real-time (no pre-recorded loops), so neither suffers from repetition fatigue. But Midnight Signals offers features Endel cannot match: 500+ procedurally generated bird species, Indian voice narration with custom lyrics, full lo-fi hip hop beat generation, and 12 independently controllable nature channels.",
+          "The price difference is the deciding factor for many. Endel costs $29.99/year. Midnight Signals is completely free with no subscriptions, no paywalls, and no usage limits. Every feature is available to every user."
+        ]
+      },
+      {
+        title: "Which Platform Should You Choose?",
+        paragraphs: [
+          "Choose Endel if: you want a completely passive, AI-driven experience; you own an Apple Watch and want heart rate-responsive audio; you don't need bird sounds, lo-fi beats, or customization; and you're willing to pay $30/year for the hands-off experience.",
+          "Choose Midnight Signals if: you want full control over your soundscape; you want bird sounds, lo-fi beats, or voice narration; you're budget-conscious and refuse to pay for background audio; you prefer procedural generation over AI decision-making; or you want features no other platform offers.",
+          "Many users actually use both — Endel for passive background during focused work, and Midnight Signals for active soundscape design during creative sessions or relaxation."
+        ]
+      }
+    ],
+    comparisonTable: {
+      headers: ["Feature", "Endel", "Midnight Signals"],
+      rows: [
+        ["Generation type", "AI-adaptive", "Procedural (user-controlled)"],
+        ["Lo-fi beats", "No", "Full generative engine"],
+        ["Bird sounds", "No", "500+ species"],
+        ["Indian voice", "No", "Full AI narration"],
+        ["Heart rate integration", "Apple Watch", "No"],
+        ["Manual control", "None", "Full channel mixing"],
+        ["Price", "$29.99/yr", "Completely free"],
+        ["Platform", "iOS, macOS, web", "Web (all browsers)"],
+        ["Unique strength", "Passive AI adaptation", "Customization + unique sounds"]
+      ]
+    },
+    testimonials: [
+      {
+        quote: "Endel is beautiful but expensive. Midnight Signals gives me the real-time generation I loved about Endel, plus bird sounds and lo-fi — for free. Easy choice.",
+        author: "Oliver Schmidt",
+        role: "Product Designer"
+      },
+      {
+        quote: "I use Endel for my morning focus sessions and Midnight Signals for creative work in the afternoon. Both have their place, but if I could only keep one, it'd be Midnight Signals for the sheer variety.",
+        author: "Sophie Laurent",
+        role: "Creative Director"
+      }
+    ],
+    faqs: [
+      {
+        question: "Does Midnight Signals adapt to time of day like Endel?",
+        answer: "Not yet — Midnight Signals is user-controlled rather than AI-adaptive. However, our presets are optimized for different times of day (Morning Paradise for AM, Enchanted Forest for PM, Starry Night for evening), and you can switch between them manually."
+      },
+      {
+        question: "Which platform has better sound quality?",
+        answer: "Both use real-time generation with different approaches. Endel's sounds are more polished and ambient; Midnight Signals' sounds are more varied and customizable. Neither uses pre-recorded loops, so neither suffers from repetition fatigue."
+      },
+      {
+        question: "Can I try both and decide?",
+        answer: "Endel offers a limited free trial (typically 7 days). Midnight Signals is completely free — you can use every feature immediately without creating an account or entering payment information."
+      }
+    ],
+    presetConfig: {
+      activeChannels: {
+        birds: true,
+        owl: false,
+        trees: true,
+        ocean: true,
+        crickets: true
+      },
+      channelVolumes: {
+        birds: 0.3,
+        owl: 0.0,
+        trees: 0.4,
+        ocean: 0.5,
+        crickets: 0.2
+      },
+      customLyrics: "Two approaches, one desire,\nSound that lifts the mind up higher,\nAI or manual control,\nFind the path that makes you whole...",
+      customTitle: "Adaptive Soundscape Mix",
+      customArtist: "Midnight Signals",
+      bpm: 70,
+      synthWaveform: "triangle",
+      favBirdId: "skylark"
+    }
   }
 ];
 

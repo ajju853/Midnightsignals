@@ -113,6 +113,44 @@ const TRANSLATIONS = {
     scenerySub: "ग्राफिक्स बदलें या नीचे मैन्युअल पर्यावरणीय परत ओवरले चालू करें।",
     mixerTitle: "प्रक्रियात्मक साउंडस्केप बोर्ड",
     mixerToggleAll: "लूप इंजन खेलने की स्थिति टॉगल करें"
+  },
+  nl: {
+    tagline: "Je Geest Heeft Een Frequentie Nodig. Wij Leveren Het.",
+    vocalSignal: "Vocale Signaal Verteller",
+    readLyrics: "Live songteksten voorlezen met hoogwaardige Indiase menselijke spraaksynthese.",
+    lyricReader: "Songtekst Lezer Modus",
+    active: "Actief",
+    disabled: "Uitgeschakeld",
+    availableSystemVoices: "Beschikbare Systeemstemmen",
+    testAccent: "Indiaas accent testen",
+    returnMain: "Terug naar Hoofdstation",
+    cozyTuner: "Gezellige Station Tuner & Frequentie-index",
+    totalLnt: "TOTALE LNT",
+    stationStandby: "STANDBY",
+    stationRecv: "ONTVANGEN",
+    sceneryTitle: "Atmosferisch Landschap & Visualisator Modus",
+    scenerySub: "Schakel grafische weergave of schakel handmatige omgevingslagen hieronder in.",
+    mixerTitle: "Procedurele Soundscapes Bord",
+    mixerToggleAll: "Schakel Loop Engine Afspeelstatus"
+  },
+  fr: {
+    tagline: "Votre Esprit A Besoin D'Une Fréquence. Nous La Fournissons.",
+    vocalSignal: "Narrateur de Signal Vocal",
+    readLyrics: "Lire les paroles en direct avec une synthèse vocale indienne haute fidélité.",
+    lyricReader: "Mode Lecteur de Paroles",
+    active: "Actif",
+    disabled: "Désactivé",
+    availableSystemVoices: "Voix Système Disponibles",
+    testAccent: "Tester l'accent indien",
+    returnMain: "Retour à la Station Principale",
+    cozyTuner: "Station Confort & Index de Fréquence",
+    totalLnt: "TOTAL LNT",
+    stationStandby: "VEILLE",
+    stationRecv: "RÉCEPTION",
+    sceneryTitle: "Paysage Atmosphérique & Mode Visualiseur",
+    scenerySub: "Changez les graphiques ou activez les couches environnementales manuelles ci-dessous.",
+    mixerTitle: "Paysages Sonores Procéduraux",
+    mixerToggleAll: "Activer/Désactiver la Lecture de la Boucle"
   }
 };
 
@@ -440,7 +478,7 @@ export default function App() {
   ]);
 
   // AI Unsent message and responses state list
-  const [interfaceLanguage, setInterfaceLanguage] = useState<"en" | "de" | "hi">("en");
+  const [interfaceLanguage, setInterfaceLanguage] = useState<"en" | "de" | "hi" | "nl" | "fr">("en");
   const [unsentMessageInput, setUnsentMessageInput] = useState("");
   const [isSendingEcho, setIsSendingEcho] = useState(false);
   const [echoHistory, setEchoHistory] = useState<EchoItem[]>([
@@ -1778,13 +1816,9 @@ export default function App() {
               <button
                 type="button"
                 onClick={() => {
-                  if (interfaceLanguage === "en") {
-                    setInterfaceLanguage("de");
-                  } else if (interfaceLanguage === "de") {
-                    setInterfaceLanguage("hi");
-                  } else {
-                    setInterfaceLanguage("en");
-                  }
+                  const langOrder = ["en", "de", "hi", "nl", "fr"] as const;
+                  const idx = langOrder.indexOf(interfaceLanguage);
+                  setInterfaceLanguage(langOrder[(idx + 1) % langOrder.length]);
                 }}
                 className="py-1 px-2.5 rounded-lg border border-white/10 bg-zinc-900/60 text-zinc-350 hover:bg-zinc-800 text-[8.5px] uppercase font-mono font-semibold transition-all shadow-md active:scale-95 cursor-pointer"
               >

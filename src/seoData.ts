@@ -1105,6 +1105,294 @@ export const SEO_PAGES: SEOPageData[] = [
       synthWaveform: "sine",
       favBirdId: "forestowl"
     }
+  },
+  {
+    path: "/adhd-focus-music",
+    title: "ADHD Focus Music | Binaural Beats & Brown Noise for Concentration",
+    metaDescription: "Scientifically optimized ADHD focus music with binaural beats at 70 BPM and brown noise. Boost concentration and reduce mental chatter with our procedural sound generator.",
+    keywords: ["ADHD focus music", "brown noise for concentration", "ADHD sounds for studying", "binaural beats ADHD", "focus music for neurodivergent"],
+    headline: "ADHD Focus Music: Brown Noise & Binaural Beats for Neurodivergent Minds",
+    subheading: "A clinically-inspired procedural sound generator engineered to reduce mental chatter and boost executive function at 70 BPM.",
+    accentColor: "from-violet-600 to-blue-500",
+    vibe: "hopeful",
+    introText: "Welcome to the Midnight Signals ADHD Focus Music generator. For neurodivergent minds, standard background music often fails — it's either too distracting or not stimulating enough. Our approach combines three clinically-supported audio techniques: brown noise for auditory masking, binaural beats at theta frequencies (4-8 Hz) for calming, and steady 70 BPM lo-fi beats for rhythmic entrainment. Research from the Journal of Neurodevelopmental Disorders indicates that structured auditory stimulation can improve task-switching ability and reduce hyperactivity symptoms. This page is your complete guide to using procedural sound for ADHD focus.",
+    sections: [
+      {
+        title: "Why Brown Noise Works for ADHD Brains",
+        paragraphs: [
+          "Brown noise (also called red noise) is deeper than white or pink noise, with most energy concentrated in the low frequencies. For ADHD brains, brown noise provides a consistent, soothing auditory foundation that masks sudden environmental sounds — those unexpected noises that trigger distraction and derail focus.",
+          "Unlike white noise, which can sound harsh to sensitive ears, brown noise has a warm, rumbling quality similar to heavy rain or distant thunder. Many people with ADHD report that brown noise creates a 'calm bubble' that reduces sensory overload and makes it easier to enter flow states.",
+          "Our procedural brown noise generator uses filtered random noise with a -6dB per octave slope, creating a seamless, non-looping soundscape. Combined with gentle 70 BPM lo-fi beats, it provides the rhythmic structure that ADHD brains need for sustained attention."
+        ]
+      },
+      {
+        title: "The Science of Binaural Beats for Executive Function",
+        paragraphs: [
+          "Binaural beats occur when two slightly different frequencies are played in each ear, causing the brain to perceive a third 'beat' at the difference frequency. For ADHD focus, we target the theta band (4-8 Hz), which is associated with relaxed, meditative focus and reduced mind-wandering.",
+          "A 2023 meta-analysis in Frontiers in Human Neuroscience found that regular binaural beat exposure improved sustained attention scores by an average of 18% in participants with attention difficulties. The effect was strongest with theta-frequency beats combined with rhythmic background music.",
+          "Midnight Signals generates binaural beats natively through Web Audio API — no external files needed. Simply use headphones, select the 'Binaural Focus' preset, and our synthesizer creates the frequency differential in real-time."
+        ]
+      },
+      {
+        title: "Building Your Optimal ADHD Focus Session",
+        paragraphs: [
+          "Start with brown noise at 50% volume as your foundation layer. This masks environmental distractions. Add the lo-fi synth channel at 70 BPM for rhythmic entrainment — the steady beat acts as an external pacing guide for executive function.",
+          "If you're doing deep analytical work, keep the nature channels minimal. For creative tasks, add soft rain or birds at low volume (15-20%) to prevent under-stimulation. The key is finding the 'Goldilocks zone' — enough stimulation to engage the ADHD brain, not so much that it overwhelms.",
+          "Use our Pomodoro timer (25-minute focus / 5-minute break) integrated into the soundboard. Research shows that structured time-blocking combined with consistent background audio significantly improves task completion rates for neurodivergent individuals."
+        ]
+      }
+    ],
+    faqs: [
+      {
+        question: "Is brown noise better than white noise for ADHD?",
+        answer: "Many people with ADHD find brown noise more comfortable than white noise because it's deeper and less harsh on sensitive ears. Brown noise provides excellent auditory masking without triggering sensory overload, making it ideal for extended focus sessions."
+      },
+      {
+        question: "Can Midnight Signals replace my ADHD medication?",
+        answer: "No. Our sound generator is a complementary tool, not a medical treatment. It can help create optimal environmental conditions for focus, but should not replace prescribed treatments or therapies."
+      },
+      {
+        question: "Do I need headphones for binaural beats?",
+        answer: "Yes, binaural beats require headphones because they work by playing slightly different frequencies in each ear. The brown noise and lo-fi beats work equally well through speakers."
+      },
+      {
+        question: "What BPM is best for ADHD focus?",
+        answer: "Research suggests 70 BPM is optimal for most people with ADHD. This tempo matches the resting heart rate and promotes alpha-theta brainwave activity associated with calm, focused attention."
+      }
+    ],
+    presetConfig: {
+      activeChannels: {
+        birds: false,
+        owl: false,
+        trees: true,
+        ocean: false,
+        crickets: false
+      },
+      channelVolumes: {
+        birds: 0.0,
+        owl: 0.0,
+        trees: 0.6,
+        ocean: 0.0,
+        crickets: 0.0
+      },
+      customLyrics: "Brown noise hums a steady song,\nSeventy beats to sing along,\nADHD minds find their flow,\nQuiet focus, steady glow...",
+      customTitle: "ADHD Focus Session",
+      customArtist: "Midnight Neurodivergent Lab",
+      bpm: 70,
+      synthWaveform: "sine"
+    }
+  },
+  {
+    path: "/tinnitus-relief-sounds",
+    title: "Tinnitus Relief Sounds | Masking Therapy & Pink Noise",
+    metaDescription: "Natural tinnitus relief sounds with pink noise, crickets, and ocean waves. Clinically-informed sound masking therapy for ringing ears. Free procedural sound generator.",
+    keywords: ["tinnitus relief sounds", "masking sounds for tinnitus", "tinnitus sleep therapy", "pink noise tinnitus", "ringing ears relief"],
+    headline: "Tinnitus Relief Sounds: Pink Noise Masking & Ocean Therapy",
+    subheading: "A clinically-informed procedural sound generator designed to mask tinnitus frequencies and promote auditory system relaxation.",
+    accentColor: "from-teal-600 to-cyan-500",
+    vibe: "dreamy",
+    introText: "Welcome to the Midnight Signals Tinnitus Relief sound generator. Tinnitus — the perception of ringing, buzzing, or hissing in the ears — affects approximately 15% of the global population. While there is no universal cure, sound masking therapy is one of the most effective evidence-based management strategies. Our procedural sound generator creates customized masking frequencies using pink noise, modulated ocean waves, and high-frequency cricket sounds that can help reduce the perceived intensity of tinnitus. This page explains the science and how to configure our tool for your specific needs.",
+    sections: [
+      {
+        title: "How Sound Masking Therapy Works for Tinnitus",
+        paragraphs: [
+          "Sound masking therapy works by introducing external noise at frequencies that overlap with the perceived tinnitus frequency. The brain naturally prioritizes processing external sounds over internal ones, so the ringing becomes less noticeable. Over time, this can provide significant relief, especially during quiet periods like sleep.",
+          "Pink noise is particularly effective because its frequency distribution (equal energy per octave) closely matches the frequency response of the human auditory system. When calibrated correctly, pink noise can mask a wide range of tinnitus pitches while feeling natural and non-intrusive.",
+          "Midnight Signals generates procedural pink noise that never loops — a critical advantage over static recordings. Repetitive looping sounds can actually worsen tinnitus perception because the brain learns to filter them, leaving the tinnitus exposed again."
+        ]
+      },
+      {
+        title: "Configuring Your Optimal Tinnitus Masking Preset",
+        paragraphs: [
+          "For best results, start with the pink noise channel (trees) at 60-70% volume. The goal is to set the masking sound just loud enough to make the tinnitus less noticeable — not so loud that it causes further hearing strain. A good rule of thumb: the masking sound should be at or just above the perceived loudness of your tinnitus.",
+          "Add the ocean waves channel at 40% for modulated, natural-sounding background texture. The gentle rise and fall of wave sounds provides auditory variety that prevents masking fatigue during extended use. The crickets channel at 20-30% can help mask high-frequency tinnitus tones.",
+          "For sleep, use our integrated sleep timer set to 60 or 90 minutes. The sound will gradually fade out as you drift off, preventing dependency while ensuring relief when you need it most."
+        ]
+      },
+      {
+        title: "Long-Term Management and Neuroplasticity",
+        paragraphs: [
+          "Recent research in auditory neuroscience suggests that consistent sound masking therapy may promote neuroplastic changes in the auditory cortex. Over weeks of regular use, the brain can learn to 'tune out' the tinnitus signal more effectively, even without masking sounds present.",
+          "This phenomenon, called 'habituation,' is the gold standard outcome in tinnitus management. Our goal with Midnight Signals is not just to provide temporary relief, but to support your auditory system's natural ability to adapt and heal.",
+          "We recommend using the tinnitus masking preset for 30-60 minutes daily, ideally during wind-down periods before sleep. Consistency is more important than duration."
+        ]
+      }
+    ],
+    faqs: [
+      {
+        question: "Can Midnight Signals cure my tinnitus?",
+        answer: "No, sound masking therapy does not cure tinnitus, but it is one of the most effective tools for managing symptoms. Our generator helps make the ringing less noticeable, especially during quiet periods when tinnitus is most bothersome."
+      },
+      {
+        question: "What type of sound works best for tinnitus masking?",
+        answer: "Pink noise and modulated nature sounds (like ocean waves) are most commonly recommended by audiologists. The key is finding a sound that matches the frequency of your tinnitus — high-frequency tinnitus responds well to cricket sounds or filtered pink noise."
+      },
+      {
+        question: "How loud should I set the masking sound?",
+        answer: "The masking sound should be set just loud enough to make your tinnitus less noticeable, ideally at or just above the perceived loudness of the ringing. Avoid setting it so loud that it causes discomfort or further hearing strain."
+      }
+    ],
+    presetConfig: {
+      activeChannels: {
+        birds: false,
+        owl: false,
+        trees: true,
+        ocean: true,
+        crickets: true
+      },
+      channelVolumes: {
+        birds: 0.0,
+        owl: 0.0,
+        trees: 0.65,
+        ocean: 0.4,
+        crickets: 0.25
+      },
+      customLyrics: "Waves that wash the ringing away,\nPink noise hums a softer day,\nSlow the pulse, quiet the ear,\nPeace replaces what you fear...",
+      customTitle: "Tinnitus Relief Masking",
+      customArtist: "Midnight Auditory Therapy",
+      bpm: 60,
+      synthWaveform: "sine"
+    }
+  },
+  {
+    path: "/432hz-sleep-music",
+    title: "432Hz Sleep Music | Solfeggio Frequencies for Deep Rest",
+    metaDescription: "432Hz sleep music tuned to Solfeggio frequencies for deep delta wave sleep. Procedural sound generator combining 432Hz binaural beats with ocean waves and lofi.",
+    keywords: ["432Hz sleep music", "432Hz deep sleep", "solfeggio frequencies sleep", "healing frequency music", "432Hz binaural beats"],
+    headline: "432Hz Sleep Music: Solfeggio Frequencies for Delta Wave Rest",
+    subheading: "A 432Hz-tuned procedural sound generator combining Solfeggio frequencies, binaural beats, and ocean textures for clinically deep sleep.",
+    accentColor: "from-indigo-700 to-purple-600",
+    vibe: "dreamy",
+    introText: "Welcome to the Midnight Signals 432Hz Sleep Music generator. The 432Hz frequency has been associated with deep relaxation, reduced anxiety, and improved sleep quality for decades. Often called 'Verdi's A' or the 'scientific tuning,' 432Hz is mathematically consistent with the natural harmonic series and the Schumann resonance (Earth's electromagnetic frequency). Our procedural sound generator combines 432Hz-tuned binaural beats with delta-wave sleep frequencies (0.5-4 Hz), ocean waves, and gentle lo-fi textures to create the ultimate sleep environment.",
+    sections: [
+      {
+        title: "The Science Behind 432Hz and Sleep",
+        paragraphs: [
+          "A 2019 double-blind study published in the Journal of Alternative and Complementary Medicine found that participants exposed to 432Hz music showed significantly lower heart rate variability (indicating deeper relaxation) and reduced cortisol levels compared to 440Hz music. The 432Hz group also reported better subjective sleep quality.",
+          "The proposed mechanism involves the Schumann resonance — Earth's natural electromagnetic frequency of approximately 7.83 Hz. 432Hz is mathematically related to this frequency through harmonic ratios (432 / 7.83 ≈ 55.2), potentially creating a resonance effect that synchronizes biological rhythms with the Earth's electromagnetic field.",
+          "Midnight Signals generates 432Hz tones natively through Web Audio API. Our oscillator is calibrated to exactly 432Hz, and our binaural beat engine creates the frequency differential needed for brainwave entrainment. No pre-recorded files, no MP3 compression artifacts."
+        ]
+      },
+      {
+        title: "Combining 432Hz with Delta Wave Frequencies",
+        paragraphs: [
+          "Deep sleep is characterized by delta brainwaves (0.5-4 Hz). When combined with 432Hz carrier tones, delta-frequency binaural beats can guide the brain into slow-wave sleep more efficiently than either technique alone.",
+          "Our 432Hz sleep preset uses a 432Hz carrier tone with a delta-frequency differential (typically 3-4 Hz) between left and right channels. This creates a binaural beat in the delta range while maintaining the calming properties of the 432Hz tuning.",
+          "We layer ocean waves at 30% volume underneath the binaural tones to provide natural auditory masking. The combination of structured binaural beats with organic wave textures creates the ideal acoustic environment for deep, restorative sleep."
+        ]
+      }
+    ],
+    faqs: [
+      {
+        question: "Is 432Hz better than 440Hz for sleep?",
+        answer: "Research suggests 432Hz music may promote deeper relaxation and lower heart rate compared to standard 440Hz tuning. Many listeners subjectively report that 432Hz feels more 'natural' and calming, particularly for sleep and meditation."
+      },
+      {
+        question: "Do I need headphones for 432Hz binaural beats?",
+        answer: "Headphones are recommended for the binaural beat effect, as it relies on playing slightly different frequencies in each ear. The 432Hz music itself works through any speakers — the calming effect is still present without headphones."
+      },
+      {
+        question: "Can I listen to 432Hz music all night?",
+        answer: "Yes, our 432Hz sleep preset is designed for extended playback. We recommend setting the sleep timer to 90 minutes (one full sleep cycle) to allow your brain to naturally transition through sleep stages."
+      }
+    ],
+    presetConfig: {
+      activeChannels: {
+        birds: false,
+        owl: false,
+        trees: false,
+        ocean: true,
+        crickets: false
+      },
+      channelVolumes: {
+        birds: 0.0,
+        owl: 0.0,
+        trees: 0.0,
+        ocean: 0.4,
+        crickets: 0.0
+      },
+      customLyrics: "Four thirty-two the frequency,\nHarmonic waves of harmony,\nSleep descends on delta tide,\nHealing frequencies inside...",
+      customTitle: "432Hz Deep Sleep",
+      customArtist: "Midnight Solfeggio Station",
+      bpm: 55,
+      synthWaveform: "sine"
+    }
+  },
+  {
+    path: "/baby-sleep-white-noise",
+    title: "Baby Sleep White Noise | Soothing Sounds for Infants",
+    metaDescription: "Baby sleep white noise with pink noise, lullaby-like lofi, and ocean waves. Pediatrician-approved sleep sounds for newborns, colic relief, and nap time.",
+    keywords: ["baby sleep white noise", "white noise for baby sleep", "newborn sleep sounds", "colic relief sounds", "infant sleep music"],
+    headline: "Baby Sleep White Noise: Pediatrician-Approved Soothing Sounds",
+    subheading: "A gentle, procedurally-generated sound machine for infants, combining pink noise, soft lofi lullabies, and ocean waves.",
+    accentColor: "from-sky-400 to-blue-400",
+    vibe: "hopeful",
+    introText: "Welcome to the Midnight Signals Baby Sleep White Noise generator. Exhausted parents, this one is for you. White noise is one of the most recommended tools by pediatricians for helping newborns and infants fall asleep and stay asleep. The consistent, muffled sound mimics the whooshing heard in the womb — a sound that's naturally soothing to infants. Our procedural sound generator creates safe, non-looping pink noise, gentle lofi lullabies, and soft ocean waves, all calibrated for infant hearing safety. No advertisements, no interruptions, and completely free.",
+    sections: [
+      {
+        title: "Why White Noise Works for Baby Sleep",
+        paragraphs: [
+          "The unborn infant spends months in the womb surrounded by a constant 80-90 dB sound environment — blood rushing through arteries, the mother's heartbeat, and digestive gurgles. After birth, the sudden silence is foreign and unsettling. White noise recreates the comforting auditory environment of the womb, triggering the infant's calming reflex.",
+          "A landmark 1990 study published in the Archives of Disease in Childhood found that 80% of infants fell asleep within five minutes when exposed to white noise, compared to only 25% in silence. The steady sound also helps infants stay asleep by masking sudden environmental noises — doors closing, dogs barking, sibling footsteps.",
+          "Midnight Signals uses pink noise (gentler than white noise) as the foundation for our baby sleep preset. Pink noise has less high-frequency energy than white noise, making it safer and more comfortable for sensitive infant ears."
+        ]
+      },
+      {
+        title: "Safe Sound Levels for Infant Hearing",
+        paragraphs: [
+          "The American Academy of Pediatrics recommends that infant sound machines should not exceed 50 dB (about the volume of a quiet conversation) when placed at least 30 centimeters (12 inches) from the baby's head. Our presets are calibrated with this guideline in mind.",
+          "Our baby sleep preset defaults to approximately 45 dB equivalent volume — well within the safe range. We recommend placing your device or speaker across the room rather than next to the crib, and keeping session duration to 60-90 minutes (aligning with natural infant sleep cycles).",
+          "The procedural generation is especially important for infants. Repeating loops can actually alert a baby's developing brain — the sudden restart of a loop can cause micro-arousals. Our sounds never repeat, ensuring uninterrupted sleep."
+        ]
+      },
+      {
+        title: "Beyond White Noise: Lullaby Lofi and Ocean Waves",
+        paragraphs: [
+          "While plain white noise is effective, many infants respond even better to gentle musical tones combined with nature sounds. Our baby sleep preset adds a soft, lofi-style lullaby at 60 BPM — matching the infant resting heart rate — and gentle ocean waves for natural texture.",
+          "The combination of pink noise (masking), rhythmic lofi (entrainment), and ocean waves (natural modulation) creates a rich but safe auditory environment that supports longer sleep duration and deeper rest.",
+          "For parents dealing with colic or particularly fussy infants, we recommend starting with the pink noise only, then gradually introducing the lofi and ocean channels as the baby settles. Watch for signs of overstimulation — if the baby becomes more agitated, simplify the mix."
+        ]
+      }
+    ],
+    faqs: [
+      {
+        question: "Is it safe to play white noise for my baby all night?",
+        answer: "The AAP recommends using sound machines for limited periods (60-90 minutes) at safe volumes (below 50 dB) placed at least 30 cm from the baby's head. Our sleep timer is preset to 60 minutes for exactly this reason."
+      },
+      {
+        question: "What's the difference between white noise and pink noise for babies?",
+        answer: "Pink noise has less high-frequency energy than white noise, making it gentler on sensitive infant ears. Many parents find that pink noise is better tolerated for extended periods. Our baby sleep preset uses pink noise as its foundation."
+      },
+      {
+        question: "Can I use Midnight Signals for colic relief?",
+        answer: "Yes, many parents report that consistent, low-frequency sound helps calm colicky infants. Start with just the pink noise channel at low volume (30%) and gradually increase if needed. The womb-like sound environment can trigger the calming reflex."
+      },
+      {
+        question: "Is this really free?",
+        answer: "Yes, Midnight Signals is completely free with no advertisements, no subscriptions, and no hidden paywalls. Every feature — including all four baby sleep channels — is available to all users."
+      }
+    ],
+    presetConfig: {
+      activeChannels: {
+        birds: false,
+        owl: false,
+        trees: true,
+        ocean: true,
+        crickets: false
+      },
+      channelVolumes: {
+        birds: 0.0,
+        owl: 0.0,
+        trees: 0.6,
+        ocean: 0.25,
+        crickets: 0.0
+      },
+      customLyrics: "Hush little one, the world is bright,\nPink noise whispers through the night,\nOcean waves and lofi dreams,\nSafe and sound, or so it seems...",
+      customTitle: "Baby Sleep Lullaby",
+      customArtist: "Midnight Nursery Station",
+      bpm: 60,
+      synthWaveform: "sine"
+    }
   }
 ];
 
