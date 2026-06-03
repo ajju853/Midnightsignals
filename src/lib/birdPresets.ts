@@ -4172,5 +4172,48 @@ export const BIRD_PRESETS: BirdPreset[] = [
     duration: 0.5,
     repeatCount: 3,
     interval: 0.8
+  },
+  // ====== FINAL STRAggLERS ======
+  {
+    id: "barbarypartridge_ma",
+    name: "Barbary Partridge",
+    category: "africa",
+    emoji: "🇲🇦",
+    description: "Rhythmic 'chuck-chuck-chucka' calls from Morocco's Atlas slopes",
+    waveType: "triangle",
+    baseFreq: 1800,
+    freqChange: 300,
+    sweepType: "clicks",
+    duration: 0.2,
+    repeatCount: 5,
+    interval: 0.25
+  },
+  {
+    id: "hoopoe_uz",
+    name: "Hoopoe",
+    category: "asia",
+    emoji: "🇺🇿",
+    description: "Soft 'hoop-hoop-hoop' calls across Uzbekistan's ancient cities",
+    waveType: "sine",
+    baseFreq: 1400,
+    freqChange: 200,
+    sweepType: "bell",
+    duration: 0.3,
+    repeatCount: 3,
+    interval: 0.4
+  },
+  {
+    id: "whitestork_lt",
+    name: "White Stork",
+    category: "europe",
+    emoji: "🇱🇹",
+    description: "Loud bill-clattering over Lithuania's farmhouse chimneys",
+    waveType: "triangle",
+    baseFreq: 300,
+    freqChange: 100,
+    sweepType: "clicks",
+    duration: 0.15,
+    repeatCount: 6,
+    interval: 0.2
   }
 ];
