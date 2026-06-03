@@ -3,6 +3,8 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="content-language" content="en" />
+    <meta name="language" content="English" />
     
     <!-- Search Engine Verification -->
     <meta name="google-site-verification" content="google14833afe332cbfc4" />
@@ -150,7 +152,17 @@
     </script>
   </head>
   <body>
-    <div id="root"></div>
+    <div id="root">
+      <!-- Fallback content for search engine indexers and non-JS environments -->
+      <header style="display:none;">
+        <h1>Midnight Signals | Lofi Radio, Sleep Sound & Nature Mixer</h1>
+        <p>Create custom lofi radio stations with ocean waves, bird songs, rain ambience, AI lyrics and sleep-friendly soundscapes. Free online ambient sound generator.</p>
+      </header>
+      <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; background: #050505; color: #a855f7; font-family: sans-serif; text-align: center; padding: 20px; box-sizing: border-box;">
+        <h2 style="font-size: 24px; margin-bottom: 10px; font-weight: 300; letter-spacing: 1px;">Midnight Signals</h2>
+        <p style="color: #a1a1aa; font-size: 14px;">Initializing cozy lo-fi audio transmitters and focus soundboards...</p>
+      </div>
+    </div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
