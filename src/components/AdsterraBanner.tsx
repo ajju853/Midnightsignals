@@ -13,27 +13,43 @@ interface AdsterraBannerProps {
   className?: string;
 }
 
+// Shared sequential queue for HPF ads to prevent atOptions race
+const hpfQueue: Array<{
+  atOptions: NonNullable<AdsterraBannerProps["atOptions"]>;
+  container: HTMLDivElement;
+}> = [];
+let hpfProcessing = false;
+
+function processHpfQueue() {
+  if (hpfProcessing || hpfQueue.length === 0) return;
+  hpfProcessing = true;
+  const item = hpfQueue.shift()!;
+  (window as any).atOptions = item.atOptions;
+  const s = document.createElement("script");
+  s.src = `https://www.highperformanceformat.com/${item.atOptions.key}/invoke.js`;
+  s.async = false;
+  s.onload = s.onerror = () => {
+    hpfProcessing = false;
+    processHpfQueue();
+  };
+  item.container.appendChild(s);
+}
+
 const AdsterraBanner: React.FC<AdsterraBannerProps> = ({ code, type, atOptions, className }) => {
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (containerRef.current) {
-      containerRef.current.innerHTML = "";
-    }
+    if (!containerRef.current) return;
+    containerRef.current.innerHTML = "";
+
     if (type === "atoptions" && atOptions) {
-      const s = document.createElement("script");
-      s.innerHTML = `window.atOptions = ${JSON.stringify(atOptions)};`;
-      containerRef.current?.appendChild(s);
-      const script = document.createElement("script");
-      script.src = `https://www.highperformanceformat.com/${atOptions.key}/invoke.js`;
-      script.async = false;
-      containerRef.current?.appendChild(script);
+      hpfQueue.push({ atOptions, container: containerRef.current });
+      if (!hpfProcessing) processHpfQueue();
     } else {
       const script = document.createElement("script");
-      script.type = "text/javascript";
       script.src = code;
       script.async = true;
-      containerRef.current?.appendChild(script);
+      containerRef.current.appendChild(script);
     }
   }, [code]);
 

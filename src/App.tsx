@@ -4027,8 +4027,8 @@ export default function App() {
           </div>
         )}
 
-        {/* Hidden container for additional ad scripts */}
-        <div id="container-24c1ea1bf7e8617e0a830cbe54159ff3" className="hidden" />
+        {/* Adstera container for invoke script */}
+        <div id="container-24c1ea1bf7e8617e0a830cbe54159ff3" />
         <Suspense fallback={null}>
           <AdsterraBanner code="https://pl29627219.effectivecpmnetwork.com/24c1ea1bf7e8617e0a830cbe54159ff3/invoke.js" />
           <AdsterraBanner code="https://pl29627220.effectivecpmnetwork.com/34/70/47/34704744b85077b343e15313b7141bea.js" />
