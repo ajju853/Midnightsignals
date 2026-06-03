@@ -413,6 +413,50 @@ Ensure you return nothing but valid JSON. Do not wrap the JSON output in markdow
   }
 });
 
+// In-memory mix store (swap with Cloudflare KV for production)
+const mixStore = new Map<string, any>();
+
+function generateMixId(): string {
+  return Math.random().toString(36).substring(2, 10);
+}
+
+// Save a mix snapshot
+app.post("/api/mix/save", (req, res) => {
+  try {
+    const { name, lyrics, voice, birds, soundscape, vibe, rainVolume, oceanVolume, vinylVolume, activeBpm } = req.body;
+    const id = generateMixId();
+    const mix = {
+      id,
+      name: name || "Untitled Mix",
+      lyrics: lyrics || { title: "", verse1: "", chorus: "", verse2: "", bridge: "", outro: "" },
+      voice: voice || { type: "ravi", speed: 1.0, pitch: 1.0 },
+      birds: birds || { selected: [], volumes: [], timing: "between-verses" },
+      soundscape: soundscape || { rain: 0, ocean: 0, wind: 0, brook: 0, lofi: { style: "dreamy", bpm: 70 }, binaural: "none" },
+      vibe: vibe || "dreamy",
+      rainVolume: rainVolume ?? 0,
+      oceanVolume: oceanVolume ?? 0,
+      vinylVolume: vinylVolume ?? 0,
+      activeBpm: activeBpm ?? 70,
+      createdAt: Date.now(),
+    };
+    mixStore.set(id, mix);
+    console.log(`[Mix] Saved mix ${id}: "${mix.name}"`);
+    res.json({ success: true, id, url: `/mix/${id}` });
+  } catch (err: any) {
+    console.error("[Mix] Save error:", err);
+    res.status(500).json({ error: err.message || "Failed to save mix" });
+  }
+});
+
+// Load a saved mix
+app.get("/api/mix/load/:id", (req, res) => {
+  const mix = mixStore.get(req.params.id);
+  if (!mix) {
+    return res.status(404).json({ error: "Mix not found" });
+  }
+  res.json(mix);
+});
+
 async function startServer() {
   // Automatically generate and write sitemap.xml on startup
   try {
@@ -517,6 +561,12 @@ async function startServer() {
         if (!activePage && currentPath === "/create/lyrics") {
           title = "Create Your Lyric | Write Your Own Lofi Song | Midnight Signals";
           metaDescription = "Write your own lofi lyrics — title, verses, chorus, bridge and outro. Save drafts and preview in the Midnight Signals mixer.";
+          isMatched = true;
+        }
+
+        if (!activePage && currentPath.startsWith("/mix/")) {
+          title = "Listen to a Saved Lofi Mix | Midnight Signals";
+          metaDescription = "A custom lofi mix shared from Midnight Signals. Listen to the saved soundscape, voice, and lyrics.";
           isMatched = true;
         }
         

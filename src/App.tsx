@@ -646,6 +646,9 @@ export default function App() {
   const [presetsSubTab, setPresetsSubTab] = useState<"all" | "favorites" | "recents" | "share">("all");
   const [favoriteNameInput, setFavoriteNameInput] = useState("");
   const [copySuccess, setCopySuccess] = useState(false);
+  const [mixSavedUrl, setMixSavedUrl] = useState("");
+  const [mixSaving, setMixSaving] = useState(false);
+  const [mixName, setMixName] = useState("");
 
   // Load favorites from local storage
   const [favorites, setFavorites] = useState<any[]>(() => {
@@ -680,7 +683,45 @@ export default function App() {
   // Auto-load share link if loaded in address bar
   useEffect(() => {
     if (typeof window !== "undefined") {
+      const pathname = window.location.pathname;
       const searchParams = new URL(window.location.href).searchParams;
+
+      // Handle /mix/:id — load saved mix from server
+      const mixMatch = pathname.match(/^\/mix\/([a-z0-9]{8})$/);
+      if (mixMatch) {
+        const mixId = mixMatch[1];
+        fetch(`/api/mix/load/${mixId}`)
+          .then((r) => r.json())
+          .then((mix) => {
+            if (mix.error) return;
+            if (mix.vibe) setCurrentVibe(mix.vibe);
+            if (mix.rainVolume != null) setRainVolume(mix.rainVolume);
+            if (mix.oceanVolume != null) setOceanVolume(mix.oceanVolume);
+            if (mix.vinylVolume != null) setVinylVolume(mix.vinylVolume);
+            if (mix.activeBpm) setActiveBpm(mix.activeBpm);
+            if (mix.soundscape?.binaural !== "none") {
+              setIsBinauralActive(true);
+              const offsetMap: Record<string, number> = { delta: 2, theta: 6, alpha: 10, beta: 15 };
+              setBinauralOffset(offsetMap[mix.soundscape.binaural] || 6);
+            }
+            if (mix.name) setActiveSongTitle(mix.name);
+            if (mix.birds?.selected?.length) {
+              const chs: Record<string, boolean> = { birds: false, owl: false, trees: false, ocean: false, crickets: false };
+              for (const b of mix.birds.selected) if (b in chs) chs[b] = true;
+              setTimeout(() => {
+                const launchEvent = new CustomEvent("launch-seo-preset", {
+                  detail: { activeChannels: chs, channelVolumes: {} }
+                });
+                window.dispatchEvent(launchEvent);
+              }, 400);
+            }
+            window.history.replaceState({}, "", "/");
+            setCurrentPath("");
+          })
+          .catch(() => {});
+        return;
+      }
+
       const loadLyricsTitle = searchParams.get("loadLyrics");
       if (loadLyricsTitle) {
         try {
@@ -902,6 +943,51 @@ export default function App() {
       setTimeout(() => {
         setCopySuccess(false);
       }, 3000);
+    }
+  };
+
+  const handleSaveMix = async () => {
+    setMixSaving(true);
+    try {
+      const activeChs = natureSoundboardState.activeChannels;
+      const res = await fetch("/api/mix/save", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: mixName.trim() || activeSongTitle || "Untitled Mix",
+          lyrics: { title: activeSongTitle, verse1: "", chorus: "", verse2: "", bridge: "", outro: "" },
+          vibe: currentVibe,
+          rainVolume,
+          oceanVolume,
+          vinylVolume,
+          activeBpm,
+          soundscape: {
+            rain: rainVolume,
+            ocean: oceanVolume,
+            wind: 0,
+            brook: 0,
+            lofi: { style: currentVibe, bpm: activeBpm },
+            binaural: isBinauralActive ? (binauralOffset <= 4 ? "delta" : binauralOffset <= 8 ? "theta" : binauralOffset <= 14 ? "alpha" : "beta") : "none",
+          },
+          voice: { type: selectedVoiceName || "ravi", speed: 1.0, pitch: 1.0 },
+          birds: {
+            selected: Object.entries(activeChs).filter(([, v]) => v).map(([k]) => k),
+            volumes: [],
+            timing: "between-verses",
+          },
+        }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        setMixSavedUrl(data.url);
+        speakText("Mix saved and ready to share.");
+      } else {
+        speakText("Failed to save mix.");
+      }
+    } catch {
+      speakText("Could not reach the server. Mix not saved.");
+    } finally {
+      setMixSaving(false);
     }
   };
 
@@ -1911,6 +1997,14 @@ export default function App() {
                 }`}
               >
                 {copySuccess ? "✓ Copied!" : "🔗 Share"}
+              </button>
+              <button
+                type="button"
+                onClick={handleSaveMix}
+                disabled={mixSaving}
+                className="py-1 px-2.5 rounded-lg border uppercase text-[8.5px] font-mono font-semibold transition-all shadow-md active:scale-95 cursor-pointer border-white/10 bg-zinc-900/60 text-zinc-350 hover:bg-zinc-800 hover:text-white disabled:opacity-50"
+              >
+                {mixSaving ? "⏳" : "💾 Save Mix"}
               </button>
               <button
                 type="button"
@@ -4122,6 +4216,50 @@ export default function App() {
         <Suspense fallback={null}>
           <CookieConsent onSave={(prefs) => console.log("Cookies preferences loaded:", prefs)} />
         </Suspense>
+
+        {/* SAVE MIX OVERLAY */}
+        {mixSavedUrl && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm" onClick={() => setMixSavedUrl("")}>
+            <div className="bg-zinc-900 border border-white/10 rounded-2xl p-6 max-w-sm w-full mx-4 shadow-2xl" onClick={(e) => e.stopPropagation()}>
+              <div className="text-emerald-400 text-lg mb-2">✉️</div>
+              <h3 className="text-sm font-bold text-white mb-1">Mix Saved!</h3>
+              <p className="text-zinc-400 text-[11px] font-mono mb-4">
+                Share this link with anyone — they'll hear your exact mix.
+              </p>
+              <div className="bg-zinc-950 rounded-xl border border-white/5 p-3 mb-4 text-xs font-mono text-zinc-300 break-all select-all">
+                {window.location.origin}{mixSavedUrl}
+              </div>
+              <div className="flex gap-2">
+                <button
+                  onClick={() => {
+                    navigator.clipboard.writeText(`${window.location.origin}${mixSavedUrl}`);
+                    speakText("Link copied.");
+                    setMixSavedUrl("");
+                  }}
+                  className="flex-1 px-4 py-2.5 rounded-xl bg-indigo-500 hover:bg-indigo-400 text-black text-[10px] font-mono font-bold uppercase tracking-wider transition-all cursor-pointer"
+                >
+                  Copy Link
+                </button>
+                <button
+                  onClick={() => {
+                    const url = `${window.location.origin}${mixSavedUrl}`;
+                    window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent("Listen to my lofi mix on Midnight Signals")}&url=${encodeURIComponent(url)}`, "_blank");
+                    setMixSavedUrl("");
+                  }}
+                  className="px-4 py-2.5 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-white text-[10px] font-mono font-bold uppercase tracking-wider transition-all cursor-pointer border border-white/10"
+                >
+                  Tweet
+                </button>
+              </div>
+              <button
+                onClick={() => setMixSavedUrl("")}
+                className="mt-3 w-full text-center text-[9px] font-mono text-zinc-600 hover:text-zinc-400 transition-colors cursor-pointer"
+              >
+                Dismiss
+              </button>
+            </div>
+          </div>
+        )}
 
         {/* Mobile Sidebar backdrop */}
         {(showSoundConsole || showEchoTerminal) && (
