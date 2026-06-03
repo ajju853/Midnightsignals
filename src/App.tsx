@@ -1885,7 +1885,8 @@ export default function App() {
   }
 
   const createPageNav = (path: string) => {
-    setCurrentPath(path === "/" ? "" : path);
+    const pathOnly = path.split("?")[0];
+    setCurrentPath(pathOnly === "/" ? "" : pathOnly);
     window.history.pushState({}, "", path);
   };
 

@@ -20,7 +20,7 @@ export interface FloatingSignal {
   createdAt: number;
 }
 
-export type VibeType = "dreamy" | "melancholy" | "hopeful" | "neon";
+export type VibeType = "dreamy" | "melancholy" | "hopeful" | "neon" | "ambient" | "chillhop" | "jazzy" | "ethereal" | "dark" | "rainy" | "cozy";
 
 export interface SynthSettings {
   isPlaying: boolean;
