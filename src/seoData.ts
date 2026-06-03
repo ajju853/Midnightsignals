@@ -1434,43 +1434,83 @@ export function getDynamicPageData(path: string): SEOPageData | null {
       const emoji = matchedBird.emoji;
       
       // Determine vibe and color based on category
-      const vibe = category === "indian" ? "dreamy" : category === "tropical" ? "hopeful" : "dreamy";
-      const accentColor = category === "indian" ? "from-amber-500 to-orange-400" : "from-emerald-500 to-teal-400";
+      const isTaiwan = category === "taiwan";
+      const vibe = isTaiwan ? "dreamy" : category === "indian" ? "dreamy" : category === "tropical" ? "hopeful" : "dreamy";
+      const accentColor = isTaiwan ? "from-sky-500 to-indigo-500" : category === "indian" ? "from-amber-500 to-orange-400" : "from-emerald-500 to-teal-400";
       
       return {
         path: `/birds/${matchedBird.id}`,
-        title: `${birdName} ${emoji} Call & Nature Sounds | Midnight Signals`,
-        metaDescription: `Listen to soothing ${birdName} calls and forest ambience. Mix waves, crickets, wind, and lofi chord progressions with our custom browser soundboard.`,
-        keywords: [
-          `${birdName} call`,
-          `${birdName} sound`,
-          `${birdName} sleep sounds`,
-          "bird sound generator",
-          "forest sounds for studying",
-          "nature soundboard online"
-        ],
-        headline: `${birdName} Bird Call & Relaxing Forest Ambience`,
-        subheading: `An interactive browser-synthesized acoustic profile of the ${birdName} designed to relieve anxiety and boost focus.`,
+        title: isTaiwan
+          ? `${birdName} Call – 台灣藍鵲叫聲 & Nature Sounds | Midnight Signals`
+          : `${birdName} ${emoji} Call & Nature Sounds | Midnight Signals`,
+        metaDescription: isTaiwan
+          ? `Listen to the Taiwan Blue Magpie (Urocissa caerulea) call. 聆聽台灣藍鵲的叫聲 – endemic Taiwanese bird sounds for nature soundscapes, focus, and relaxation.`
+          : `Listen to soothing ${birdName} calls and forest ambience. Mix waves, crickets, wind, and lofi chord progressions with our custom browser soundboard.`,
+        keywords: isTaiwan
+          ? [
+              `${birdName} call`,
+              "台灣藍鵲叫聲",
+              "台灣藍鵲聲音",
+              "台灣特有種鳥類",
+              "長尾山娘",
+              "bird sound generator",
+              "nature soundboard online"
+            ]
+          : [
+              `${birdName} call`,
+              `${birdName} sound`,
+              `${birdName} sleep sounds`,
+              "bird sound generator",
+              "forest sounds for studying",
+              "nature soundboard online"
+            ],
+        headline: isTaiwan
+          ? `${birdName} Bird Call – 台灣藍鵲自然聲音`
+          : `${birdName} Bird Call & Relaxing Forest Ambience`,
+        subheading: isTaiwan
+          ? `Listen to the endemic Taiwan Blue Magpie (Urocissa caerulea). 聆聽長尾山娘的「嘎嘎」叫聲與笛聲般的鳴唱，適合自然冥想、讀書專注。`
+          : `An interactive browser-synthesized acoustic profile of the ${birdName} designed to relieve anxiety and boost focus.`,
         accentColor,
         vibe,
-        introText: `Welcome to the dynamic ${birdName} soundscape player on Midnight Signals. The ${birdName} (${emoji}) is native to the ${category} aviary family and is renowned for its ${desc.toLowerCase()}. Environmental acoustics indicate that active birdsongs reduce cognitive fatigue, block out ambient city hums, and promote delta sleep. Below, customize our soundboard sliders to blend ${birdName} songs with ocean surf, forest wind, or soft lofi chords.`,
+        introText: isTaiwan
+          ? `Welcome to the Taiwan Blue Magpie (Urocissa caerulea) soundscape player on Midnight Signals. 台灣藍鵲（又稱長尾山娘）是台灣特有種鳥類，棲息於中低海拔闊葉林，叫聲粗啞如「嘎嘎」，亦能發出輕柔笛聲。聆聽台灣藍鵲的叫聲能帶你進入台灣山林的氛圍，適合搭配 lofi 音樂或雨聲作為背景。`
+          : `Welcome to the dynamic ${birdName} soundscape player on Midnight Signals. The ${birdName} (${emoji}) is native to the ${category} aviary family and is renowned for its ${desc.toLowerCase()}. Environmental acoustics indicate that active birdsongs reduce cognitive fatigue, block out ambient city hums, and promote delta sleep. Below, customize our soundboard sliders to blend ${birdName} songs with ocean surf, forest wind, or soft lofi chords.`,
         sections: [
           {
-            title: `Acoustic Engineering of ${birdName} Soundwaves`,
-            paragraphs: [
+            title: isTaiwan ? `Taiwan Blue Magpie – 台灣藍鵲介紹` : `Acoustic Engineering of ${birdName} Soundwaves`,
+            paragraphs: isTaiwan ? [
+              `The Taiwan Blue Magpie (Urocissa caerulea), also known as the "Long-tailed Mountain Lady" (長尾山娘), is an endemic bird species of Taiwan. It lives in broadleaf forests at elevations of 300-1,200 metres. Its call is a raucous, metallic "cackle" — often compared to a frog or a monkey — but it can also produce soft, flute-like notes.`,
+              `In Taiwanese folklore, the blue magpie is considered a symbol of good luck and protection. It is one of the national symbols of Taiwan, often featured in local art and literature. This makes the Taiwan Blue Magpie not just a soundscape element, but a cultural experience that connects listeners to Taiwan's natural heritage.`
+            ] : [
               `Our synthesis engine models the natural frequency of the ${birdName} utilizing a ${matchedBird.waveType} wave oscillator. Operating at a base frequency of ${matchedBird.baseFreq}Hz with a ${matchedBird.sweepType} sweep type, it replicates the natural acoustic signature of this species.`,
               `Unlike static MP3 recordings that loop predictably, our Web Audio generator triggers procedural call sweeps with randomized interval offsets (averaging every ${matchedBird.interval} seconds). This prevents your brain's subconscious from noticing repetitive audio cycles, ensuring high-quality, uninterrupted noise therapy.`
             ]
           },
           {
-            title: "How to Optimize this Preset for Work or Sleep",
-            paragraphs: [
+            title: isTaiwan ? "Suggested Mix for This Bird – 建議搭配" : "How to Optimize this Preset for Work or Sleep",
+            paragraphs: isTaiwan ? [
+              `Combine the Taiwan Blue Magpie call with a Taiwan mountain wind or light rain nature layer for an authentic forest atmosphere. Pair with a Dreamy or Ethereal lofi style and Theta binaural beats for deep relaxation.`,
+              `The irregular, non-repeating pattern of the magpie's cackle keeps your mind gently engaged without being distracting — perfect for study sessions, meditation, or immersive background ambience while working.`
+            ] : [
               `Click the 'Launch Curated Preset Station' button to load the custom bird mixer. We suggest setting the main volume slider to 30-40% to mimic a natural forest.`,
               `You can toggle other nature channels on the dashboard, including nocturnal owl hoots, forest breeze, summer crickets, and coastal tides, or add warm lo-fi synthesizer pads underneath the birdsong for a relaxing musical overlay.`
             ]
           }
         ],
-        faqs: [
+        faqs: isTaiwan ? [
+          {
+            question: "Is the Taiwan Blue Magpie noisy?",
+            answer: "Yes, its primary call is a harsh 'cackle', but it also makes softer chirps and whistles. The irregular pattern keeps your mind gently engaged without being distracting."
+          },
+          {
+            question: "Can I use this sound for meditation?",
+            answer: "Absolutely. The bird's rich, organic tone pairs beautifully with lofi beats or rain. The steady, non-repetitive calls can mask distracting background noise effectively."
+          },
+          {
+            question: "Where can I hear this bird in real life?",
+            answer: "In Taiwan's low-to-mid elevation forests, especially Yangmingshan National Park, Alishan, and near Sun Moon Lake."
+          }
+        ] : [
           {
             question: `How is the ${birdName} call generated in the browser?`,
             answer: `The system uses real-time Web Audio API oscillators to generate a ${matchedBird.waveType} wave centered at ${matchedBird.baseFreq}Hz. It applies a procedural ${matchedBird.sweepType} envelope with a duration of ${matchedBird.duration}s to simulate the bird's vocalization.`
@@ -1495,9 +1535,11 @@ export function getDynamicPageData(path: string): SEOPageData | null {
             ocean: 0.0,
             crickets: 0.35
           },
-          customLyrics: `In the branches high and green,\n${birdName} sings a song serene,\nStarlight fades, the morning breaks,\nQuiet joy within us wakes...`,
-          customTitle: `${birdName} Woodland Preset`,
-          customArtist: `${category.toUpperCase()} AVIARY RADIO`,
+          customLyrics: isTaiwan
+            ? `長尾山娘枝頭站,\n藍色羽翼閃亮光,\n嘎嘎叫聲山谷傳,\n台灣山林好風光...`
+            : `In the branches high and green,\n${birdName} sings a song serene,\nStarlight fades, the morning breaks,\nQuiet joy within us wakes...`,
+          customTitle: isTaiwan ? `台灣藍鵲山林音景` : `${birdName} Woodland Preset`,
+          customArtist: isTaiwan ? `台灣特有種鳴禽` : `${category.toUpperCase()} AVIARY RADIO`,
           bpm: 72,
           synthWaveform: matchedBird.waveType,
           favBirdId: matchedBird.id

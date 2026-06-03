@@ -22,6 +22,7 @@ export const BIRD_CATEGORIES = [
   { id: "flute", name: "🎷 Whistling & Flute-Like" },
   { id: "indian", name: "🇮🇳 Indian Birds (Beautiful Songs)" },
   { id: "belgian", name: "🇧🇪 Belgian Ardennes Birds" },
+  { id: "taiwan", name: "🇹🇼 Taiwanese Birds" },
   { id: "tropical", name: "🌴 Tropical & Exotic Voices" },
   { id: "notable", name: "🌟 Additional Notable Singers" }
 ];
@@ -1381,5 +1382,21 @@ export const BIRD_PRESETS: BirdPreset[] = [
     repeatCount: 6,
     interval: 0.15,
     lfoFreq: 28
+  },
+  // Taiwanese Birds
+  {
+    id: "taiwan-blue-magpie",
+    name: "Taiwan Blue Magpie",
+    category: "taiwan",
+    emoji: "🦜",
+    description: "Raucous 'cackle' and flute-like notes — known as the Long-tailed Mountain Lady of Taiwan",
+    waveType: "sine",
+    baseFreq: 2000,
+    freqChange: -600,
+    sweepType: "trill",
+    duration: 0.35,
+    repeatCount: 4,
+    interval: 0.55,
+    lfoFreq: 14
   }
 ];
