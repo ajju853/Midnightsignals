@@ -1,6 +1,7 @@
 import React, { useState, useMemo } from "react";
 import { Search, BookOpen, Clock, Calendar, ArrowRight, X, AlertCircle } from "lucide-react";
 import { BLOG_POSTS, BlogPost } from "../blogData";
+import MonetagBlogAds from "./MonetagBlogAds";
 
 interface BlogIndexProps {
   onNavigate: (path: string) => void;
@@ -58,6 +59,7 @@ export default function BlogIndex({ onNavigate }: BlogIndexProps) {
       <div className="absolute top-0 left-1/4 w-96 h-96 bg-indigo-500/5 rounded-full blur-3xl pointer-events-none" />
       <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-rose-500/5 rounded-full blur-3xl pointer-events-none" />
 
+      <MonetagBlogAds />
       <div className="max-w-6xl mx-auto relative z-10 space-y-12">
         {/* Header Section */}
         <div className="text-center space-y-4 max-w-3xl mx-auto">

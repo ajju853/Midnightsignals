@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { BlogPost } from "../blogData";
 import { ArrowLeft, Play, HelpCircle, Check, Quote, Volume2, Sparkles, ChevronDown, ChevronUp, Calendar, Clock, Award } from "lucide-react";
+import MonetagBlogAds from "./MonetagBlogAds";
 
 interface BlogLayoutProps {
   post: BlogPost;
@@ -44,6 +45,7 @@ export default function BlogLayout({ post, onNavigate, onLaunchPreset }: BlogLay
       <div className="absolute top-0 right-1/4 w-96 h-96 bg-indigo-500/5 rounded-full blur-3xl pointer-events-none" />
       <div className="absolute bottom-0 left-1/4 w-96 h-96 bg-emerald-500/5 rounded-full blur-3xl pointer-events-none" />
 
+      <MonetagBlogAds />
       <div className="max-w-5xl mx-auto relative z-10 space-y-8">
         {/* Back Button */}
         <button
