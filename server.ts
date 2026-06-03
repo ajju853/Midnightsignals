@@ -73,7 +73,7 @@ export function generateAndSaveSitemap(customBaseUrl?: string) {
     "/neon-lofi-and-ocean-sounds"
   ];
   
-  const baseUrl = customBaseUrl || "https://midnight-signals.cloud"; // Production domain fallback
+  const baseUrl = customBaseUrl || process.env.SITEMAP_BASE_URL || "https://midnightsignals.ajimp340.workers.dev"; // Default to verified Search Console domain
 
   // Helper to extract actual modified dates of source files
   const getFileModDate = (relativeFilePath: string): string => {

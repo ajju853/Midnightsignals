@@ -11,7 +11,7 @@ const combos = [
   "/neon-lofi-and-ocean-sounds",
 ];
 
-const baseUrl = "https://midnight-signals.cloud"; // Production domain fallback
+const baseUrl = process.env.SITEMAP_BASE_URL || "https://midnightsignals.ajimp340.workers.dev"; // Default to verified Search Console domain
 
 // Helper function to extract actual file system modification date
 const getFileModDate = (relativeFilePath: string): string => {
