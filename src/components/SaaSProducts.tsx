@@ -52,10 +52,6 @@ export const updateGoogleConsent = (prefs: CookiePreferences) => {
   const scriptSrc = (src: string) => document.querySelector(`script[src="${src}"]`);
 
   if (prefs.advertising) {
-    // -- Infolinks --
-    if (typeof (window as any).infolinks_pid !== "undefined" && !scriptSrc("//resources.infolinks.com/js/infolinks_main.js")) {
-      const s = document.createElement("script"); s.src = "//resources.infolinks.com/js/infolinks_main.js"; s.async = true; document.body.appendChild(s);
-    }
     // -- Adstera invoke --
     ["24c1ea1bf7e8617e0a830cbe54159ff3", "34704744b85077b343e15313b7141bea", "e856d0991e54ab38fca42a0003c2d1df"].forEach(id => {
       const src = id.length > 20
@@ -93,7 +89,7 @@ export const updateGoogleConsent = (prefs: CookiePreferences) => {
     }
   } else {
     // Remove all dynamically loaded ad scripts
-    document.querySelectorAll('script[src*="infolinks_main"], script[src*="effectivecpmnetwork"], script[src*="highperformanceformat"], iframe[data-adkey="adstera-popunder"]').forEach(el => el.remove());
+    document.querySelectorAll('script[src*="effectivecpmnetwork"], script[src*="highperformanceformat"], iframe[data-adkey="adstera-popunder"]').forEach(el => el.remove());
     document.getElementById("container-24c1ea1bf7e8617e0a830cbe54159ff3")?.remove();
   }
 };
