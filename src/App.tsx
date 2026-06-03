@@ -40,6 +40,7 @@ import { BookOpen, MapPin, ExternalLink, Flame, Compass, Heart, Share2, Clipboar
 
 // Lazy-loaded ad components for performance
 const AdsterraBanner = React.lazy(() => import("./components/AdsterraBanner"));
+const MonetagInPagePush = React.lazy(() => import("./components/MonetagInPagePush"));
 
 // Lazy-loaded page & modal components
 const BlogIndex = lazy(() => import("./components/BlogIndex"));
@@ -3726,14 +3727,17 @@ export default function App() {
               {activeCenterTab === "nature" && (
                 <div className="animate-fadeIn">
                   <NatureSoundboard interfaceLanguage={interfaceLanguage} />
-                  {/* Ad below mixer */}
-                  <div className="mt-4">
+                  {/* Ads below mixer */}
+                  <div className="mt-4 space-y-4">
                     <Suspense fallback={null}>
                       <AdsterraBanner
                         type="atoptions"
                         atOptions={{ key: "34f3f904aed75209c877b8fa70adf9c3", format: "iframe", height: 50, width: 320, params: {} }}
                         code=""
                       />
+                    </Suspense>
+                    <Suspense fallback={null}>
+                      <MonetagInPagePush />
                     </Suspense>
                   </div>
                 </div>
