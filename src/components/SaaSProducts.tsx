@@ -48,6 +48,20 @@ export const updateGoogleConsent = (prefs: CookiePreferences) => {
       ad_personalization: prefs.advertising ? "granted" : "denied"
     });
   }
+  // Dynamically load Infolinks when advertising consent is granted
+  if (typeof window !== "undefined" && (window as any).infolinks_pid) {
+    const existing = document.querySelector('script[src*="infolinks_main.js"]');
+    if (prefs.advertising && !existing) {
+      const script = document.createElement("script");
+      script.src = "//resources.infolinks.com/js/infolinks_main.js";
+      script.async = true;
+      document.body.appendChild(script);
+      console.log("Infolinks ads loaded (advertising consent granted).");
+    } else if (!prefs.advertising && existing) {
+      existing.remove();
+      console.log("Infolinks ads removed (advertising consent denied).");
+    }
+  }
 };
 
 export function CookieConsent({ onSave }: { onSave: (prefs: CookiePreferences) => void }) {
