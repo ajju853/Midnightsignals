@@ -266,14 +266,21 @@ export default function App() {
     return () => window.removeEventListener("popstate", handlePopState);
   }, []);
 
-  // Adstera popunder (hidden iframe)
+  // Adstera popunder (hidden iframe, deferred until page fully loads)
   useEffect(() => {
-    if (!document.querySelector('iframe[data-adkey="adstera-popunder"]')) {
+    const loadPopunder = () => {
+      if (document.querySelector('iframe[data-adkey="adstera-popunder"]')) return;
       const f = document.createElement("iframe");
       f.src = "https://www.effectivecpmnetwork.com/nemr0erp?key=1c00b92905b4f8434974fc6f0ea59673";
       f.setAttribute("data-adkey", "adstera-popunder");
       f.style.cssText = "display:none";
       document.body.appendChild(f);
+    };
+    if (document.readyState === "complete") {
+      loadPopunder();
+    } else {
+      window.addEventListener("load", loadPopunder);
+      return () => window.removeEventListener("load", loadPopunder);
     }
   }, []);
 

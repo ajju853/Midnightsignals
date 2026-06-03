@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 interface AdsterraBannerProps {
   code: string;
@@ -13,7 +13,6 @@ interface AdsterraBannerProps {
   className?: string;
 }
 
-// Shared sequential queue for HPF ads to prevent atOptions race
 const hpfQueue: Array<{
   atOptions: NonNullable<AdsterraBannerProps["atOptions"]>;
   container: HTMLDivElement;
@@ -37,9 +36,17 @@ function processHpfQueue() {
 
 const AdsterraBanner: React.FC<AdsterraBannerProps> = ({ code, type, atOptions, className }) => {
   const containerRef = useRef<HTMLDivElement>(null);
+  const [ready, setReady] = useState(typeof window !== "undefined" && document.readyState === "complete");
 
   useEffect(() => {
-    if (!containerRef.current) return;
+    if (ready) return;
+    const onLoad = () => setReady(true);
+    window.addEventListener("load", onLoad);
+    return () => window.removeEventListener("load", onLoad);
+  }, []);
+
+  useEffect(() => {
+    if (!ready || !containerRef.current) return;
     containerRef.current.innerHTML = "";
 
     if (type === "atoptions" && atOptions) {
@@ -51,7 +58,7 @@ const AdsterraBanner: React.FC<AdsterraBannerProps> = ({ code, type, atOptions, 
       script.async = true;
       containerRef.current.appendChild(script);
     }
-  }, [code]);
+  }, [code, ready]);
 
   return <div ref={containerRef} className={className} />;
 };
