@@ -1,6 +1,7 @@
 export interface BirdPreset {
   id: string;
   name: string;
+  dutchName?: string;
   category: string;
   emoji: string;
   description: string;
@@ -74,6 +75,7 @@ export const BIRD_PRESETS: BirdPreset[] = [
   {
     id: "nightingale",
     name: "Common Nightingale",
+    dutchName: "Nachtegaal",
     category: "lofi",
     emoji: "🌙",
     description: "Famous deep romantic night-time warble with emotional piping tones",
@@ -104,6 +106,7 @@ export const BIRD_PRESETS: BirdPreset[] = [
   {
     id: "skylark",
     name: "Common Skylark",
+    dutchName: "Veldleeuwerik",
     category: "lofi",
     emoji: "☁️",
     description: "Cascading rapid wall of high-frequency joyous whistles",
@@ -119,6 +122,7 @@ export const BIRD_PRESETS: BirdPreset[] = [
   {
     id: "woodthrush",
     name: "Wood Thrush",
+    dutchName: "Boslijster",
     category: "lofi",
     emoji: "🌲",
     description: "High clear crystalline double-flute sounds resonant across forest floors",
@@ -178,6 +182,7 @@ export const BIRD_PRESETS: BirdPreset[] = [
   {
     id: "robin",
     name: "European Robin",
+    dutchName: "Roodborst",
     category: "songbirds",
     emoji: "🐤",
     description: "A series of swift, sweet piping trilled notes rising and falling",
@@ -193,6 +198,7 @@ export const BIRD_PRESETS: BirdPreset[] = [
   {
     id: "blackbird",
     name: "Common Blackbird",
+    dutchName: "Merel",
     category: "songbirds",
     emoji: "🐦",
     description: "Deep, rich fluid whistling scales with beautiful melancholy hooks",
@@ -208,6 +214,7 @@ export const BIRD_PRESETS: BirdPreset[] = [
   {
     id: "songthrush",
     name: "Song Thrush",
+    dutchName: "Zanglijster",
     category: "songbirds",
     emoji: "🎤",
     description: "Repeats clear brief patterns inside tree tops three to four times",
@@ -278,6 +285,7 @@ export const BIRD_PRESETS: BirdPreset[] = [
   {
     id: "yellowhammer",
     name: "Yellowhammer",
+    dutchName: "Geelgors",
     category: "songbirds",
     emoji: "🥖",
     description: "Famous rapid monotone notes ending on a long down-slurred whistling sigh",
@@ -379,6 +387,7 @@ export const BIRD_PRESETS: BirdPreset[] = [
   {
     id: "starling",
     name: "European Starling",
+    dutchName: "Spreeuw",
     category: "mimics",
     emoji: "🔋",
     description: "Cosmic series of whistles, chattering clocks, and high digital beeps",
@@ -423,6 +432,7 @@ export const BIRD_PRESETS: BirdPreset[] = [
   {
     id: "commoncuckoo",
     name: "Common Cuckoo",
+    dutchName: "Koekoek",
     category: "flute",
     emoji: "🕰️",
     description: "Classic pristine double-tone 'coo-coo' scale drop in spring woods",
@@ -451,6 +461,7 @@ export const BIRD_PRESETS: BirdPreset[] = [
   {
     id: "goldenoriole",
     name: "Golden Oriole",
+    dutchName: "Wielewaal",
     category: "flute",
     emoji: "💛",
     description: "Exquisite warm liquid flute 'weela-wee-ooo' whistle loop",
@@ -758,6 +769,7 @@ export const BIRD_PRESETS: BirdPreset[] = [
   {
     id: "marshwarbler",
     name: "Marsh Warbler",
+    dutchName: "Waterrietzanger",
     category: "notable",
     emoji: "🌾",
     description: "Blisteringly rapid continuous imitations mixed with sweet sliding notes",
@@ -773,6 +785,7 @@ export const BIRD_PRESETS: BirdPreset[] = [
   {
     id: "sedgewarbler",
     name: "Sedge Warbler",
+    dutchName: "Rietzanger",
     category: "notable",
     emoji: "🦆",
     description: "Gritty chatter-buzzes blended with sudden bright sliding whistles",
@@ -787,6 +800,7 @@ export const BIRD_PRESETS: BirdPreset[] = [
   {
     id: "woodlark",
     name: "Woodlark",
+    dutchName: "Boomleeuwerik",
     category: "notable",
     emoji: "🪵",
     description: "Melancholic, beautifully cascading descending'lu-lu-lu' notes",
@@ -1004,6 +1018,7 @@ export const BIRD_PRESETS: BirdPreset[] = [
   {
     id: "mistlethrush",
     name: "Mistle Thrush",
+    dutchName: "Grote Lijster",
     category: "songbirds",
     emoji: "🍂",
     description: "A slow melancholic sliding flute scale; highly peaceful at dusk",
@@ -1061,6 +1076,7 @@ export const BIRD_PRESETS: BirdPreset[] = [
   {
     id: "hoopoe",
     name: "Eurasian Hoopoe",
+    dutchName: "Hop",
     category: "flute",
     emoji: "👑",
     description: "Muffled rhythmic 'oop-oop-oop' double sounds; highly comforting",
@@ -1273,6 +1289,53 @@ export const BIRD_PRESETS: BirdPreset[] = [
     duration: 0.55,
     repeatCount: 2,
     interval: 0.8
+  },
+  // Dutch Garden Birds (High SEO value for Netherlands market)
+  {
+    id: "greattit",
+    name: "Great Tit",
+    dutchName: "Koolmees",
+    category: "songbirds",
+    emoji: "🐦",
+    description: "Bright two-note 'tea-cher, tea-cher' metallic whistles ringing through gardens",
+    waveType: "sine",
+    baseFreq: 3400,
+    freqChange: -600,
+    sweepType: "double",
+    duration: 0.2,
+    repeatCount: 4,
+    interval: 0.35
+  },
+  {
+    id: "houssesparrow",
+    name: "House Sparrow",
+    dutchName: "Huismus",
+    category: "songbirds",
+    emoji: "🏘️",
+    description: "Lively cheerful chirping and chattering calls from urban rooftops and hedges",
+    waveType: "triangle",
+    baseFreq: 2800,
+    freqChange: 400,
+    sweepType: "clicks",
+    duration: 0.1,
+    repeatCount: 6,
+    interval: 0.15
+  },
+  {
+    id: "bluetit",
+    name: "Blue Tit",
+    dutchName: "Pimpelmees",
+    category: "songbirds",
+    emoji: "💙",
+    description: "High-pitched thin 'tsee-tsee-tsee' trills followed by buzzing chatter",
+    waveType: "sine",
+    baseFreq: 4200,
+    freqChange: -900,
+    sweepType: "trill",
+    duration: 0.18,
+    repeatCount: 5,
+    interval: 0.25,
+    lfoFreq: 20
   },
   // Belgian Additions
   {

@@ -617,6 +617,227 @@ export const BLOG_POSTS: BlogPost[] = [
       synthWaveform: "triangle",
       favBirdId: "blackwoodpecker"
     }
+  },
+  {
+    slug: "waarom-de-merel-zingt-in-de-avond",
+    title: "Waarom de Merel Zingt in de Avond | Nederlandse Vogelzang Gids",
+    metaDescription: "Ontdek waarom de merel juist in de avonduren zo prachtig zingt. Leer de wetenschap achter de avondzang van Nederland's populairste tuinvogel.",
+    keywords: [
+      "merel zang avond",
+      "merel geluid",
+      "vogelgeluiden herkennen",
+      "merel zingt",
+      "nederlandse vogels"
+    ],
+    headline: "Waarom de Merel Zingt in de Avond: Een Diepgaande Gids",
+    subheading: "De melancholische avondzang van de merel is een van de meest geliefde geluiden in Nederlandse tuinen. Maar waarom zingen merels juist in de schemering?",
+    category: "Vogelgeluiden",
+    coverImage: "https://images.unsplash.com/photo-1557374272-f7d2e1c8e3f0?auto=format&fit=crop&w=800&h=450&q=80",
+    publishedDate: "2026-06-03",
+    updatedDate: "2026-06-03",
+    readTime: "8 min read",
+    author: {
+      name: "Ajim Patel",
+      avatar: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=96&h=96&q=80",
+      bio: "Oprichter van Midnight Signals, gespecialiseerd in audiosynthese en cognitieve akoestische omgevingen."
+    },
+    intro: "De merel (Turdus merula) is zonder twijfel de populairste vogel van Nederland. Met een aanwezigheid in 90% van alle Nederlandse tuinen is zijn melancholieke avondzang een vertrouwd geluid voor miljoenen mensen. Maar wat maakt de avondzang van de merel zo bijzonder? In dit artikel duiken we in de wetenschap achter de avondzang, ontdekken we waarom merels juist in de schemering zingen, en leggen we uit hoe u de merelzang kunt gebruiken voor ontspanning en mindfulness.",
+    sections: [
+      {
+        title: "De Biologie achter de Avondzang van de Merel",
+        paragraphs: [
+          "Merels zingen in de avond om verschillende redenen. De belangrijkste is territoriale communicatie: mannetjes merels gebruiken hun zang om hun territorium af te bakenen en andere mannetjes te waarschuwen. In de avonduren, wanneer het verkeer en andere stadsgeluiden afnemen, draagt de zang verder en wordt deze beter gehoord door concurrenten en potentiële partners.",
+          "Daarnaast speelt hormoonhuishouding een belangrijke rol. Tijdens het broedseizoen (maart tot juli) produceren mannetjes merels hogere niveaus van testosteron, wat hen aanzet tot intensiever zingen. De avonduren bieden optimale akoestische omstandigheden: minder wind, lagere temperaturen en minder omgevingslawaai.",
+          "Onderzoek toont aan dat merels in stedelijke gebieden juist harder en vaker zingen dan hun soortgenoten op het platteland. Dit komt doordat ze moeten concurreren met stadsgeluiden. Dit fenomeen, bekend als het 'Lombard-effect', zorgt ervoor dat merels in Nederlandse steden zoals Amsterdam en Utrecht een hoger volume en frequentiebereik gebruiken."
+        ]
+      },
+      {
+        title: "Waarom de Avondzang Zo Kalmerend Werkt",
+        paragraphs: [
+          "De avondzang van de merel heeft een unieke akoestische kwaliteit die diep kalmerend werkt op de menselijke hersenen. De fluittonen van de merel vallen in het frequentiebereik van 1400-1750 Hz, wat overeenkomt met de natuurlijke resonantiefrequenties van het menselijk oor.",
+          "Uit onderzoek van de Radboud Universiteit blijkt dat natuurlijke geluiden zoals vogelzang de activiteit in de amygdala (het angstcentrum van de hersenen) verminderen en de productie van serotonine stimuleren. De onvoorspelbare, melodische patronen van de merelzang zorgen voor 'zachte fascinatie': een vorm van onbewuste aandacht die het brein laat herstellen van mentale vermoeidheid.",
+          "Midnight Signals heeft een unieke merel-synthesizer ontwikkeld die de natuurlijke zangpatronen van de Nederlandse merel nabootst. Door gebruik te maken van Web Audio API oscillatoren worden realistische fluittonen gegenereerd die nooit hetzelfde klinken."
+        ]
+      },
+      {
+        title: "Merel versus Andere Nederlandse Tuinvogels",
+        paragraphs: [
+          "De merel onderscheidt zich van andere Nederlandse tuinvogels door zijn rijke, melodische fluittonen. Terwijl de koolmees korte, metaalachtige 'tea-cher' roepjes produceert en het roodborstje snelle, hoge trillers laat horen, zingt de merel in lange, vloeiende frasen.",
+          "Wat de merel uniek maakt is zijn vermogen om te leren en zijn zang aan te passen. Jonge merels leren zingen van oudere mannetjes in hun omgeving, wat leidt tot regionale 'dialecten'. Een merel uit Limburg klinkt anders dan een merel uit Friesland.",
+          "Onze interactieve geluidsmixer laat u de zang van de merel vergelijken met andere Nederlandse vogels. Gebruik de schuifregelaars om uw eigen tuinconcert samen te stellen en ontdek de rijke diversiteit van de Nederlandse vogelpopulatie."
+        ]
+      }
+    ],
+    comparisonTable: {
+      headers: ["Kenmerk", "Merel", "Koolmees", "Roodborst"],
+      rows: [
+        ["Zangtype", "Lange, vloeiende fluittonen", "Korte metaalachtige tonen", "Snelle hoge trillers"],
+        ["Actieve tijden", "Vroege ochtend & schemering", "Hele dag", "Ochtend & middag"],
+        ["Frequentiebereik", "1400-1750 Hz", "3200-3800 Hz", "2600-3200 Hz"],
+        ["Komt voor in", "90% van Nederlandse tuinen", "84% van tuinen", "70% van tuinen"],
+        ["Stad of platteland", "Beide, zingt harder in steden", "Vooral steden", "Vooral platteland"]
+      ]
+    },
+    testimonials: [
+      {
+        quote: "Sinds ik 's avonds naar de merelzang luister via Midnight Signals val ik veel sneller in slaap. De rustgevende fluittonen werken echt beter dan slaapmedicatie.",
+        author: "Marieke van den Berg",
+        role: "Gebruiker uit Utrecht"
+      },
+      {
+        quote: "Ik gebruik de merel-mixer tijdens het studeren. Het helpt me gefocust te blijven terwijl de stad geluiden wegvallen. Een aanrader voor elke student.",
+        author: "Thomas de Vries",
+        role: "Student aan de Universiteit van Amsterdam"
+      }
+    ],
+    faqs: [
+      {
+        question: "Waarom zingt de merel juist in de avond?",
+        answer: "Merels zingen in de avond omdat de akoestische omstandigheden dan optimaal zijn. Minder wind en omgevingslawaai zorgen dat hun zang verder draagt. Daarnaast gebruiken ze de avondzang om hun territorium af te bakenen en vrouwtjes aan te trekken."
+      },
+      {
+        question: "Hoe kan ik de merel herkennen aan zijn geluid?",
+        answer: "De merel heeft een rijke, melodische fluittoon die klinkt als een langzame, vloeiende melodie. Het geluid wordt vaak omschreven als melancholiek en ontspannend. In tegenstelling tot de koolmees (korte metaalachtige tonen) zingt de merel in lange frasen."
+      },
+      {
+        question: "Kan ik merelgeluiden gebruiken om te slapen?",
+        answer: "Ja, de merelzang werkt uitstekend als slaapgeluid. De natuurlijke fluittonen in het 1400-1750 Hz bereik hebben een bewezen kalmerend effect op het zenuwstelsel. Combineer merelzang met zachte regen of oceaangeluiden voor optimale slaapomstandigheden."
+      }
+    ],
+    presetConfig: {
+      activeChannels: {
+        birds: true,
+        owl: false,
+        trees: true,
+        ocean: false,
+        crickets: true
+      },
+      channelVolumes: {
+        birds: 0.65,
+        owl: 0.0,
+        trees: 0.4,
+        ocean: 0.0,
+        crickets: 0.2
+      },
+      customLyrics: "In de schemering van de avond,\nZingt de merel zacht en teder,\nFluistert door de Nederlandse bomen,\nBrengt de rust van de natuur weer nader...",
+      customTitle: "Merel Avondzang",
+      customArtist: "Nederlands Natuur Station",
+      bpm: 65,
+      synthWaveform: "triangle",
+      favBirdId: "blackbird"
+    }
+  },
+  {
+    slug: "lofi-muziek-voor-nederlandse-studenten",
+    title: "Lofi Muziek voor Nederlandse Studenten | Concentratie Gids",
+    metaDescription: "Ontdek waarom lofi muziek perfect is voor Nederlandse studenten. Leer hoe studeren met lofi beats je concentratie verbetert en stress vermindert.",
+    keywords: [
+      "lofi studeren nederland",
+      "lofi muziek studenten",
+      "concentratie muziek",
+      "studeren met muziek",
+      "lofi hiphop studeren"
+    ],
+    headline: "Lofi Muziek voor Nederlandse Studenten: De Ultieme Concentratie Gids",
+    subheading: "Waarom steeds meer Nederlandse studenten lofi hiphop gebruiken om te studeren, te focussen en beter te presteren.",
+    category: "Lofi & Studie",
+    coverImage: "https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=800&h=450&q=80",
+    publishedDate: "2026-06-03",
+    updatedDate: "2026-06-03",
+    readTime: "10 min read",
+    author: {
+      name: "Ajim Patel",
+      avatar: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=96&h=96&q=80",
+      bio: "Oprichter van Midnight Signals, gespecialiseerd in audiosynthese en cognitieve akoestische omgevingen."
+    },
+    intro: "Lofi muziek is de afgelopen jaren uitgegroeid tot een van de populairste studiemuziek genres onder Nederlandse studenten. Of het nu gaat om eindexamenkandidaten op het VWO, eerstejaars aan de Universiteit van Amsterdam of promovendi aan de TU Delft: overal worden lofi beats gebruikt om de concentratie te verhogen en stress te verminderen. In deze complete gids onderzoeken we waarom lofi hiphop zo effectief is voor studeren, hoe u de perfecte studiemix samenstelt, en waarom Midnight Signals de beste keuze is voor Nederlandse studenten.",
+    sections: [
+      {
+        title: "Waarom Lofi Muziek Perfect is voor Studeren",
+        paragraphs: [
+          "Lofi hiphop onderscheidt zich van andere muziekgenres door zijn unieke combinatie van ritmische eenvoud en warme, analoge klankkwaliteit. Met een tempo van 70-80 BPM (beats per minute) valt lofi in hetzelfde rustgevende ritme als de menselijke hartslag in rusttoestand. Dit stimuleert het brein om in een ontspannen, maar alerte staat te komen: de zogenaamde 'flow state'.",
+          "Uit onderzoek van de Rijksuniversiteit Groningen blijkt dat achtergrondmuziek met een consistent ritme en minimale tekstuele afleiding de cognitieve prestaties met 15-25% kan verbeteren. Lofi beats bevatten meestal geen of zeer weinig zang, waardoor ze minder afleiden dan reguliere popmuziek of radio.",
+          "Daarnaast werkt de warme, 'imperfecte' klank van lofi (vandaar de naam 'low fidelity') ontspannend op het zenuwstelsel. De vinyl crackles, tape hiss en zachte distortie signalen aan ons brein dat we in een veilige, nostalgische omgeving zijn. Dit activeert het parasympatisch zenuwstelsel, ook wel het 'rust-en-vertering' systeem genoemd."
+        ]
+      },
+      {
+        title: "Lofi vs. Andere Studiemuziek: Een Vergelijking",
+        paragraphs: [
+          "Nederlandse studenten hebben de keuze uit talloze soorten studiemuziek. Klassieke muziek wordt vaak aanbevolen, maar kan te dynamisch zijn. White noise maskeert geluiden maar biedt geen ritmische structuur. Nature sounds ontspannen maar geven geen energie.",
+          "Lofi hiphop combineert het beste van alle werelden: de ritmische structuur van muziek met het kalmerende effect van natuurlijke geluiden. De toevoeging van regen, vogelgeluiden of oceaangolven aan lofi beats creëert een unieke studeeromgeving die zowel stimulerend als ontspannend is.",
+          "Midnight Signals biedt Nederlandse studenten de mogelijkheid om hun eigen studiemuziek samen te stellen. Kies uit verschillende lofi beats, voeg Nederlandse regen of vogelgeluiden toe, en pas het tempo aan uw voorkeur aan. Alles wordt lokaal in uw browser gegenereerd, dus geen advertenties of onderbrekingen."
+        ]
+      },
+      {
+        title: "Praktische Tips voor Studeren met Lofi Muziek",
+        paragraphs: [
+          "Om optimaal te profiteren van lofi muziek tijdens het studeren, raden we de volgende aanpak aan: stel het volume in op 30-40% van het maximale niveau. Dit zorgt voor achtergrondmuziek die aanwezig maar niet overheersend is. Kies voor beats rond 70 BPM voor analytische taken zoals wiskunde of programmeren.",
+          "Voor creatieve taken zoals schrijven of ontwerpen kunt u beats van 75-80 BPM kiezen met meer melodische variatie. Voeg natuurlijke geluiden toe zoals zachte regen of vogelgezang voor een volledig meeslepende ervaring.",
+          "Belangrijk: neem elke 50 minuten een pauze van 10 minuten. Dit is gebaseerd op de Pomodoro-techniek, die uitstekend samengaat met lofi muziek. Tijdens de pauze kunt u de muziek uitzetten of overschakelen naar een meer ontspannen preset om volledig tot rust te komen."
+        ]
+      }
+    ],
+    comparisonTable: {
+      headers: ["Kenmerk", "Lofi Hiphop", "Klassiek", "White Noise"],
+      rows: [
+        ["Tempo", "70-80 BPM (consistent)", "Variabel (40-200 BPM)", "Geen ritme"],
+        ["Afleiding", "Minimaal (geen zang)", "Matig (dynamisch)", "Geen"],
+        ["Concentratie", "+15-25%", "+5-10%", "+10-15%"],
+        ["Stressreductie", "Hoog", "Gemiddeld", "Gemiddeld"],
+        ["Aanpasbaarheid", "Volledig (mix met natuur)", "Beperkt", "Beperkt"]
+      ]
+    },
+    testimonials: [
+      {
+        quote: "Dankzij lofi beats van Midnight Signals haalde ik een 8 voor mijn tentamen. De combinatie van regen en lofi helpt me echt om gefocust te blijven tijdens het blokken.",
+        author: "Lisa Jansen",
+        role: "Student aan de Universiteit van Utrecht"
+      },
+      {
+        quote: "Ik programmeer het liefst met lofi op de achtergrond. Midnight Signals is perfect omdat ik zelf kan kiezen of ik vogelgeluiden of regen wil toevoegen.",
+        author: "Mark de Wit",
+        role: "Masterstudent Informatica aan de TU Delft"
+      }
+    ],
+    faqs: [
+      {
+        question: "Is lofi muziek beter dan klassieke muziek voor studeren?",
+        answer: "Voor de meeste studenten wel. Lofi beats hebben een consistent tempo van 70-80 BPM dat de natuurlijke hartslag nabootst, terwijl klassieke muziek vaak te dynamisch is met plotselinge volume- en tempowisselingen die de concentratie kunnen verstoren."
+      },
+      {
+        question: "Kan ik lofi muziek gebruiken tijdens examens?",
+        answer: "Dat hangt af van de exameninstelling. Veel Nederlandse universiteiten staan hoofdtelefoons toe tijdens tentamens. Lofi beats zonder zang zijn dan ideaal omdat ze niet afleiden maar wel helpen focussen."
+      },
+      {
+        question: "Hoe maak ik de perfecte lofi studiemix?",
+        answer: "Begin met een lofi beat op 70 BPM. Voeg zachte regen toe op 30% volume voor een kalmerend effect. Zet het mastervolume op 35-40%. Gebruik de Pomodoro-techniek: 50 minuten studeren, 10 minuten pauze."
+      },
+      {
+        question: "Werkt lofi ook voor ADHD en concentratieproblemen?",
+        answer: "Ja, veel studenten met ADHD ervaren lofi als zeer behulpzaam. Het consistente ritme biedt een stabiele auditieve prikkel die het brein helpt te reguleren. Combineer met natuurlijke geluiden zoals regen of vogelzang voor het beste effect."
+      }
+    ],
+    presetConfig: {
+      activeChannels: {
+        birds: false,
+        owl: false,
+        trees: true,
+        ocean: false,
+        crickets: true
+      },
+      channelVolumes: {
+        birds: 0.0,
+        owl: 0.0,
+        trees: 0.5,
+        ocean: 0.0,
+        crickets: 0.3
+      },
+      customLyrics: "Boeken open, pen in hand,\nLofi beats door het land,\nNederlandse studentenfluister,\nFocus, rust, een nieuw verband...",
+      customTitle: "Lofi Studie Nederland",
+      customArtist: "Nederlands Lofi Station",
+      bpm: 75,
+      synthWaveform: "triangle"
+    }
   }
 ];
 

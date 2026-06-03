@@ -1179,7 +1179,7 @@ export function getDynamicPageData(path: string): SEOPageData | null {
   }
 
   // 3. Localized pathways
-  const localePrefixes = ["/de/", "/fr/", "/ch/", "/hi/"];
+  const localePrefixes = ["/de/", "/fr/", "/ch/", "/hi/", "/nl/"];
   const matchedPrefix = localePrefixes.find((pfx) => currentPath.startsWith(pfx));
   
   if (matchedPrefix) {
@@ -1298,6 +1298,58 @@ export function getDynamicPageData(path: string): SEOPageData | null {
         activeChannels = { birds: true, owl: false, trees: false, ocean: false, crickets: true, templeBells: true, morningMist: true };
         channelVolumes = { birds: 0.6, owl: 0, trees: 0, ocean: 0, crickets: 0.2, templeBells: 0.8, morningMist: 0.5 };
         customTitle = "वैदिक सुबह ध्यान";
+      }
+    } else if (lang === "nl") {
+      if (term === "merel-vogelgeluid") {
+        title = "Merel Geluid | Vogelgeluiden voor Ontspanning | Midnight Signals";
+        desc = "Luister naar het rustgevende geluid van de merel (blackbird). Mix met regen, wind en lofi beats voor ultieme ontspanning en focus.";
+        headline = "Merel Vogelgeluid & Natuurlijke Ontspanning";
+        subheading = "De merel is de populairste tuinvogel van Nederland. Zijn melancholische zang werkt diep kalmerend.";
+        intro = "Welkom bij de merel-vogelgeluid pagina van Midnight Signals. De merel (Turdus merula) komt voor in 90% van Nederlandse tuinen en staat bekend om zijn prachtige, melancholieke fluittonen. Onderzoek toont aan dat merelgeluiden het stressniveau verlagen en een veilige, rustgevende omgeving creëren. Gebruik onze interactieve geluidsmixer om het merelgeluid te combineren met regen, wind of lofi beats voor uw perfecte ontspanningsmix.";
+        activeChannels = { birds: true, owl: false, trees: true, ocean: false, crickets: false };
+        channelVolumes = { birds: 0.7, owl: 0.0, trees: 0.4, ocean: 0.0, crickets: 0.0 };
+        customTitle = "Merel Zang Ontspanning";
+        customArtist = "Nederlands Natuur Station";
+      } else if (term === "koolmees-geluid") {
+        title = "Koolmees Geluid | Vogelgeluiden Herkennen | Midnight Signals";
+        desc = "Herken het geluid van de koolmees, de meest voorkomende stadsvogel in Amsterdam, Rotterdam en Den Haag. Ideaal voor concentratie.";
+        headline = "Koolmees Geluid Herkennen & Ontspannen";
+        subheading = "De koolmees is de nummer 1 tuinvogel in Nederlandse steden. Zijn vrolijke roep zorgt voor directe ontspanning.";
+        intro = "De koolmees (Parus major) is dé nummer 1 tuinvogel in Amsterdam, Rotterdam, Den Haag en Utrecht. Zijn kenmerkende 'tea-cher, tea-cher' metaalachtige fluittonen zijn direct herkenbaar. Wetenschappelijk onderzoek toont aan dat het luisteren naar koolmeesgeluiden de concentratie verbetert en stress vermindert. Luister live naar gesynthetiseerde koolmeesgeluiden en ontdek waarom deze vogel zo geliefd is in Nederlandse tuinen.";
+        activeChannels = { birds: true, owl: false, trees: true, ocean: false, crickets: true };
+        channelVolumes = { birds: 0.7, owl: 0.0, trees: 0.4, ocean: 0.0, crickets: 0.25 };
+        customTitle = "Koolmees Tuinmuziek";
+        customArtist = "Nederlands Natuur Station";
+      } else if (term === "nederlandse-tuinvogels") {
+        title = "Nederlandse Tuinvogels Herkennen | Vogelgeluiden Gids | Midnight Signals";
+        desc = "Leer de 10 meest voorkomende Nederlandse tuinvogels herkennen aan hun geluid. Merel, koolmees, roodborst en meer. Interactieve geluidsmixer.";
+        headline = "Nederlandse Tuinvogels Herkennen aan Hun Geluid";
+        subheading = "Een complete gids voor de mooiste vogelgeluiden uit Nederlandse tuinen, bossen en parken.";
+        intro = "Nederland heeft een rijke vogelpopulatie. Uit onderzoek van Vogelbescherming Nederland blijkt dat het aantal vogelwaarnemingen de afgelopen jaren met 42% is gestegen. Tuinvogels herkennen aan hun geluid is een populaire hobby geworden. Op deze pagina vindt u de 10 meest voorkomende Nederlandse tuinvogels met hun kenmerkende geluiden. Gebruik onze interactieve soundboard om elke vogel afzonderlijk te horen of maak uw eigen mix.";
+        activeChannels = { birds: true, owl: true, trees: true, ocean: false, crickets: true };
+        channelVolumes = { birds: 0.6, owl: 0.15, trees: 0.5, ocean: 0.0, crickets: 0.2 };
+        customTitle = "Nederlandse Tuinvogels";
+        customArtist = "Nederlands Natuur Station";
+      } else if (term === "regen-lofi-studeren") {
+        title = "Regen Lofi Studeren | Concentratie Muziek | Midnight Signals";
+        desc = "Studeren met regengeluiden en lofi beats. Verhoog uw concentratie met onze unieke mix van Nederlandse regen en chillhop muziek.";
+        headline = "Regen Lofi voor Studeren en Concentratie";
+        subheading = "Combineer Nederlandse regen met zachte lofi beats voor maximale focus tijdens het studeren.";
+        intro = "Regen en lofi muziek vormen de perfecte combinatie voor studeren. De Nederlandse regen staat bekend om zijn kalmerende effect, en in combinatie met lofi hiphop beats ontstaat de ideale studeeromgeving. Onze unieke generator combineert real-time gesynthetiseerde regenval met warme lofi akkoorden voor een ononderbroken concentratie-ervaring. Perfect voor studenten, programmeurs en schrijvers.";
+        activeChannels = { birds: false, owl: false, trees: true, ocean: false, crickets: true };
+        channelVolumes = { birds: 0.0, owl: 0.0, trees: 0.6, ocean: 0.0, crickets: 0.2 };
+        customTitle = "Regen Lofi Studie";
+        customArtist = "Nederlands Lofi Station";
+      } else if (term === "vogelgeluiden-lofi") {
+        title = "Vogelgeluiden Lofi Mix | Natuur & Beats | Midnight Signals";
+        desc = "Unieke mix van vogelgeluiden en lofi beats. Ontspanning, focus en studie met Nederlandse vogelzang en chillhop.";
+        headline = "Vogelgeluiden & Lofi: De Perfecte Mix";
+        subheading = "Een baanbrekende combinatie van natuurlijke vogelzang en warme lofi hiphop beats voor ultieme ontspanning.";
+        intro = "Vogelgeluiden en lofi beats vormen een unieke combinatie die steeds populairder wordt in Nederland. De natuurlijke, onvoorspelbare patronen van vogelzang vullen de warme, ritmische structuur van lofi hiphop perfect aan. Deze pagina biedt een exclusieve mix van Nederlandse vogelgeluiden (merel, koolmees, roodborst) met zachte lofi beats. Perfect voor studeren, werken of gewoon tot rust komen na een drukke dag.";
+        activeChannels = { birds: true, owl: false, trees: true, ocean: false, crickets: false };
+        channelVolumes = { birds: 0.6, owl: 0.0, trees: 0.3, ocean: 0.0, crickets: 0.0 };
+        customTitle = "Vogelgeluiden Lofi";
+        customArtist = "Nederlands Lofi Station";
       }
     }
 

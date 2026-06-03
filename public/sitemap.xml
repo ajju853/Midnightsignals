@@ -619,6 +619,24 @@
     <priority>0.7</priority>
   </url>
   <url>
+    <loc>https://midnightsignals.ajimp340.workers.dev/birds/greattit</loc>
+    <lastmod>2026-06-03</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://midnightsignals.ajimp340.workers.dev/birds/houssesparrow</loc>
+    <lastmod>2026-06-03</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://midnightsignals.ajimp340.workers.dev/birds/bluetit</loc>
+    <lastmod>2026-06-03</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://midnightsignals.ajimp340.workers.dev/birds/blackwoodpecker</loc>
     <lastmod>2026-06-03</lastmod>
     <changefreq>weekly</changefreq>
@@ -1064,6 +1082,18 @@
   </url>
   <url>
     <loc>https://midnightsignals.ajimp340.workers.dev/blog/ardennes-forest-soundscape-guide</loc>
+    <lastmod>2026-06-03</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://midnightsignals.ajimp340.workers.dev/blog/waarom-de-merel-zingt-in-de-avond</loc>
+    <lastmod>2026-06-03</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://midnightsignals.ajimp340.workers.dev/blog/lofi-muziek-voor-nederlandse-studenten</loc>
     <lastmod>2026-06-03</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>

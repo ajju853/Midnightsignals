@@ -182,7 +182,13 @@ export function generateAndSaveSitemap(customBaseUrl?: string) {
     "/ch/natur-ambient",
     // Hindi (India Expansion)
     "/hi/barsat-ki-awaz-sona",
-    "/hi/dhyan-mandir-ghanti"
+    "/hi/dhyan-mandir-ghanti",
+    // Dutch (Netherlands)
+    "/nl/merel-vogelgeluid",
+    "/nl/koolmees-geluid",
+    "/nl/nederlandse-tuinvogels",
+    "/nl/regen-lofi-studeren",
+    "/nl/vogelgeluiden-lofi"
   ];
 
   for (const path of localizedPaths) {
