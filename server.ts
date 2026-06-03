@@ -582,6 +582,12 @@ async function startServer() {
           isMatched = true;
         }
 
+        if (!activePage && currentPath === "/create/mix") {
+          title = "Mix Creator Wizard | Build & Share Lofi Mixes | Midnight Signals";
+          metaDescription = "Create a complete lofi mix in 5 steps: lyrics, narrator voice, bird species, soundscape, and review. Share your creation with a single link.";
+          isMatched = true;
+        }
+
         if (!activePage && currentPath.startsWith("/mix/")) {
           title = "Listen to a Saved Lofi Mix | Midnight Signals";
           metaDescription = "A custom lofi mix shared from Midnight Signals. Listen to the saved soundscape, voice, and lyrics.";

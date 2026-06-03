@@ -48,6 +48,7 @@ const CreateLyrics = lazy(() => import("./components/CreateLyrics"));
 const VoiceSelect = lazy(() => import("./components/VoiceSelect"));
 const BirdSelect = lazy(() => import("./components/BirdSelect"));
 const SoundscapeSelect = lazy(() => import("./components/SoundscapeSelect"));
+const CreateMixWizard = lazy(() => import("./components/CreateMixWizard"));
 const EmbeddableInfographic = lazy(() => import("./components/EmbeddableInfographic"));
 const CookieConsent = lazy(() => import("./components/SaaSProducts").then(m => ({ default: m.CookieConsent })));
 const ContactHub = lazy(() => import("./components/SaaSProducts").then(m => ({ default: m.ContactHub })));
@@ -1915,6 +1916,14 @@ export default function App() {
     return (
       <Suspense fallback={null}>
         <SoundscapeSelect onNavigate={createPageNav} />
+      </Suspense>
+    );
+  }
+
+  if (currentPath === "/create/mix") {
+    return (
+      <Suspense fallback={null}>
+        <CreateMixWizard onNavigate={createPageNav} />
       </Suspense>
     );
   }
@@ -4081,6 +4090,19 @@ export default function App() {
             className="hover:text-indigo-400 text-indigo-400/70 font-bold transition-colors cursor-pointer outline-none"
           >
             🌿 Soundscape
+          </a>
+          <span className="text-zinc-800 select-none">•</span>
+          <a
+            href="/create/mix"
+            onClick={(e) => {
+              e.preventDefault();
+              setCurrentPath("/create/mix");
+              window.history.pushState({}, "", "/create/mix");
+              window.scrollTo({ top: 0, behavior: "smooth" });
+            }}
+            className="hover:text-indigo-400 text-indigo-400/70 font-bold transition-colors cursor-pointer outline-none"
+          >
+            🎛️ Mix Creator
           </a>
           <span className="text-zinc-800 select-none">•</span>
           <a
