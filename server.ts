@@ -437,6 +437,7 @@ app.post("/api/mix/save", (req, res) => {
       oceanVolume: oceanVolume ?? 0,
       vinylVolume: vinylVolume ?? 0,
       activeBpm: activeBpm ?? 70,
+      plays: 0,
       createdAt: Date.now(),
     };
     mixStore.set(id, mix);
@@ -460,11 +461,20 @@ app.get("/api/mix/load/:id", (req, res) => {
 // List saved mixes
 app.get("/api/mix/list", (req, res) => {
   const limit = Math.min(parseInt(req.query.limit as string) || 50, 100);
-  const mixes = Array.from(mixStore.values())
-    .sort((a, b) => b.createdAt - a.createdAt)
-    .slice(0, limit)
-    .map(({ id, name, voice, birds, vibe, createdAt }) => ({ id, name, voice: voice?.name || "", birds: birds?.selected?.length || 0, vibe, createdAt }));
-  res.json({ mixes, total: mixStore.size });
+  const sort = (req.query.sort as string) || "newest";
+  let mixes = Array.from(mixStore.values());
+  if (sort === "popular") mixes.sort((a, b) => b.plays - a.plays || (b.createdAt - a.createdAt));
+  else mixes.sort((a, b) => b.createdAt - a.createdAt);
+  const items = mixes.slice(0, limit).map(({ id, name, voice, birds, vibe, plays, createdAt }) => ({ id, name, voice: voice?.name || "", birds: birds?.selected?.length || 0, vibe, plays, createdAt }));
+  res.json({ mixes: items, total: mixStore.size });
+});
+
+// Increment play counter for a mix
+app.post("/api/mix/play/:id", (req, res) => {
+  const mix = mixStore.get(req.params.id);
+  if (!mix) return res.status(404).json({ error: "Mix not found" });
+  mix.plays = (mix.plays || 0) + 1;
+  res.json({ plays: mix.plays });
 });
 
 async function startServer() {

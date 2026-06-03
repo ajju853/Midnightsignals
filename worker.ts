@@ -10,6 +10,7 @@ interface MixData {
   oceanVolume: number;
   vinylVolume: number;
   activeBpm: number;
+  plays: number;
   createdAt: number;
 }
 
@@ -58,6 +59,7 @@ export default {
           oceanVolume: (body.oceanVolume as number) ?? 0,
           vinylVolume: (body.vinylVolume as number) ?? 0,
           activeBpm: (body.activeBpm as number) ?? 70,
+          plays: 0,
           createdAt: Date.now(),
         };
         mixStore.set(id, mix);
@@ -70,11 +72,20 @@ export default {
 
     if (path === "/api/mix/list" && method === "GET") {
       const limit = Math.min(parseInt(url.searchParams.get("limit") || "50", 10), 100);
-      const mixes = Array.from(mixStore.values())
-        .sort((a, b) => b.createdAt - a.createdAt)
-        .slice(0, limit)
-        .map(({ id, name, voice, birds, vibe, createdAt }) => ({ id, name, voice: voice?.name || "", birds: birds?.selected?.length || 0, vibe, createdAt }));
-      return jsonResponse({ mixes, total: mixStore.size });
+      const sort = url.searchParams.get("sort") || "newest";
+      let mixes = Array.from(mixStore.values());
+      if (sort === "popular") mixes.sort((a, b) => b.plays - a.plays || (b.createdAt - a.createdAt));
+      else mixes.sort((a, b) => b.createdAt - a.createdAt);
+      const items = mixes.slice(0, limit).map(({ id, name, voice, birds, vibe, plays, createdAt }) => ({ id, name, voice: voice?.name || "", birds: birds?.selected?.length || 0, vibe, plays, createdAt }));
+      return jsonResponse({ mixes: items, total: mixStore.size });
+    }
+
+    if (path.startsWith("/api/mix/play/") && method === "POST") {
+      const id = path.replace("/api/mix/play/", "");
+      const mix = mixStore.get(id);
+      if (!mix) return jsonResponse({ error: "Mix not found" }, 404);
+      mix.plays = (mix.plays || 0) + 1;
+      return jsonResponse({ plays: mix.plays });
     }
 
     if (path.startsWith("/api/mix/load/") && method === "GET") {

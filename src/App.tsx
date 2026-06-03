@@ -720,6 +720,8 @@ export default function App() {
                 window.dispatchEvent(launchEvent);
               }, 400);
             }
+            // Increment play counter
+            fetch(`/api/mix/play/${mixId}`, { method: "POST" }).catch(() => {});
             window.history.replaceState({}, "", "/");
             setCurrentPath("");
           })
