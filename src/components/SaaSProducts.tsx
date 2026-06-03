@@ -37,59 +37,10 @@ export const updateGoogleConsent = (prefs: CookiePreferences) => {
   if (typeof window !== "undefined" && (window as any).gtag) {
     (window as any).gtag("consent", "update", {
       analytics_storage: prefs.analytics ? "granted" : "denied",
-      ad_storage: prefs.advertising ? "granted" : "denied",
-      ad_user_data: prefs.advertising ? "granted" : "denied",
-      ad_personalization: prefs.advertising ? "granted" : "denied"
+      ad_storage: "granted",
+      ad_user_data: "granted",
+      ad_personalization: "granted"
     });
-    console.log("Google Consent Mode v2 loaded/updated:", {
-      analytics_storage: prefs.analytics ? "granted" : "denied",
-      ad_storage: prefs.advertising ? "granted" : "denied",
-      ad_user_data: prefs.advertising ? "granted" : "denied",
-      ad_personalization: prefs.advertising ? "granted" : "denied"
-    });
-  }
-  // Dynamically load ad networks when advertising consent is granted
-  if (prefs.advertising) {
-    // -- Adstera scripts --
-    const adsteraScripts = [
-      { src: "https://pl29627219.effectivecpmnetwork.com/24c1ea1bf7e8617e0a830cbe54159ff3/invoke.js", container: "container-24c1ea1bf7e8617e0a830cbe54159ff3" },
-      { src: "https://pl29627220.effectivecpmnetwork.com/34/70/47/34704744b85077b343e15313b7141bea.js" },
-      { src: "https://pl29627222.effectivecpmnetwork.com/e8/56/d0/e856d0991e54ab38fca42a0003c2d1df.js" },
-    ];
-    adsteraScripts.forEach(({ src, container }) => {
-      if (document.querySelector(`script[src="${src}"]`)) return;
-      if (container && !document.getElementById(container)) {
-        const c = document.createElement("div"); c.id = container; document.body.appendChild(c);
-      }
-      const s = document.createElement("script"); s.src = src; s.async = true; document.body.appendChild(s);
-    });
-    // -- HighPerformanceFormat (sequential to avoid atOptions race) --
-    const hpfAds = [
-      { key: "fbf1f69cbed71f9c65dd7f9650b6fc17" },
-      { key: "211b37b1c02c6b796f50458e746b3593" },
-      { key: "7a493155c7ae0fa0e772e03772602f92" },
-      { key: "34f3f904aed75209c877b8fa70adf9c3" },
-      { key: "1275325c6a1afc2d110b7323766f6c13" }
-    ];
-    (function loadHpf(i) {
-      if (i >= hpfAds.length) return;
-      const ad = hpfAds[i];
-      const invokeSrc = `https://www.highperformanceformat.com/${ad.key}/invoke.js`;
-      if (document.querySelector(`script[src="${invokeSrc}"]`)) { loadHpf(i + 1); return; }
-      (window as any).atOptions = { key: ad.key, format: "iframe", height: [60, 600, 300, 50, 90][i], width: [468, 160, 160, 320, 728][i], params: {} };
-      const s = document.createElement("script"); s.src = invokeSrc; s.async = false;
-      s.onload = () => loadHpf(i + 1);
-      document.body.appendChild(s);
-    })(0);
-    // -- Adstera popunder (iframe) --
-    if (!document.querySelector('iframe[data-adkey="adstera-popunder"]')) {
-      const f = document.createElement("iframe"); f.src = "https://www.effectivecpmnetwork.com/nemr0erp?key=1c00b92905b4f8434974fc6f0ea59673";
-      f.setAttribute("data-adkey", "adstera-popunder"); f.style.cssText = "display:none"; document.body.appendChild(f);
-    }
-  } else {
-    // Remove all dynamically loaded ad scripts
-    document.querySelectorAll('script[src*="effectivecpmnetwork"], script[src*="highperformanceformat"], iframe[data-adkey="adstera-popunder"]').forEach(el => el.remove());
-    document.getElementById("container-24c1ea1bf7e8617e0a830cbe54159ff3")?.remove();
   }
 };
 
