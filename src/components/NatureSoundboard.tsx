@@ -845,6 +845,59 @@ export default function NatureSoundboard({ interfaceLanguage = "en" }: { interfa
                         caveEchoes: { active: false, volume: 0.1 }
                       },
                       favBirdId: "tui"
+                    },
+                    {
+                      name: "Coffee Shop",
+                      desc: "Warm cozy cafe ambiance with soft chatter, brewing machines, and gentle lofi background beats.",
+                      color: "text-amber-400 border-amber-400/25 bg-amber-500/5",
+                      channels: { 
+                        birds: { active: false, volume: 0.1 }, 
+                        trees: { active: true, volume: 0.5 }, 
+                        ocean: { active: false, volume: 0.1 }, 
+                        crickets: { active: true, volume: 0.4 }, 
+                        owl: { active: false, volume: 0.1 },
+                        mountainWind: { active: false, volume: 0.15 },
+                        brook: { active: true, volume: 0.3 },
+                        desertBreeze: { active: false, volume: 0.1 },
+                        morningMist: { active: true, volume: 0.2 },
+                        caveEchoes: { active: false, volume: 0.1 }
+                      }
+                    },
+                    {
+                      name: "Enchanted Forest",
+                      desc: "Mythical woodland with morning mist, trickling brooks, and magical owl calls echoing through ancient trees.",
+                      color: "text-purple-400 border-purple-400/25 bg-purple-500/5",
+                      channels: { 
+                        birds: { active: true, volume: 0.6 }, 
+                        trees: { active: true, volume: 0.7 }, 
+                        ocean: { active: false, volume: 0.1 }, 
+                        crickets: { active: false, volume: 0.15 }, 
+                        owl: { active: true, volume: 0.6 },
+                        mountainWind: { active: false, volume: 0.2 },
+                        brook: { active: true, volume: 0.55 },
+                        desertBreeze: { active: false, volume: 0.1 },
+                        morningMist: { active: true, volume: 0.7 },
+                        caveEchoes: { active: true, volume: 0.3 }
+                      },
+                      favBirdId: "forestowl"
+                    },
+                    {
+                      name: "Starry Night",
+                      desc: "Deep night sky ambience with distant desert breeze, cricket choruses, and soft cave echoes under a canopy of stars.",
+                      color: "text-indigo-400 border-indigo-400/25 bg-indigo-500/5",
+                      channels: { 
+                        birds: { active: false, volume: 0.1 }, 
+                        trees: { active: false, volume: 0.2 }, 
+                        ocean: { active: false, volume: 0.1 }, 
+                        crickets: { active: true, volume: 0.7 }, 
+                        owl: { active: true, volume: 0.5 },
+                        mountainWind: { active: true, volume: 0.4 },
+                        brook: { active: false, volume: 0.15 },
+                        desertBreeze: { active: true, volume: 0.3 },
+                        morningMist: { active: false, volume: 0.1 },
+                        caveEchoes: { active: true, volume: 0.5 }
+                      },
+                      favBirdId: "nightjar"
                     }
                   ].map((preset) => (
                     <button

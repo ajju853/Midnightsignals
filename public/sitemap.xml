@@ -103,6 +103,18 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://midnightsignals.ajimp340.workers.dev/coffeeshop-ambiance</loc>
+    <lastmod>2026-06-03</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://midnightsignals.ajimp340.workers.dev/enchanted-forest-ambience</loc>
+    <lastmod>2026-06-03</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://midnightsignals.ajimp340.workers.dev/birds/malabarwhistlingthrush</loc>
     <lastmod>2026-06-03</lastmod>
     <changefreq>weekly</changefreq>

@@ -976,6 +976,135 @@ export const SEO_PAGES: SEOPageData[] = [
       synthWaveform: "triangle",
       favBirdId: "blackwoodpecker"
     }
+  },
+  {
+    path: "/coffeeshop-ambiance",
+    title: "Coffee Shop Ambiance | Cafe Sounds for Focus & Creativity",
+    metaDescription: "Listen to warm coffee shop ambiance sounds with gentle lofi beats, soft chatter, and espresso machines. Boost creativity and focus with our interactive cafe sound mixer.",
+    keywords: ["coffee shop ambiance", "cafe sounds for studying", "coffitivity alternative", "background coffee shop noise", "cozy cafe ambience"],
+    headline: "Coffee Shop Ambiance & Cafe Sound Generator",
+    subheading: "The perfect background noise for creative flow — warm cafe acoustics, gentle chatter, and lo-fi beats blended naturally.",
+    accentColor: "from-amber-600 to-yellow-400",
+    vibe: "neon",
+    introText: "Welcome to the Coffee Shop Ambiance generator on Midnight Signals. Coffee shop background noise has been scientifically proven to boost creative performance. According to research from the University of British Columbia, ambient cafe noise at 70 decibels enhances creative problem-solving compared to silence or loud environments. Our interactive mixer combines gentle nature textures with warm lo-fi beats to recreate the perfect cafe atmosphere for deep work.",
+    sections: [
+      {
+        title: "The Science of Coffee Shop Noise for Creativity",
+        paragraphs: [
+          "Why does working from a coffee shop feel so productive? The answer lies in 'distraction optimization.' Moderate ambient noise (around 70 dB) creates a slight cognitive challenge that forces your brain to focus harder, filtering out irrelevant stimuli. This state of 'focused attention' is ideal for creative tasks, brainstorming, and problem-solving.",
+          "Our coffee shop sound generator captures this optimal acoustic environment. By blending soft background textures with warm lo-fi beats, we recreate the signature cafe experience that has made Coffitivity and similar platforms popular among remote workers and creatives.",
+          "What sets Midnight Signals apart is the ability to customize your cafe soundscape. Adjust the level of background 'chatter' (simulated through layered nature textures), add lo-fi beats for rhythm, or introduce rain for a cozy window-side table feel."
+        ]
+      },
+      {
+        title: "Customizing Your Perfect Cafe Soundscape",
+        paragraphs: [
+          "Our interactive soundboard lets you dial in your ideal coffee shop ambiance. Start with the 'Coffee Shop' preset to load our recommended mix, then adjust individual channels to taste. The 'trees' channel provides the warm ambient texture that mimics cafe background noise, while 'crickets' adds the high-frequency energy of a bustling room.",
+          "Add 'brook' for a subtle bubbling effect reminiscent of espresso machines, and toggle 'morningMist' for that cozy, humid cafe window feel. For the complete experience, activate our lo-fi generator to add gentle hip-hop beats at 70-75 BPM — the perfect tempo for creative flow.",
+          "Unlike static recordings that loop every 10 minutes, our procedural audio engine generates sounds that never repeat. This ensures your brain never experiences 'loop fatigue' — the subtle cognitive disruption caused by noticing repeating audio patterns."
+        ]
+      }
+    ],
+    faqs: [
+      {
+        question: "Is this better than Coffitivity?",
+        answer: "Midnight Signals offers everything Coffitivity does — warm cafe ambiance — plus lo-fi beats, nature sound integration, and procedural (non-looping) audio. You also get 500+ bird species and Indian voice narration, features no other cafe sound platform offers."
+      },
+      {
+        question: "Can I use this for studying?",
+        answer: "Yes! Coffee shop ambiance is scientifically proven to boost cognitive performance for creative and analytical tasks. The 70 dB ambient level creates the ideal 'focused attention' state for studying."
+      },
+      {
+        question: "Does this use real coffee shop recordings?",
+        answer: "Our platform uses Web Audio synthesis to generate cafe-like textures procedurally. This means no looping, no repetition, and full customization of each sound layer."
+      }
+    ],
+    presetConfig: {
+      activeChannels: {
+        birds: false,
+        owl: false,
+        trees: true,
+        ocean: false,
+        crickets: true
+      },
+      channelVolumes: {
+        birds: 0.0,
+        owl: 0.0,
+        trees: 0.5,
+        ocean: 0.0,
+        crickets: 0.4
+      },
+      customLyrics: "Coffee steam and morning light,\nGentle chatter, warm and bright,\nLofi beats in the background play,\nCreative flow throughout the day...",
+      customTitle: "Coffee Shop Focus",
+      customArtist: "Midnight Cafe Station",
+      bpm: 73,
+      synthWaveform: "triangle"
+    }
+  },
+  {
+    path: "/enchanted-forest-ambience",
+    title: "Enchanted Forest Ambience | Fantasy Nature Sounds for Sleep & Focus",
+    metaDescription: "Enter an enchanted forest with mystical woodland sounds, morning mist, and magical owl calls. Fantasy ambient soundscapes for sleep, meditation, and creative inspiration.",
+    keywords: ["enchanted forest ambience", "fantasy forest sounds", "magical woodland ambience", "mythical nature sounds", "forest meditation music"],
+    headline: "Enchanted Forest Ambience & Mythical Woodland Sounds",
+    subheading: "A procedurally-generated magical forest soundscape with mystical mist, ancient owl calls, and bubbling woodland streams.",
+    accentColor: "from-purple-700 to-indigo-500",
+    vibe: "dreamy",
+    introText: "Welcome to the Enchanted Forest soundscape on Midnight Signals. Fantasy forests have captivated human imagination for centuries — from the ancient woodlands of Celtic mythology to the magical forests of modern fantasy literature. Our enchanted forest generator captures this mystical atmosphere through layered procedural audio: deep owl calls echo through misty canopies, morning dew drips from ancient branches, and hidden streams bubble through moss-covered stones. This ambient soundscape is perfect for fantasy writing, D&D sessions, meditation, or simply escaping into a world of magic and wonder.",
+    sections: [
+      {
+        title: "The Art of Mythical Soundscape Design",
+        paragraphs: [
+          "Creating a convincing enchanted forest ambience requires more than just bird sounds and wind. The key is layering sounds that trigger the imagination — sounds that suggest hidden presences, magical phenomena, and ancient wisdom. Our procedural generator achieves this by combining multiple organic textures at carefully balanced levels.",
+          "The 'morningMist' channel provides the ethereal, otherworldly foundation — a soft, filtered noise that suggests magical fog rolling through ancient trees. Deep 'owl' calls at 50-60% volume evoke the wise, sentinel-like presence of mythical forest guardians. The 'caveEchoes' channel adds subtle, distant reverberations that suggest hidden caverns or magical groves.",
+          "Unlike the real forest presets on our platform, the Enchanted Forest uses slightly unnatural sound combinations — owl calls during 'daylight' hours, mist without rain, and brook sounds that seem to come from nowhere. This deliberate departure from realism is what creates the magical, otherworldly atmosphere."
+        ]
+      },
+      {
+        title: "Perfect for Fantasy Writers, Gamers, and Dreamers",
+        paragraphs: [
+          "The Enchanted Forest preset has become a favorite among fantasy writers and tabletop RPG players. Authors use it to enter the right headspace for writing forest scenes, while Dungeon Masters play it during woodland exploration sequences to immerse their players.",
+          "For meditation practitioners, the enchanted forest offers a unique escape from the ordinary. The combination of magical mist, ancient owl calls, and bubbling brooks creates a liminal space — neither fully real nor fully imaginary — where the mind can wander freely and creatively.",
+          "Our procedural generation ensures the forest never sounds the same twice. Each session brings slightly different owl call patterns, mist movements, and brook gurgles, making every visit to the enchanted forest a unique experience."
+        ]
+      }
+    ],
+    faqs: [
+      {
+        question: "Can I use this for D&D sessions?",
+        answer: "Absolutely! The Enchanted Forest preset is perfect for woodland exploration scenes, mystical groves, and Feywild adventures. Combine with our lo-fi beats for tavern scenes or switch to 'Cave Echoes' for dungeon crawls."
+      },
+      {
+        question: "Is this real forest recording?",
+        answer: "No, it's a procedurally-generated soundscape using Web Audio synthesis. This allows the sounds to never repeat and gives you full control over each layer — mist, owl calls, brook, and cave echoes can all be adjusted independently."
+      },
+      {
+        question: "Can I create my own fantasy soundscape?",
+        answer: "Yes! Use our custom soundboard to mix and match channels. Start with the Enchanted Forest preset, then adjust individual volumes, toggle channels on/off, and save your unique magical forest configuration."
+      }
+    ],
+    presetConfig: {
+      activeChannels: {
+        birds: true,
+        owl: true,
+        trees: true,
+        ocean: false,
+        crickets: false
+      },
+      channelVolumes: {
+        birds: 0.5,
+        owl: 0.6,
+        trees: 0.65,
+        ocean: 0.0,
+        crickets: 0.1
+      },
+      customLyrics: "Through the misty forest deep,\nAncient trees their vigil keep,\nOwl calls echo through the night,\nBathing everything in silver light...",
+      customTitle: "Enchanted Forest Dreams",
+      customArtist: "Midnight Mythical Station",
+      bpm: 65,
+      synthWaveform: "sine",
+      favBirdId: "forestowl"
+    }
   }
 ];
 
