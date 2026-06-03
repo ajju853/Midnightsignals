@@ -6,6 +6,19 @@
     <meta http-equiv="content-language" content="en" />
     <meta name="language" content="English" />
     
+    <!-- Unregister old Monetag service worker -->
+    <script>
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.getRegistrations().then(function(regs) {
+          for (var i = 0; i < regs.length; i++) {
+            if (regs[i].active && regs[i].active.scriptURL.indexOf('3nbf4.com') !== -1) {
+              regs[i].unregister();
+            }
+          }
+        });
+      }
+    </script>
+    
     <!-- Search Engine Verification -->
     <meta name="google-site-verification" content="google14833afe332cbfc4" />
     <meta name="msvalidate.01" content="21B8BFC4F275F30741B3E96DD8446328" />
