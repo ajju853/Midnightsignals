@@ -23,6 +23,7 @@ export const BIRD_CATEGORIES = [
   { id: "indian", name: "🇮🇳 Indian Birds (Beautiful Songs)" },
   { id: "belgian", name: "🇧🇪 Belgian Ardennes Birds" },
   { id: "taiwan", name: "🇹🇼 Taiwanese Birds" },
+  { id: "australian", name: "🇦🇺 Australian Birds" },
   { id: "tropical", name: "🌴 Tropical & Exotic Voices" },
   { id: "notable", name: "🌟 Additional Notable Singers" }
 ];
@@ -1398,5 +1399,78 @@ export const BIRD_PRESETS: BirdPreset[] = [
     repeatCount: 4,
     interval: 0.55,
     lfoFreq: 14
+  },
+  // Australian Birds
+  {
+    id: "kookaburra",
+    name: "Laughing Kookaburra",
+    category: "australian",
+    emoji: "🇦🇺",
+    description: "Iconic echoing 'laughing' call that rings across Australian dawn bushland",
+    waveType: "triangle",
+    baseFreq: 750,
+    freqChange: 350,
+    sweepType: "warble",
+    duration: 0.6,
+    repeatCount: 4,
+    interval: 0.7,
+    lfoFreq: 5
+  },
+  {
+    id: "ganggang-cockatoo",
+    name: "Gang-gang Cockatoo",
+    category: "australian",
+    emoji: "🧡",
+    description: "Distinctive creaky door-like 'scraaark' call with rusty hinge charm",
+    waveType: "sawtooth",
+    baseFreq: 1200,
+    freqChange: -300,
+    sweepType: "down",
+    duration: 0.5,
+    repeatCount: 2,
+    interval: 0.9
+  },
+  {
+    id: "whipbird",
+    name: "Eastern Whipbird",
+    category: "australian",
+    emoji: "🌿",
+    description: "Famous whip-crack sound followed by delicate high chattering notes",
+    waveType: "sine",
+    baseFreq: 4200,
+    freqChange: -1500,
+    sweepType: "cascade",
+    duration: 0.15,
+    repeatCount: 3,
+    interval: 0.5
+  },
+  {
+    id: "willywagtail",
+    name: "Willie Wagtail",
+    category: "australian",
+    emoji: "🖤",
+    description: "Sweet energetic scolding chatter with rhythmic lively phrasing",
+    waveType: "triangle",
+    baseFreq: 3500,
+    freqChange: 600,
+    sweepType: "triplet",
+    duration: 0.18,
+    repeatCount: 5,
+    interval: 0.25
+  },
+  {
+    id: "piedbutcherbird",
+    name: "Pied Butcherbird",
+    category: "australian",
+    emoji: "🎵",
+    description: "Beautiful rich fluting carolling melody echoing across open woodlands and ranges",
+    waveType: "sine",
+    baseFreq: 1600,
+    freqChange: 700,
+    sweepType: "bell",
+    duration: 0.65,
+    repeatCount: 3,
+    interval: 0.8,
+    lfoFreq: 6
   }
 ];

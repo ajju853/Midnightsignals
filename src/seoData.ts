@@ -1393,6 +1393,71 @@ export const SEO_PAGES: SEOPageData[] = [
       bpm: 60,
       synthWaveform: "sine"
     }
+  },
+  {
+    path: "/birds/australian",
+    title: "Australian Bird Sounds Library – Native Bird Calls for Study & Relaxation",
+    metaDescription: "Listen to Australia's most iconic native bird calls including the Laughing Kookaburra, Superb Lyrebird, and Gang-gang Cockatoo. Free online soundboard for study, focus, and relaxation.",
+    keywords: [
+      "Australian bird sounds",
+      "native Australian birds",
+      "kookaburra call",
+      "lyrebird sounds",
+      "Australian bird soundboard",
+      "bush sounds for study",
+      "Australian nature sounds"
+    ],
+    headline: "Australian Bird Sounds Library – Native Bird Calls from the Bush",
+    subheading: "Explore Australia's unique birdlife through procedural audio. Each species is synthesised in real-time using Web Audio oscillators for an authentic, non-repeating soundscape experience.",
+    accentColor: "from-orange-500 to-red-400",
+    vibe: "hopeful",
+    introText: "Welcome to the Australian Bird Sounds Library on Midnight Signals. Australia is home to some of the world's most unique and recognisable bird calls — from the iconic 'laughing' of the Kookaburra at dawn to the incredible mimicry of the Superb Lyrebird and the creaky charm of the Gang-gang Cockatoo. Our procedural synthesis engine recreates these calls in real-time, giving you an authentic slice of the Australian bush for study, meditation, or relaxation.",
+    sections: [
+      {
+        title: "Why Australian Birdsong is Unique",
+        paragraphs: [
+          "Australian birds have evolved in isolation for millions of years, resulting in calls and songs found nowhere else on Earth. The Laughing Kookaburra's territorial 'laugh' echoes through eucalypt forests at dawn and dusk, while the Superb Lyrebird can mimic any sound it hears — from other bird calls to chainsaws and camera shutters.",
+          "The Gang-gang Cockatoo's distinctive creaky call, often described as a 'rusty hinge,' is a beloved sound of the Australian Alps in summer. The Eastern Whipbird's whip-crack call cuts through dense rainforest, answered by delicate chattering. These sounds have become deeply embedded in Australian culture, featuring in films, television, and music."
+        ]
+      },
+      {
+        title: "Australian Birds in Aboriginal Culture",
+        paragraphs: [
+          "For tens of thousands of years, Aboriginal Australians have lived alongside these birds, incorporating their calls into Dreamtime stories and songlines. The Kookaburra is known as a messenger bird that signals the start of a new day. The lyrebird's incredible mimicry abilities feature in stories about creation and the connection between all living things.",
+          "By listening to these bird calls, you are connecting with one of the world's oldest continuous cultures and the unique natural heritage of the Australian continent."
+        ]
+      },
+      {
+        title: "How to Use These Sounds",
+        paragraphs: [
+          "Each bird page features a customisable soundboard where you can blend the bird call with nature layers (ocean, wind, rain, crickets) and lofi synthesizer pads. Adjust individual volumes to create your perfect study or relaxation atmosphere.",
+          "Australian birdsong is naturally rhythmic and non-repetitive, making it excellent background sound for deep work. The organic patterns help mask distracting noises without becoming predictable — your brain won't tune them out the way it does with repetitive loops."
+        ]
+      }
+    ],
+    faqs: [
+      {
+        question: "What is the most iconic Australian bird call?",
+        answer: "The Laughing Kookaburra's call is arguably the most recognisable Australian bird sound, often used in film and television to establish an Australian bush setting."
+      },
+      {
+        question: "Can Australian bird sounds help me study?",
+        answer: "Yes. The natural, non-repetitive patterns of Australian birdsong are excellent for maintaining focus during study or work. They mask distracting background noise without becoming predictable."
+      },
+      {
+        question: "Are these real recordings?",
+        answer: "No — our sounds are generated procedurally using Web Audio API oscillators. This means the calls are different every time you listen, preventing the brain's subconscious pattern recognition that makes static recordings less effective over time."
+      }
+    ],
+    presetConfig: {
+      activeChannels: { birds: true, owl: false, trees: true, ocean: false, crickets: true },
+      channelVolumes: { birds: 0.6, owl: 0.0, trees: 0.35, ocean: 0.0, crickets: 0.3 },
+      customLyrics: "Under southern cross so bright,\nBushland echoes through the night,\nKookaburra laughs on high,\nStars are scattered in the sky...",
+      customTitle: "Australian Bushland Soundscape",
+      customArtist: "AUSTRALIAN BUSHLAND RADIO",
+      bpm: 70,
+      synthWaveform: "triangle"
+    }
   }
 ];
 
@@ -1435,16 +1500,21 @@ export function getDynamicPageData(path: string): SEOPageData | null {
       
       // Determine vibe and color based on category
       const isTaiwan = category === "taiwan";
-      const vibe = isTaiwan ? "dreamy" : category === "indian" ? "dreamy" : category === "tropical" ? "hopeful" : "dreamy";
-      const accentColor = isTaiwan ? "from-sky-500 to-indigo-500" : category === "indian" ? "from-amber-500 to-orange-400" : "from-emerald-500 to-teal-400";
+      const isAustralia = category === "australian";
+      const vibe = isTaiwan ? "dreamy" : isAustralia ? "hopeful" : category === "indian" ? "dreamy" : category === "tropical" ? "hopeful" : "dreamy";
+      const accentColor = isTaiwan ? "from-sky-500 to-indigo-500" : isAustralia ? "from-orange-500 to-red-400" : category === "indian" ? "from-amber-500 to-orange-400" : "from-emerald-500 to-teal-400";
       
       return {
         path: `/birds/${matchedBird.id}`,
         title: isTaiwan
           ? `${birdName} Call – 台灣藍鵲叫聲 & Nature Sounds | Midnight Signals`
+          : isAustralia
+          ? `${birdName} Call – Australian ${emoji} Native Bird Sounds | Midnight Signals`
           : `${birdName} ${emoji} Call & Nature Sounds | Midnight Signals`,
         metaDescription: isTaiwan
           ? `Listen to the Taiwan Blue Magpie (Urocissa caerulea) call. 聆聽台灣藍鵲的叫聲 – endemic Taiwanese bird sounds for nature soundscapes, focus, and relaxation.`
+          : isAustralia
+          ? `Listen to the ${birdName}, an iconic Australian bird. Perfect for nature soundscapes, study focus, and experiencing Australia's unique wildlife.`
           : `Listen to soothing ${birdName} calls and forest ambience. Mix waves, crickets, wind, and lofi chord progressions with our custom browser soundboard.`,
         keywords: isTaiwan
           ? [
@@ -1453,6 +1523,15 @@ export function getDynamicPageData(path: string): SEOPageData | null {
               "台灣藍鵲聲音",
               "台灣特有種鳥類",
               "長尾山娘",
+              "bird sound generator",
+              "nature soundboard online"
+            ]
+          : isAustralia
+          ? [
+              `${birdName} call`,
+              `${birdName} sound Australia`,
+              "Australian bird sounds",
+              "native Australian birds",
               "bird sound generator",
               "nature soundboard online"
             ]
@@ -1466,31 +1545,43 @@ export function getDynamicPageData(path: string): SEOPageData | null {
             ],
         headline: isTaiwan
           ? `${birdName} Bird Call – 台灣藍鵲自然聲音`
+          : isAustralia
+          ? `${birdName} – Australian Native Bird Call & Sounds`
           : `${birdName} Bird Call & Relaxing Forest Ambience`,
         subheading: isTaiwan
           ? `Listen to the endemic Taiwan Blue Magpie (Urocissa caerulea). 聆聽長尾山娘的「嘎嘎」叫聲與笛聲般的鳴唱，適合自然冥想、讀書專注。`
+          : isAustralia
+          ? `An interactive browser-synthesized acoustic profile of the ${birdName}. Experience the sounds of Australian bushland for relaxation, study, and focus.`
           : `An interactive browser-synthesized acoustic profile of the ${birdName} designed to relieve anxiety and boost focus.`,
         accentColor,
         vibe,
         introText: isTaiwan
           ? `Welcome to the Taiwan Blue Magpie (Urocissa caerulea) soundscape player on Midnight Signals. 台灣藍鵲（又稱長尾山娘）是台灣特有種鳥類，棲息於中低海拔闊葉林，叫聲粗啞如「嘎嘎」，亦能發出輕柔笛聲。聆聽台灣藍鵲的叫聲能帶你進入台灣山林的氛圍，適合搭配 lofi 音樂或雨聲作為背景。`
+          : isAustralia
+          ? `Welcome to the ${birdName} soundscape player on Midnight Signals. The ${birdName} (${emoji}) is one of Australia's most beloved native birds, known for its ${desc.toLowerCase()}. Australian bush birdsong has been shown to reduce stress and improve concentration, making it perfect for study sessions, meditation, or immersive background ambience while working.`
           : `Welcome to the dynamic ${birdName} soundscape player on Midnight Signals. The ${birdName} (${emoji}) is native to the ${category} aviary family and is renowned for its ${desc.toLowerCase()}. Environmental acoustics indicate that active birdsongs reduce cognitive fatigue, block out ambient city hums, and promote delta sleep. Below, customize our soundboard sliders to blend ${birdName} songs with ocean surf, forest wind, or soft lofi chords.`,
         sections: [
           {
-            title: isTaiwan ? `Taiwan Blue Magpie – 台灣藍鵲介紹` : `Acoustic Engineering of ${birdName} Soundwaves`,
+            title: isTaiwan ? `Taiwan Blue Magpie – 台灣藍鵲介紹` : isAustralia ? `About the ${birdName}` : `Acoustic Engineering of ${birdName} Soundwaves`,
             paragraphs: isTaiwan ? [
               `The Taiwan Blue Magpie (Urocissa caerulea), also known as the "Long-tailed Mountain Lady" (長尾山娘), is an endemic bird species of Taiwan. It lives in broadleaf forests at elevations of 300-1,200 metres. Its call is a raucous, metallic "cackle" — often compared to a frog or a monkey — but it can also produce soft, flute-like notes.`,
               `In Taiwanese folklore, the blue magpie is considered a symbol of good luck and protection. It is one of the national symbols of Taiwan, often featured in local art and literature. This makes the Taiwan Blue Magpie not just a soundscape element, but a cultural experience that connects listeners to Taiwan's natural heritage.`
+            ] : isAustralia ? [
+              `The ${birdName} (${emoji}) is one of Australia's most iconic native birds, found across eastern and southern Australia. Its distinctive call has become synonymous with the Australian bush experience, often featured in film and television to evoke the Australian landscape.`,
+              `In Aboriginal Australian culture, the ${birdName} features prominently in Dreamtime stories and is considered an important messenger bird. Its presence in your soundscape connects you to one of the world's oldest living cultures and the unique natural heritage of the Australian continent.`
             ] : [
               `Our synthesis engine models the natural frequency of the ${birdName} utilizing a ${matchedBird.waveType} wave oscillator. Operating at a base frequency of ${matchedBird.baseFreq}Hz with a ${matchedBird.sweepType} sweep type, it replicates the natural acoustic signature of this species.`,
               `Unlike static MP3 recordings that loop predictably, our Web Audio generator triggers procedural call sweeps with randomized interval offsets (averaging every ${matchedBird.interval} seconds). This prevents your brain's subconscious from noticing repetitive audio cycles, ensuring high-quality, uninterrupted noise therapy.`
             ]
           },
           {
-            title: isTaiwan ? "Suggested Mix for This Bird – 建議搭配" : "How to Optimize this Preset for Work or Sleep",
+            title: isTaiwan ? "Suggested Mix for This Bird – 建議搭配" : isAustralia ? "Suggested Australian Soundscape Mix" : "How to Optimize this Preset for Work or Sleep",
             paragraphs: isTaiwan ? [
               `Combine the Taiwan Blue Magpie call with a Taiwan mountain wind or light rain nature layer for an authentic forest atmosphere. Pair with a Dreamy or Ethereal lofi style and Theta binaural beats for deep relaxation.`,
               `The irregular, non-repeating pattern of the magpie's cackle keeps your mind gently engaged without being distracting — perfect for study sessions, meditation, or immersive background ambience while working.`
+            ] : isAustralia ? [
+              `Combine the ${birdName} call with an ocean or wind nature layer for an authentic Australian bush atmosphere. Pair with a warm lo-fi style and Alpha binaural beats for focused study sessions.`,
+              `The organic, natural patterning of Australian birdsong has been shown to reduce cortisol levels and improve concentration. Perfect for students studying for exams, remote workers seeking focus, or anyone wanting to bring the peace of the Australian outdoors into their space.`
             ] : [
               `Click the 'Launch Curated Preset Station' button to load the custom bird mixer. We suggest setting the main volume slider to 30-40% to mimic a natural forest.`,
               `You can toggle other nature channels on the dashboard, including nocturnal owl hoots, forest breeze, summer crickets, and coastal tides, or add warm lo-fi synthesizer pads underneath the birdsong for a relaxing musical overlay.`
@@ -1509,6 +1600,19 @@ export function getDynamicPageData(path: string): SEOPageData | null {
           {
             question: "Where can I hear this bird in real life?",
             answer: "In Taiwan's low-to-mid elevation forests, especially Yangmingshan National Park, Alishan, and near Sun Moon Lake."
+          }
+        ] : isAustralia ? [
+          {
+            question: `What does a ${birdName} sound like?`,
+            answer: `The ${birdName} produces a ${desc.toLowerCase()}. It is one of the most recognizable bird calls in Australia and is a favourite among birdwatchers and nature enthusiasts.`
+          },
+          {
+            question: "Can I use Australian bird sounds for studying?",
+            answer: "Yes! Australian birdsong is naturally rhythmic and non-repetitive, making it excellent background sound for study, creative work, and relaxation. The organic patterns help mask distracting noises without becoming predictable."
+          },
+          {
+            question: "Where can I hear this bird in the wild?",
+            answer: `${birdName}s are found across eastern and southern Australia in woodlands, forests, and urban parks. They are particularly active at dawn and dusk.`
           }
         ] : [
           {
@@ -1537,9 +1641,11 @@ export function getDynamicPageData(path: string): SEOPageData | null {
           },
           customLyrics: isTaiwan
             ? `長尾山娘枝頭站,\n藍色羽翼閃亮光,\n嘎嘎叫聲山谷傳,\n台灣山林好風光...`
+            : isAustralia
+            ? `Under the wide Australian sky,\n${birdName} calls as days go by,\nBushland echoes, soft and deep,\nNative songs that never sleep...`
             : `In the branches high and green,\n${birdName} sings a song serene,\nStarlight fades, the morning breaks,\nQuiet joy within us wakes...`,
-          customTitle: isTaiwan ? `台灣藍鵲山林音景` : `${birdName} Woodland Preset`,
-          customArtist: isTaiwan ? `台灣特有種鳴禽` : `${category.toUpperCase()} AVIARY RADIO`,
+          customTitle: isTaiwan ? `台灣藍鵲山林音景` : isAustralia ? `Australian ${birdName} Bushland` : `${birdName} Woodland Preset`,
+          customArtist: isTaiwan ? `台灣特有種鳴禽` : isAustralia ? `AUSTRALIAN BUSHLAND RADIO` : `${category.toUpperCase()} AVIARY RADIO`,
           bpm: 72,
           synthWaveform: matchedBird.waveType,
           favBirdId: matchedBird.id
